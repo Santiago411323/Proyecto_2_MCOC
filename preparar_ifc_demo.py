@@ -8,6 +8,7 @@ importlib.import_module("bl_ext.user_default.bonsai")
 import ifcopenshell
 import ifcopenshell.api
 import ifcopenshell.geom
+from completar_modelo import completar
 
 base = Path(__file__).resolve().parent
 destino = base / "modelo_e02.ifc"
@@ -34,7 +35,7 @@ for i, nombre in enumerate(["Bloque_A", "Bloque_B", "Bloque_C"]):
     matriz[0,3] = i * 4.
     ifcopenshell.api.run("geometry.edit_object_placement", modelo,
         product=objeto, matrix=matriz)
-modelo.write(str(destino))
+completar(modelo).write(str(destino))
 verificado = ifcopenshell.open(str(destino))
 objetos = verificado.by_type("IfcBuildingElementProxy")
 assert len(objetos) == 3

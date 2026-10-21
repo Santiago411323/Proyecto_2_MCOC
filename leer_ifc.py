@@ -3,12 +3,18 @@ import argparse
 import json
 from pathlib import Path
 import ifcopenshell
+import ifcopenshell.util.element
 
 
 def leer_elementos(ruta):
     modelo = ifcopenshell.open(str(ruta))
-    return {obj.GlobalId: {"nombre": obj.Name, "clase": obj.is_a()}
-            for obj in modelo.by_type("IfcElement")}
+    elementos = {}
+    for obj in modelo.by_type("IfcElement"):
+        propiedades = ifcopenshell.util.element.get_psets(obj).get("Pset_HormigonMasivo", {}).copy()
+        propiedades.pop("id", None)  # ID STEP local: puede cambiar al reexportar el mismo objeto.
+        elementos[obj.GlobalId] = {"nombre": obj.Name, "clase": obj.is_a(),
+                                  "propiedades": propiedades}
+    return elementos
 
 
 def comparar(antes, despues):
@@ -30,6 +36,7 @@ def main():
     print(f"Archivo: {args.archivo.resolve()}\nElementos: {len(elementos)}")
     for guid, datos in sorted(elementos.items()):
         print(f"{guid} | {datos['clase']} | {datos['nombre']}")
+        print(json.dumps(datos["propiedades"], ensure_ascii=False))
     if args.comparar:
         antes = json.loads(args.comparar.read_text(encoding="utf-8"))
         cambios = comparar(antes, elementos)

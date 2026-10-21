@@ -1,6 +1,6 @@
 # Proyecto 2 — G9: Punta Arenas / Tehuel Aike
 
-Avance inicial para E01/E02: IFC → Python, difusión térmica 1D y tests.
+Avance inicial para E01/E02: IFC → Python, voxelización G04, difusión térmica 1D y tests.
 Integrantes: pendiente de completar. Punto meteorológico docente: latitud
 **-52.821770**, longitud **-70.896850** (ver `sitio.json`).
 
@@ -21,7 +21,7 @@ No hace falta activar el entorno: los comandos usan directamente su ejecutable.
 ## Demo IFC (round-trip)
 
 `modelo_e02.ifc` contiene tres bloques de práctica de 2 × 2 × 2 m, separados
-4 m en X: Bloque_A, Bloque_B y Bloque_C. Son IfcBuildingElementProxy con
+4 m en X: Vertida_01, Vertida_02 y Vertida_03. Son IfcBuildingElementProxy con
 GlobalId distintos, contenidos en un IfcBuildingStorey. No representan la
 geometría definitiva ni una división constructiva de la fundación.
 
@@ -32,8 +32,8 @@ geometría definitiva ni una división constructiva de la fundación.
 .\.venv\Scripts\python.exe leer_ifc.py modelo_e02.ifc --guardar resultados/antes.json
 ```
 
-3. En Bonsai seleccionar Bloque_A y editar su atributo IFC **Name** a
-   Bloque_A_modificado. Confirmar la edición del atributo y guardar con
+3. En Bonsai seleccionar Vertida_01 y editar su atributo IFC **Name** a
+   Vertida_01_modificada. Confirmar la edición del atributo y guardar con
    **File → Save IFC Project**. No basta cambiar una etiqueta de Blender
    que no se sincronice con IFC, ni guardar solamente un archivo .blend.
 4. Leer otra vez el archivo desde disco:
@@ -43,7 +43,7 @@ geometría definitiva ni una división constructiva de la fundación.
 ```
 
 Debe mostrar un cambio de nombre con el mismo GlobalId. El lector compara
-nombre y clase; esta demo NO compara geometría. Restaurar el nombre original
+nombre, clase y Pset_HormigonMasivo; esta demo NO compara geometría. Restaurar el nombre original
 y guardar antes de volver a ejecutar la batería completa de tests.
 La prueba automatizada modifica una copia temporal; el round-trip interactivo
 en Bonsai debe ensayarse por separado.
@@ -82,6 +82,26 @@ En una grilla gruesa, la temperatura del centro se interpola linealmente.
 El solver es independiente de Blender y del IFC en esta etapa. Aún no incorpora
 hidratación, Robin/Neumann, clima, activación de vertidas ni el caso 3D real.
 La prueba uniforme usa bordes Dirichlet a la misma temperatura, no bordes aislados.
+La activación por tiempo sí está implementada en el módulo de voxelización;
+todavía no está conectada al solver térmico.
+
+## Voxelización y propiedades — G00, G01, G02, G04
+
+La revisión de las cuatro guías y el guion de demostración están en
+`docs/ENTREGA_GUIAS.md`. Los horarios, material M1, temperatura de colocación y
+protecciones son ejemplos didácticos, no datos calibrados ni un plan real aprobado.
+
+```powershell
+.\.venv\Scripts\python.exe voxelizar.py
+.\.venv\Scripts\python.exe voxelizar.py --tiempo-h 24 --salida resultados/voxeles_24h
+.\.venv\Scripts\python.exe voxelizar.py --tiempo-h 48 --salida resultados/voxeles_48h
+```
+
+Genera NPZ con centros, occupied, active, vertida_id, material_id, horarios y
+temperaturas de colocación; CSV de error de volumen, metadatos JSON y un corte PNG.
+`occupied` indica pertenencia geométrica; `active` indica hormigón ya colocado.
+El volumen geométrico se compara con TODOS los voxeles ocupados, aunque aún no
+se hayan colocado. No se debe confundir volumen total con volumen activo.
 
 ## Tests
 
@@ -90,7 +110,8 @@ La prueba uniforme usa bordes Dirichlet a la misma temperatura, no bordes aislad
 ```
 
 Comprueban temperatura uniforme, error frente a solución exacta, principio del
-máximo, refinamiento, estabilidad, tiempo final, grilla y cambio de nombre IFC.
+máximo, refinamiento, estabilidad, tiempo final, grilla, cambio de nombre IFC,
+clasificación geométrica, identidades, volumen y activación de voxeles.
 
 ## Entrega
 
@@ -102,5 +123,5 @@ No hay informe adicional para E02. Canvas solicita URL de repositorio y SHA:
 git rev-parse HEAD
 ```
 
-El repositorio remoto aún debe crearse/conectarse y subirse. Los instaladores,
+Repositorio: https://github.com/Santiago411323/Proyecto_2_MCOC . Los instaladores,
 el entorno virtual y los resultados generados se excluyen mediante .gitignore.
