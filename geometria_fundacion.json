@@ -1,0 +1,12 @@
+{
+  "fuente": "Presentacion_inicial_P2_Hormigon_Masivo_2026 (1).pptx, diapositiva 4 y figura adjunta",
+  "estado": "Interpretacion provisional; requiere validacion del profesor",
+  "ancho_m": 18.0,
+  "altura_total_m": 3.3,
+  "diametro_superior_m": 7.0,
+  "semilado_tramo_recto_m": 3.728,
+  "alturas_capas_m": [1.1, 1.1, 1.1],
+  "segmentos_circulo": 96,
+  "supuesto_transicion": "Superficie reglada desde contorno octogonal a circulo de radio 3.5 m",
+  "supuesto_vertidas": "Tres cuerpos contiguos por niveles; secuencia ilustrativa no prescrita por el PPT"
+}

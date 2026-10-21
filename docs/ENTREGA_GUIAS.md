@@ -17,7 +17,7 @@ adicional de la rúbrica E01 ni como una simulación térmica 3D terminada.
 
 ## Schema constructivo
 
-Todos los elementos de práctica son IfcBuildingElementProxy. Conservan los GlobalId
+Los tres cuerpos de la fundación provisional son IfcFooting. Conservan los GlobalId
 originales. Cada uno tiene Pset_HormigonMasivo con:
 
 | Campo | Unidad / significado |
@@ -34,8 +34,10 @@ originales. Cada uno tiene Pset_HormigonMasivo con:
 
 El voxelizador usa Inicio_h, no interpreta InicioPlanificado. Si se editan fechas,
 deben mantener coherentes ambos campos. No se añade una dependencia meteorológica.
-La geometría sigue siendo tres cubos separados de 2 m de lado (24 m³ en total),
-no la fundación de 18 × 18 m. No se ha inventado la geometría oficial pendiente.
+La geometría es una fundación continua con base octogonal de 18 × 18 m,
+transición inclinada y cilindro superior de diámetro 7 m; altura total 3,30 m.
+La interpretación de la transición y la división en capas requieren validación: ver
+GEOMETRIA_FUNDACION.md. El volumen calculado de la malla es 487,0695 m³.
 
 ## Demo IFC en Bonsai
 
@@ -69,7 +71,8 @@ La magnitud de la suma distingue interior de exterior. Se usan mallas cerradas;
 las superficies abiertas se rechazan. Este baseline requiere metros, elementos
 sin superposición volumétrica y mallas orientadas consistentemente.
 Los puntos exactamente sobre una frontera tienen una clasificación ambigua;
-las resoluciones de demostración no sitúan centros sobre las caras de los bloques.
+las resoluciones evitan centros sobre las interfaces horizontales de las capas.
+En superficies inclinadas o curvas debe evaluarse la sensibilidad a la alineación.
 La comprobación de aristas no demuestra por sí sola orientación correcta ni
 ausencia de autointersecciones: geometrías nuevas deben validarse antes de usarlas.
 
@@ -92,14 +95,15 @@ N_ocupado equivale al N_activo de G04 cuando ya se colocaron todas las vertidas.
 
 | h [m] | Voxeles ocupados | V_geom [m³] | V_h [m³] | Error relativo |
 |---|---:|---:|---:|---:|
-| 0,7 | 81 | 24 | 27,783 | 15,7625 % |
-| 0,4 | 375 | 24 | 24 | ≈0 % |
-| 0,2 | 3000 | 24 | 24 | ≈0 % |
+| 0,8 | 955 | 487,0695 | 488,96 | 0,3881 % |
+| 0,5 | 3916 | 487,0695 | 489,50 | 0,4990 % |
+| 0,25 | 30832 | 487,0695 | 481,75 | 1,0921 % |
 
-El cero se explica por alineación exacta entre cubos y grilla; no demuestra que
-una fundación curva se represente sin error ni permite estimar un orden asintótico
-con estos tres datos. Para geometría nueva debe repetirse el estudio.
-Con h=0,4 m hay 125 celdas activas a t=0 h, 250 a t=24 h y 375 a t=48 h.
+El error no es monótono: depende de la alineación de los centros con las caras
+inclinadas y las alturas de 1,10 m. Los tres casos tienen error menor que 1,1 %,
+pero estos datos no prueban un orden de convergencia ni una tendencia asintótica.
+Debe ampliarse el estudio antes de seleccionar una grilla para resultados térmicos.
+Las cotas y volúmenes se verifican en tests/test_fundacion.py.
 
 ## Ensayo de la parte térmica
 
@@ -128,7 +132,7 @@ adiabático: mantiene bordes a la misma temperatura, con Dirichlet.
 
 ## Nota opcional Canvas (menos de 100 palabras)
 
-Disponemos de un IFC con tres vertidas de práctica y propiedades constructivas,
+Disponemos de un IFC provisional de la fundación con tres vertidas y propiedades constructivas,
 lector independiente, voxelización por centros con tres resoluciones y activación
 temporal, y solver 1D verificado con solución exacta y tests. El modelo aún no es
 la fundación definitiva. El solver actual implementa conducción sin fuente y

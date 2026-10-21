@@ -20,10 +20,21 @@ No hace falta activar el entorno: los comandos usan directamente su ejecutable.
 
 ## Demo IFC (round-trip)
 
-`modelo_e02.ifc` contiene tres bloques de práctica de 2 × 2 × 2 m, separados
-4 m en X: Vertida_01, Vertida_02 y Vertida_03. Son IfcBuildingElementProxy con
-GlobalId distintos, contenidos en un IfcBuildingStorey. No representan la
-geometría definitiva ni una división constructiva de la fundación.
+`modelo_e02.ifc` contiene una fundación continua interpretada de la diapositiva 4:
+base octogonal de 18 × 18 m, transición inclinada y parte superior cilíndrica de
+diámetro 7 m, con altura total 3,30 m. Los tres objetos IfcFooting corresponden a
+capas contiguas de 1,10 m (Vertida_01/02/03), con GlobalId distintos.
+La transición y el plan de capas son provisionales y requieren validación docente;
+ver `docs/GEOMETRIA_FUNDACION.md` y parámetros en `geometria_fundacion.json`.
+
+```powershell
+.\.venv\Scripts\python.exe ver_fundacion.py
+```
+
+Genera `resultados/fundacion/fundacion_3d_actualizada.png` y `planta_corte.png`.
+`crear_fundacion.py` reconstruye el IFC con esos parámetros (sobrescribe el archivo;
+no ejecutar si se quieren conservar ediciones manuales). `preparar_ifc_demo.py`
+queda como generador histórico del ejercicio de cubos, no de la fundación actual.
 
 1. Abrir `modelo_e02.ifc` con **File → Open IFC Project** en Bonsai.
 2. Guardar el estado inicial desde la terminal:

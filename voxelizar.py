@@ -16,15 +16,18 @@ import ifcopenshell.util.unit
 def dentro_malla(puntos, triangulos):
     """Numero de enrollamiento: interior si |suma de angulos| > 2*pi."""
     resultado = np.zeros(len(puntos), dtype=bool)
-    for inicio in range(0, len(puntos), 512):
-        p = puntos[inicio:inicio+512, None, :]
+    limites=triangulos.reshape(-1,3)
+    candidatos=np.flatnonzero(np.all((puntos>=limites.min(axis=0)) & (puntos<=limites.max(axis=0)),axis=1))
+    for inicio in range(0, len(candidatos), 512):
+        indices=candidatos[inicio:inicio+512]
+        p = puntos[indices, None, :]
         a, b, c = (triangulos[None, :, j, :] - p for j in range(3))
         la, lb, lc = (np.linalg.norm(v, axis=2) for v in (a, b, c))
         numerador = np.einsum("...i,...i->...", a, np.cross(b, c))
         denominador = (la*lb*lc + np.sum(a*b, axis=2)*lc
                        + np.sum(b*c, axis=2)*la + np.sum(c*a, axis=2)*lb)
         angulos = 2*np.arctan2(numerador, denominador)
-        resultado[inicio:inicio+512] = np.abs(angulos.sum(axis=1)) > 2*np.pi
+        resultado[indices] = np.abs(angulos.sum(axis=1)) > 2*np.pi
     return resultado
 
 
@@ -103,7 +106,7 @@ def voxelizar(solidos, h, tiempo_h=0.):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("archivo", nargs="?", default="modelo_e02.ifc")
-    p.add_argument("--resoluciones", nargs="+", type=float, default=[.7,.4,.2])
+    p.add_argument("--resoluciones", nargs="+", type=float, default=[.8,.5,.25])
     p.add_argument("--tiempo-h", type=float, default=0.)
     p.add_argument("--salida", type=Path, default=Path("resultados/voxeles"))
     args = p.parse_args()

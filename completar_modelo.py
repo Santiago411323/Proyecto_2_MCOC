@@ -6,7 +6,7 @@ import ifcopenshell.util.element
 
 
 def completar(modelo):
-    objetos = sorted(modelo.by_type("IfcBuildingElementProxy"), key=lambda o: o.Name)
+    objetos = sorted(modelo.by_type("IfcElement"), key=lambda o: o.Name)
     for i, objeto in enumerate(objetos, start=1):
         objeto.Name = f"Vertida_{i:02d}"
         psets = ifcopenshell.util.element.get_psets(objeto)
