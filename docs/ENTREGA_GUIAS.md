@@ -118,7 +118,9 @@ El último comando debe dar error de estabilidad. Explicar almacenamiento,
 conducción, condición inicial, bordes Dirichlet a 20 °C, alpha=k/(rho*cp),
 Fo=alpha*dt/dx² <=0,5 y actualización desde el arreglo del instante anterior.
 Entender también Neumann (flujo impuesto) y Robin (intercambio con ambiente):
-aún no están implementados. No afirmar que el test uniforme verifica un dominio
+ahora están implementados en difusion_1d_bordes.py, con ejemplos en
+graficos_fundacion_1d.py y tests/test_bordes_1d.py. El archivo solver_1d.py conserva
+su caso original Dirichlet. No afirmar que el test uniforme original verifica un dominio
 adiabático: mantiene bordes a la misma temperatura, con Dirichlet.
 
 ## Pendientes que no se deben presentar como terminados
@@ -136,5 +138,6 @@ Disponemos de un IFC provisional de la fundación con tres vertidas y propiedade
 lector independiente, voxelización por centros con tres resoluciones y activación
 temporal, y solver 1D verificado con solución exacta y tests. El modelo aún no es
 la fundación definitiva. El solver actual implementa conducción sin fuente y
-bordes Dirichlet; falta integrar hidratación, Neumann/Robin, voxeles, clima y
+bordes Dirichlet; existe un módulo adicional verificado con Neumann/Robin.
+Falta integrar hidratación, voxeles, clima y
 activación al cálculo térmico. Los parámetros constructivos son ejemplos didácticos.

@@ -61,6 +61,25 @@ en Bonsai debe ensayarse por separado.
 
 ## Solver 1D
 
+### Gráficos de esta etapa sobre la altura de 3,30 m
+
+```powershell
+.\.venv\Scripts\python.exe graficos_fundacion_1d.py
+```
+
+Abrir `resultados/fundacion_1d/01_perfiles_altura.png` y
+`02_centro_y_extremos.png`. Compara Dirichlet, Neumann aislado y Robin a lo
+largo de una columna idealizada de 3,30 m. Es una comparación de condiciones
+de borde, no una predicción de la fundación real: condición inicial sinusoidal
+impuesta (extremos 20 °C, centro 60 °C), sin hidratación, material uniforme y
+sin pérdidas laterales. El período de 14 días es un horizonte de demostración.
+La altura proviene del JSON geométrico; no se leen secciones ni áreas del IFC
+para el cálculo térmico 1D. Las condiciones se documentan en `docs/GRAFICOS_1D.md`.
+
+El motor nuevo está en `difusion_1d_bordes.py`; permite elegir cada extremo
+independientemente y agrega una fuente uniforme opcional. El script original
+`solver_1d.py` se conserva como benchmark de un metro con Dirichlet:
+
 ```powershell
 .\.venv\Scripts\python.exe solver_1d.py
 .\.venv\Scripts\python.exe solver_1d.py --dx 0.025 --dt 150 --salida resultados/fino
@@ -90,8 +109,9 @@ mantener el mismo Fo. La última iteración acorta dt si hace falta para
 alcanzar exactamente la duración. La precisión se evalúa con la solución exacta.
 En una grilla gruesa, la temperatura del centro se interpola linealmente.
 
-El solver es independiente de Blender y del IFC en esta etapa. Aún no incorpora
+El solver original es independiente de Blender y del IFC en esta etapa. Aún no incorpora
 hidratación, Robin/Neumann, clima, activación de vertidas ni el caso 3D real.
+Neumann y Robin sí están implementados y verificados en `difusion_1d_bordes.py`.
 La prueba uniforme usa bordes Dirichlet a la misma temperatura, no bordes aislados.
 La activación por tiempo sí está implementada en el módulo de voxelización;
 todavía no está conectada al solver térmico.
