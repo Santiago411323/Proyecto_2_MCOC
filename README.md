@@ -54,7 +54,9 @@ queda como generador histórico del ejercicio de cubos, no de la fundación actu
 ```
 
 Debe mostrar un cambio de nombre con el mismo GlobalId. El lector compara
-nombre, clase y Pset_HormigonMasivo; esta demo NO compara geometría. Restaurar el nombre original
+nombre, clase, Pset_HormigonMasivo y métricas geométricas (dimensiones, posición,
+volumen y área). Puede detectar agrandar la base; no demuestra equivalencia total
+de dos formas que compartan todas esas métricas. Restaurar el nombre original
 y guardar antes de volver a ejecutar la batería completa de tests.
 La prueba automatizada modifica una copia temporal; el round-trip interactivo
 en Bonsai debe ensayarse por separado.
