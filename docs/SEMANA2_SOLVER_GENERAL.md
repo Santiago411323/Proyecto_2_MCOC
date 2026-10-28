@@ -23,7 +23,7 @@ Desde la raíz del proyecto, en la terminal de VS Code:
 .\.venv\Scripts\python.exe demo_semana2.py
 ```
 
-El primer comando ejecuta 23 pruebas del motor general. Para incluir la batería
+El primer comando ejecuta 29 pruebas del motor general. Para incluir la batería
 1D previa y el lector IFC:
 
 ```powershell
@@ -40,6 +40,10 @@ Demostración individual de 3D, cambio de resolución y paso inválido:
 
 El tercero debe detenerse con error de estabilidad, no producir temperaturas
 explosivas. El modelo rechaza el dt solicitado en lugar de corregirlo silenciosamente.
+
+La pauta adicional exige modificar parámetros de las soluciones exactas en vivo.
+Usar `verificar_parametros.py` y `PAUTA_PARAMETROS_SEMANA2.md`: admite longitudes
+y celdas distintas por eje, T0, amplitud, alpha, rho, cp, q0 y tiempo.
 
 ## Dónde ver los resultados
 

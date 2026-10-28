@@ -21,6 +21,17 @@ Abrir `resultados/semana2`: `sinusoidal_2d.png`, `sinusoidal_3d.png`,
 Los campos completos se guardan como NPZ. El BIM del caso base sigue en
 `modelo_e02.ifc` y se inspecciona desde Bonsai.
 
+Para cambiar parámetros en vivo según la pauta de esta semana:
+
+```powershell
+.\.venv\Scripts\python.exe verificar_parametros.py --dim 3 --longitudes 2 1 0.6 --celdas 20 16 12 --alpha 0.2 --t0 12 --amplitud 7 --duracion 0.08 --salida resultados/pauta_3d
+.\.venv\Scripts\python.exe verificar_parametros.py --caso fuente --dim 3 --q0 24 --rho 2 --cp 3 --duracion 0.1 --salida resultados/pauta_fuente
+```
+
+Ver `docs/PAUTA_PARAMETROS_SEMANA2.md` para las fórmulas exactas, unidades y
+efectos esperados al variar cada parámetro. El caso fuente es adiabático en todas
+las caras; no modela hidratación todavía.
+
 ## Instalación en Windows
 
 Requisitos: Python 3.12, Git y Blender 4.5 con Bonsai 0.9.0 para editar IFC.

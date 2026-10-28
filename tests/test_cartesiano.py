@@ -111,3 +111,23 @@ def test_refinamiento_temporal(dimension):
     exacta=20+10*perfil*np.exp(-tasa*.03)
     r2=modelo.resolver(20+10*perfil,.03,dt/4)
     assert np.max(np.abs(r2["T"]-exacta)) < np.max(np.abs(r1["T"]-exacta))/3.5
+
+
+@pytest.mark.parametrize("L,forma", [((2.,.7),(24,20)),((2.,1.,.6),(20,16,12))])
+def test_formula_pauta_longitudes_y_parametros_distintos(L,forma):
+    alpha=.2; T0=12.; A=7.; t=.08
+    m,r,exacta,dt=sinusoidal(len(L),forma,longitudes=L,T0=T0,amplitud=A,
+        alpha=alpha,rho=3.,cp=4.,duracion=t)
+    lambda_=sum((np.pi/v)**2 for v in L)
+    formula=T0+A*np.prod([np.sin(np.pi*x/l) for x,l in zip(m.coordenadas,L)],axis=0)*np.exp(-alpha*lambda_*t)
+    np.testing.assert_allclose(exacta,formula)
+    assert np.max(np.abs(r["T"]-formula))<.025
+    assert np.all(m.k==pytest.approx(alpha*3.*4.))
+
+
+@pytest.mark.parametrize("q0,rho,cp",[(12.,2.,3.),(24.,2.,3.),(-5.,4.,2.),(0.,3.,4.)])
+def test_fuente_pauta_parametros_modificados(q0,rho,cp):
+    m=TermicoCartesiano((5,7,4),(2.,1.,.6),k=1.,rho=rho,cp=cp)
+    t=.07; r=m.resolver(13.,t,.6*m.dt_max,fuente_W_m3=q0)
+    np.testing.assert_allclose(r["T"],13+q0*t/(rho*cp),atol=1e-12)
+    assert r["energia_J"][-1]-r["energia_J"][0]==pytest.approx(q0*np.prod(m.longitudes)*t,abs=1e-11)
