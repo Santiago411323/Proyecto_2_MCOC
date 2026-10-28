@@ -4,6 +4,23 @@ Avance inicial para E01/E02: IFC → Python, voxelización G04, difusión térmi
 Integrantes: pendiente de completar. Punto meteorológico docente: latitud
 **-52.821770**, longitud **-70.896850** (ver `sitio.json`).
 
+## Semana 2 — solver general 1D/2D/3D
+
+El motor nuevo `termico_cartesiano.py` usa balances de energía por celdas con
+Dirichlet, Neumann, Robin, fuente volumétrica y materiales heterogéneos.
+No introduce hidratación ni clima real. Los casos 2D/3D son verificaciones
+matemáticas, no temperaturas de la fundación. Ver `docs/SEMANA2_SOLVER_GENERAL.md`.
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_cartesiano.py -v
+.\.venv\Scripts\python.exe demo_semana2.py
+```
+
+Abrir `resultados/semana2`: `sinusoidal_2d.png`, `sinusoidal_3d.png`,
+`balances_y_bordes.png`, `dos_materiales.png`, `convergencia_1d_2d_3d.png`.
+Los campos completos se guardan como NPZ. El BIM del caso base sigue en
+`modelo_e02.ifc` y se inspecciona desde Bonsai.
+
 ## Instalación en Windows
 
 Requisitos: Python 3.12, Git y Blender 4.5 con Bonsai 0.9.0 para editar IFC.
