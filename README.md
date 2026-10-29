@@ -4,6 +4,14 @@ Avance inicial para E01/E02: IFC → Python, voxelización G04, difusión térmi
 Integrantes: pendiente de completar. Punto meteorológico docente: latitud
 **-52.821770**, longitud **-70.896850** (ver `sitio.json`).
 
+## Panel interactivo de ejercicios
+
+Abrir **`panel_termico.html`** en Edge o Chrome. Permite cambiar geometría,
+malla, material, condiciones de borde por cara, fuente, dt y calibración de
+Qmax; muestra campos animados, curvas, comparaciones y exporta CSV/PNG/JSON.
+Es un archivo autónomo sin conexión, para bloques rectangulares de prueba.
+Ver `docs/PANEL_INTERACTIVO.md` para uso, hipótesis y verificación con Python.
+
 ## Semana 2 — solver general 1D/2D/3D
 
 El motor nuevo `termico_cartesiano.py` usa balances de energía por celdas con

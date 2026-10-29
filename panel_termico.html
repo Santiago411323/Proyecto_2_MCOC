@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>THERMA — Laboratorio de difusión</title><style>:root{--ink:#1d302d;--muted:#65756e;--green:#276c59;--lime:#cce888;--bg:#f5f6f1;--line:#e0e5dc;--paper:#fff;--orange:#b87539;font-family:'Segoe UI',Arial,sans-serif;color:var(--ink);background:var(--bg);font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,label.file-label{ -webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #8caf67;outline-offset:2px}button:disabled{opacity:.5;cursor:wait}a{color:inherit;text-decoration:none}[hidden]{display:none!important}.topbar{height:88px;display:flex;align-items:center;justify-content:space-between;padding:0 36px;background:var(--paper);border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;align-items:center;gap:12px;font-size:24px;letter-spacing:3px;font-weight:700}.brandmark{background:var(--green);color:var(--lime);width:42px;height:46px;display:grid;place-items:center;border-radius:12px;font-size:29px;position:relative;letter-spacing:-3px}.brandmark span{position:absolute;right:5px;top:4px;font-size:17px}.brand-sub{display:block;font-size:9px;letter-spacing:2px;color:var(--muted);font-weight:500;margin-top:2px}.top-context{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}.dot{display:inline-block;width:7px;height:7px;background:#6a986c;border-radius:100%;flex-shrink:0}.slash{color:#c3ccc1}.tag{font-size:9px;font-weight:600;letter-spacing:1px;background:#edf1e8;color:#52684f;padding:6px 9px;border-radius:4px}.amber{color:#9a621d;background:#fff2d9}.quiet{border:0;background:transparent;color:var(--muted);font-size:12px;padding:9px 6px;cursor:pointer}.quiet:hover{color:var(--green)}.workspace{display:grid;grid-template-columns:326px minmax(0,1fr);max-width:1900px;margin:auto}.sidebar{background:#fff;border-right:1px solid var(--line);padding:28px 24px;align-self:start}.sidehead h2{font-size:25px;letter-spacing:-.8px;margin:10px 0}.sidehead p{font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:25px}.eyebrow{font-size:10px;font-weight:600;letter-spacing:1.7px;color:var(--muted)}.green{color:var(--green)}label{display:flex;flex-direction:column;gap:7px;font-size:11px;color:#53665b}input[type=number],select{width:100%;height:37px;padding:7px 10px;background:#fbfcf8;border:1px solid #dce3d6;border-radius:6px;color:var(--ink);min-width:0;font-size:12px}select{padding-right:22px}input[type=range]{accent-color:var(--green);min-width:0}.label{margin-bottom:24px}details{border-top:1px solid var(--line)}summary{font-size:12px;font-weight:600;cursor:pointer;list-style:none;padding:18px 0;display:flex;align-items:center;gap:12px}summary:after{content:'+';margin-left:auto;color:var(--muted)}details[open]>summary:after{content:'−'}summary>span{font-size:10px;color:#88988b;letter-spacing:1px}.detail-body{padding:0 0 20px}.detail-body>label{margin:12px 0}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 12px}.field-grid label{line-height:1.4}.dimension-switch,.segments{display:flex;background:#edf1e8;border-radius:7px;padding:4px;gap:3px;margin-bottom:16px}.dimension-switch button,.segments button{border:0;background:transparent;padding:8px 16px;border-radius:5px;color:var(--muted);font-size:12px;flex:1}.dimension-switch button.active,.segments button.active{color:white;background:var(--green)}.hint{font-size:11px;line-height:1.65;color:var(--muted);margin:12px 0 0}.inline-note{font-size:11px;background:#f1f5eb;padding:10px;border-radius:5px;margin-top:12px;color:var(--green)}.formula{background:#f3f5ee;padding:13px 9px;color:var(--green);font-size:11px;text-align:center;margin:14px 0;border-radius:5px}.formula small{display:block;font-size:10px;margin-top:6px;color:var(--muted)}.check{flex-direction:row;align-items:center;line-height:1.5;margin-bottom:15px;font-size:11px}.check input{accent-color:var(--green)}.face{padding:12px 0;border-top:1px dashed var(--line);margin-top:12px}.face-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px}.face-head b{width:28px}.face-head select{flex:1}.face .field-grid{gap:9px}.face input{height:32px}.primary{background:var(--green);border:1px solid var(--green);color:white;border-radius:7px;padding:13px 16px;font-size:12px;font-weight:600}.primary:hover{background:#1b5746}.primary span{float:right;color:var(--lime);font-size:17px;line-height:16px}.secondary{border:1px solid #d4dfce;background:#f6f8f1;color:var(--green);border-radius:6px;padding:8px 11px;font-size:11px}.secondary:hover{background:#eaf1e1}.full{width:100%}.side-actions{padding-top:20px;border-top:1px solid var(--line);position:sticky;bottom:0;background:#fff;padding-bottom:12px;margin-top:8px}.progress-track{height:3px;background:#edf1e9;margin:12px 0 5px;border-radius:4px;overflow:hidden}#progress{width:0;height:100%;background:var(--green);transition:width .2s}.side-actions .hint{font-size:10px;margin:4px 0}main{padding:36px 36px 16px;min-width:0}.hero{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:28px}.hero h1{font-size:clamp(27px,2.8vw,42px);line-height:1.12;letter-spacing:-1.5px;margin:13px 0;color:#203b30;font-weight:500}.hero p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}.hero-stamp{display:flex;align-items:center;gap:12px;color:#697e68;font-size:9px;letter-spacing:1.2px;white-space:nowrap}.hero-stamp small{display:block;color:var(--green);font-size:12px;letter-spacing:2px;margin-top:5px}.orb{height:44px;width:44px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#deedba,#71a07e 55%,#315f4a);box-shadow:inset -8px -3px 11px #2b5c3a33}.result-toolbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}.result-state{font-size:11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.toolbar-actions{display:flex;align-items:center;gap:8px}.file-label{display:block}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}.metrics>div{border-left:1px solid #d8e0d2;padding-left:16px;min-width:0}.metrics>div:first-child{border:0;padding-left:0}.metrics>div>span{font-size:11px;color:var(--muted)}.metrics strong{display:block;font-size:clamp(22px,2.15vw,32px);font-weight:500;letter-spacing:-1px;white-space:nowrap;margin:9px 0 6px;font-variant-numeric:tabular-nums}.metrics strong small{font-size:12px;letter-spacing:0;color:var(--muted)}.metrics>div>small{font-size:10px;color:var(--muted);display:block;line-height:1.6}.visual-grid{display:grid;grid-template-columns:1.12fr 1fr;gap:20px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;min-width:0;box-shadow:0 4px 15px #244c2e03}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}.panel-head h3{font-size:17px;font-weight:500;letter-spacing:-.4px;margin:8px 0 0}.pill{font-size:10px;color:var(--green);background:#edf4e6;border:1px solid #dfebd3;border-radius:20px;padding:7px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}.view-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.view-controls .segments{margin:0}.view-controls .segments button{font-size:10px;padding:6px 8px;white-space:nowrap}.view-controls label{font-size:10px}.view-controls select{font-size:10px;height:30px;padding:4px 20px 4px 6px}.slice-control{flex:1;min-width:100px}.canvas-wrap{position:relative;background:#fafbf7;border:1px solid #edf0e7;border-radius:6px;overflow:hidden}.canvas-wrap canvas{display:block;width:100%;height:290px}.field-tooltip{position:absolute;pointer-events:none;top:10px;left:10px;background:#203b30e8;color:white;padding:7px 10px;border-radius:5px;font-size:11px}.color-legend{display:flex;gap:10px;align-items:center;font-size:10px;color:var(--muted);margin-top:13px;font-variant-numeric:tabular-nums}.gradient{flex:1;height:6px;background:linear-gradient(90deg,#15132b,#553c76,#ac5369,#ed9053,#f2df88);border-radius:3px}.playback{display:flex;align-items:center;gap:10px;margin-top:15px}.play{background:var(--green);color:white;border:0;border-radius:100%;height:30px;width:30px;font-size:10px;flex-shrink:0}.playback input{flex:1}.playback select{width:61px;height:30px;font-size:10px}.field-footer,.chart-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:10px;margin-top:7px;line-height:1.5}.chart{width:100%;height:300px;display:block}.chart-panel .chart{height:300px}.legend{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:0 0 9px;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:5px}.legend i{display:inline-block;width:13px;height:3px;border-radius:2px}.legend button{border:0;background:transparent;color:var(--muted);font-size:10px;padding:0;cursor:pointer}.chart-read{font-size:11px;min-height:18px;color:var(--green);font-variant-numeric:tabular-nums}.numerical-detail{padding:12px;background:#f6f8f1;border-radius:6px;font-size:10px;line-height:1.9;color:var(--muted);margin-top:10px}.chart-footer{align-items:flex-end}.chart-footer .quiet{white-space:nowrap}.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}.small-chart{width:100%;height:190px;display:block}.unit{font-size:11px;color:var(--muted)}.physics-panel{display:grid;grid-template-columns:1fr 1.1fr;gap:35px;margin-top:20px;background:#edf2e6;border:0}.physics-panel h3{font-size:20px;font-weight:500;letter-spacing:-.2px;margin:15px 0 10px}.physics-panel p{font-size:11px;line-height:1.8;color:#5d705d}.physics-copy p{margin-top:0}.physics-copy p:last-child{margin-bottom:0}footer{display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:10px;color:#7b8a78;padding:23px 0 4px;letter-spacing:1px}footer span{letter-spacing:0}.error{padding:13px 16px;border:1px solid #e9c6b1;background:#fff2e9;color:#9b4b29;border-radius:7px;font-size:12px;line-height:1.6;margin-bottom:20px}
+@media(min-width:1550px){.canvas-wrap canvas{height:340px}.chart-panel .chart{height:350px}.sidebar{padding:30px}.workspace{grid-template-columns:350px minmax(0,1fr)}}@media(max-width:1200px){main{padding:27px 22px}.workspace{grid-template-columns:295px minmax(0,1fr)}.sidebar{padding:25px 18px}.hero-stamp{display:none}.visual-grid{grid-template-columns:1fr}.chart-panel .chart{height:260px}.metrics strong{font-size:23px}.metrics{gap:8px}.metrics>div{padding-left:10px}.lower-grid{grid-template-columns:1fr 1fr}.topbar{padding:0 24px}.panel{padding:18px}}@media(max-width:800px){.workspace{display:block}.sidebar{border-right:0;border-bottom:1px solid var(--line)}.sidehead{display:none}#controls{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}.side-actions{position:static}.label{max-width:400px}.topbar{height:72px;padding:0 18px}.top-context{display:none}.brand{font-size:21px}main{padding:26px 18px}.hero h1{font-size:34px}.metrics strong{font-size:25px}.physics-panel{grid-template-columns:1fr;gap:8px}.result-toolbar{align-items:flex-start}.toolbar-actions{flex-wrap:wrap;justify-content:flex-end}.metrics{grid-template-columns:1fr 1fr;gap:20px}.metrics>div:nth-child(3){border:0;padding-left:0}.lower-grid{grid-template-columns:1fr}footer{flex-wrap:wrap}.canvas-wrap canvas{height:290px}}@media(max-width:440px){#controls{display:block}.hero h1{font-size:29px}.panel{padding:15px}.topbar .quiet{font-size:11px}.toolbar-actions{gap:0}.quiet{font-size:11px}.metrics strong{font-size:23px}.result-toolbar{flex-direction:column;gap:5px}.view-controls{gap:8px}.chart-footer{flex-wrap:wrap}.sidehead{display:block}input[type=number],select{font-size:16px}button{min-height:34px}}
+</style></head>
+<body>
+<header class="topbar"><a class="brand" href="#"><span class="brandmark">T<span>°</span></span><span>THERMA<span class="brand-sub">LABORATORIO TÉRMICO</span></span></a><div class="top-context"><span class="dot"></span>Proyecto 2 <span class="slash">/</span> Grupo 9 <span class="tag">EXPERIMENTOS</span></div><button class="quiet" id="helpBtn">Cómo funciona ↗</button></header>
+<div class="workspace">
+<aside class="sidebar"><div class="sidehead"><div class="eyebrow">TU EXPERIMENTO</div><h2>Define la física<span class="green">.</span></h2><p>Un cambio en los datos. Una nueva respuesta térmica.</p></div>
+<label class="label">Punto de partida<select id="preset"><option value="robin">Bloque 3 × 3 × 0,60 · Robin</option><option value="d20">Bloque · Dirichlet a 20 °C</option><option value="d30">Bloque · Dirichlet a 30 °C</option><option value="adiabatic">Bloque · Neumann adiabático</option><option value="sine">Verificación sinusoidal 1D</option><option value="bar3">Barra 4 × 2 × 1 · 3D</option></select></label>
+<form id="controls">
+<details open><summary><span>01</span> Geometría y malla</summary><div class="detail-body"><div class="dimension-switch" role="group" aria-label="Dimensión del solver"><button type="button" data-dim="1">1D</button><button type="button" data-dim="2">2D</button><button type="button" data-dim="3" class="active">3D</button></div><div class="field-grid"><label>Largo x [m]<input id="lx" type="number" step="any" value="3" min="0.001"></label><label>Celdas x<input id="nx" type="number" value="30" min="2" max="160"></label><label data-axis="2">Ancho y [m]<input id="ly" type="number" step="any" value="3" min="0.001"></label><label data-axis="2">Celdas y<input id="ny" type="number" value="30" min="2" max="160"></label><label data-axis="3">Alto z [m]<input id="lz" type="number" step="any" value="0.6" min="0.001"></label><label data-axis="3">Celdas z<input id="nz" type="number" value="6" min="2" max="160"></label></div><p class="hint" id="dimensionHint"></p></div></details>
+<details open><summary><span>02</span> Material y estado inicial</summary><div class="detail-body"><div class="field-grid"><label>k [W/(m·K)]<input id="k" type="number" step="any" min="0.00001" value="2"></label><label>ρ [kg/m³]<input id="rho" type="number" step="any" value="2400" min="0.001"></label><label>cₚ [J/(kg·K)]<input id="cp" type="number" step="any" value="900" min="0.001"></label><label>Temperatura base [°C]<input id="initial" type="number" step="any" value="20"></label></div><label>Distribución inicial<select id="initialType"><option value="uniform">Uniforme</option><option value="sine">Sinusoidal: T₀ + A · ∏ sen(πxᵢ/Lᵢ)</option></select></label><label id="amplitudeLabel">Amplitud A [°C]<input id="amplitude" type="number" step="any" value="30"></label><div class="inline-note" id="alphaRead">α = k / (ρ · cₚ)</div></div></details>
+<details><summary><span>03</span> Condiciones de borde</summary><div class="detail-body"><div class="field-grid"><label>Aplicar a todas<select id="globalType"><option value="D">Dirichlet · temperatura fija</option><option value="N">Neumann · flujo impuesto</option><option value="R" selected>Robin · convección</option></select></label><label>T borde / aire [°C]<input id="globalTemp" type="number" step="any" value="20"></label><label>h [W/(m²·K)]<input id="globalH" type="number" step="any" value="10" min="0"></label><label>Flujo saliente [W/m²]<input id="globalFlux" type="number" step="any" value="0"></label><label>R aislación [m²·K/W]<input id="globalR" type="number" step="any" value="0" min="0"></label></div><button type="button" id="applyFaces" class="secondary full">Aplicar a las caras activas ↓</button><p class="hint">Después puedes editar cada cara por separado.</p><div id="faces"></div><p class="hint">Normal exterior. Flujo positivo = calor que sale. Robin: ∂T/∂n = −(h/k)(T−Taire). La aislación R se suma en serie.</p></div></details>
+<details open><summary><span>04</span> Fuente de calor</summary><div class="detail-body"><label>Generación volumétrica<select id="source"><option value="none">Sin generación</option><option value="constant">Constante en el tiempo</option><option value="pulse" selected>Pulso cosenoidal</option></select></label><div id="sourceFields"><label id="periodLabel">Duración del pulso [días]<input id="period" type="number" step="any" min="0.00001" value="2"></label><div class="formula">q(t) = Qmax / 2 · [1 − cos(2πt / P)]<small>0 ≤ t ≤ P; cero después</small></div><label class="check"><input id="calibrate" type="checkbox" checked> Encontrar Qmax para el objetivo central</label><div class="field-grid"><label id="targetLabel">Objetivo máximo [°C]<input id="target" type="number" step="any" value="70"></label><label id="qmaxLabel">Qmax [W/m³]<input id="qmax" type="number" step="any" value="1905.58"></label></div></div></div></details>
+<details><summary><span>05</span> Tiempo y precisión</summary><div class="detail-body"><div class="field-grid"><label>Duración [días]<input id="days" type="number" step="any" min="0.00001" value="14"></label><label>Selección de Δt<select id="dtMode"><option value="auto">Automático estable</option><option value="manual">Manual</option></select></label><label id="factorLabel">Fracción del Δt crítico<input id="factor" type="number" step="any" min="0.01" max="1" value="0.7"></label><label id="dtLabel">Δt manual [s]<input id="dt" type="number" step="any" min="0.000001" value="300"></label></div><p class="hint">El automático usa el límite de todas las celdas y resuelve el pulso con al menos 200 pasos. Un Δt manual inestable se rechaza.</p></div></details>
+</form><div class="side-actions"><button id="run" class="primary full">Ejecutar simulación <span>↗</span></button><button id="cancel" class="secondary full" hidden>Detener cálculo</button><div class="progress-track"><div id="progress"></div></div><div class="hint" id="status" aria-live="polite">Listo para explorar.</div></div>
+</aside>
+<main>
+<section class="hero"><div><div class="eyebrow">DE LA ECUACIÓN A LA INTUICIÓN</div><h1>El calor, en movimiento.</h1><p>Explora la difusión térmica. Cambia una variable y observa qué sucede.</p></div><div class="hero-stamp"><span class="orb"></span><span>SOLVER CARTESIANO<small>1D / 2D / 3D</small></span></div></section>
+<div class="result-toolbar"><div class="result-state"><span class="dot"></span><span id="resultState">Preparando el primer experimento</span><span id="stale" class="tag amber" hidden>CAMBIOS SIN CALCULAR</span></div><div class="toolbar-actions"><button class="quiet" id="configExport">Guardar ajustes ↓</button><label class="quiet file-label">Cargar ajustes ↑<input id="configImport" type="file" accept="application/json,.json" hidden></label></div></div>
+<div id="error" class="error" role="alert" hidden></div>
+<section class="metrics"><div><span>Máximo del centro</span><strong id="metricPeak">—<small> °C</small></strong><small id="metricTime">Momento del máximo</small></div><div><span>Generación Qmax</span><strong id="metricQ">—<small> W/m³</small></strong><small id="metricQNote">Definida por el experimento</small></div><div><span>Δt usado / crítico</span><strong id="metricDt">—</strong><small id="metricMesh">Malla del dominio</small></div><div><span>Balance energético</span><strong id="metricEnergy">—<small> J</small></strong><small>Residual máximo · energía almacenada − aportes</small></div></section>
+<div class="visual-grid"><section class="panel field-panel"><div class="panel-head"><div><div class="eyebrow">DISTRIBUCIÓN ESPACIAL</div><h3 id="fieldTitle">Campo de temperatura</h3></div><span class="pill" id="frameLabel">Día 0,00</span></div><div class="view-controls"><div class="segments"><button id="viewFlat" class="active">Plano</button><button id="viewIso">Volumen 3D</button></div><label>Corte<select id="plane"><option value="xy">XY · ancho y largo</option><option value="xz">XZ · largo y altura</option><option value="yz">YZ · ancho y altura</option></select></label><label class="slice-control"><span id="sliceLabel">Posición del corte</span><input id="slice" type="range" min="0" max="5" value="3"></label></div><div class="canvas-wrap"><canvas id="fieldCanvas" role="img" aria-label="Distribución de temperatura en el dominio"></canvas><div id="fieldTooltip" class="field-tooltip" hidden></div></div><div class="color-legend"><span id="colorMin">20 °C</span><div class="gradient"></div><span id="colorMax">70 °C</span></div><div class="playback"><button id="play" class="play" aria-label="Reproducir animación">▶</button><input id="timeline" type="range" min="0" max="64" value="0" aria-label="Instante de la animación"><select id="speed" aria-label="Velocidad de reproducción"><option value="1">1×</option><option value="2">2×</option><option value="0.5">0,5×</option></select></div><div class="field-footer"><span id="fieldNote">Celdas centradas · escala de colores fija</span><button id="pngExport" class="quiet">Imagen PNG ↓</button></div></section>
+<section class="panel chart-panel"><div class="panel-head"><div><div class="eyebrow">RESPUESTA TEMPORAL</div><h3>El centro del dominio</h3></div><button id="pin" class="secondary">Comparar +</button></div><div id="legend" class="legend"></div><canvas id="centerCanvas" class="chart" role="img" aria-label="Temperatura central en el tiempo"></canvas><div id="hoverRead" class="chart-read">Desliza sobre la curva para consultar un instante.</div><div class="numerical-detail" id="numericalDetail"></div><div class="chart-footer"><span id="exactNote">Se calibra el máximo temporal, no la temperatura al terminar el pulso.</span><button id="csvExport" class="quiet">Datos CSV ↓</button></div></section></div>
+<div class="lower-grid"><section class="panel"><div class="panel-head"><div><div class="eyebrow">GENERACIÓN INTERNA</div><h3>El pulso de calor</h3></div><span class="unit">W/m³</span></div><canvas id="sourceCanvas" class="small-chart" role="img" aria-label="Generación volumétrica de calor en el tiempo"></canvas></section><section class="panel"><div class="panel-head"><div><div class="eyebrow">CONSERVACIÓN</div><h3>¿A dónde va la energía?</h3></div><span class="unit">MJ</span></div><div class="legend"><span><i style="background:#317f75"></i>Almacenada</span><span><i style="background:#c88d4e"></i>Aportes netos</span></div><canvas id="energyCanvas" class="small-chart" role="img" aria-label="Cambio de energía y aportes acumulados"></canvas></section></div>
+<section class="panel physics-panel" id="physics"><div><div class="eyebrow">LA FÍSICA DETRÁS</div><h3>ρ cₚ ∂T/∂t = ∇ · (k ∇T) + q(t)</h3><p>Balance de energía explícito por celdas. Propiedades constantes. Bordes por cara.</p></div><div class="physics-copy"><p><b>Dirichlet</b> fija la temperatura de la superficie. <b>Neumann</b> prescribe el flujo saliente; cero significa aislamiento. <b>Robin</b> intercambia calor con el ambiente y permite añadir aislación.</p><p>El panel modela bloques rectangulares para estudiar física. No incorpora el IFC, las vertidas, el clima ni una ley de hidratación de la fundación. La calibración busca el máximo dentro del intervalo que elijas.</p></div></section>
+<footer>THERMA / G9 <span>Cálculo local · sin subir tus datos · sin conexión a internet</span><button class="quiet" id="fieldExport">Exportar campo actual CSV ↓</button></footer>
+</main></div>
+<script id="solver-source" type="text/plain">/* Solver cartesiano explícito, propiedades escalares constantes, unidades SI.
+   Motor independiente del DOM: se ejecuta en Worker y se verifica contra Python. */
+(function(root){
+'use strict';
+const DAY=86400;
+function pulseIntegral(t,P){const u=Math.max(0,Math.min(t,P));return u/2-P*Math.sin(2*Math.PI*u/P)/(4*Math.PI);}
+function shape(t,p){return p.source==='none'?0:p.source==='constant'?1:(t>=0&&t<=p.period?0.5*(1-Math.cos(2*Math.PI*t/p.period)):0);}
+function meanSource(a,b,p){return p.source==='none'?0:p.source==='constant'?1:(pulseIntegral(b,p.period)-pulseIntegral(a,p.period))/(b-a);}
+function make(p){
+ const dim=p.dim, n=p.n.slice(0,dim), L=p.L.slice(0,dim);
+ if(![1,2,3].includes(dim)||n.some(v=>!Number.isInteger(v)||v<2||v>160)||L.some(v=>!Number.isFinite(v)||v<=0))throw Error('Revisa las dimensiones y el número de celdas (2–160 por eje).');
+ if(![p.k,p.rho,p.cp,p.days].every(v=>Number.isFinite(v)&&v>0))throw Error('Material y duración deben ser positivos.');
+ if(p.source==='pulse'&&(!Number.isFinite(p.period)||p.period<=0))throw Error('La duración del pulso debe ser positiva.');
+ if(![p.initial,p.amplitude,p.target,p.qmax].every(Number.isFinite))throw Error('Temperaturas y fuente deben ser números finitos.');
+ const nx=n[0],ny=n[1]||1,nz=n[2]||1,N=nx*ny*nz, dx=L.map((v,a)=>v/n[a]),alpha=p.k/(p.rho*p.cp), vol=dx.reduce((a,b)=>a*b,1), C=p.rho*p.cp*vol;
+ if(N>50000)throw Error('La malla supera 50.000 celdas. Reduce las celdas por eje.');
+ const strides=[1,nx,nx*ny],rates=dx.map(d=>alpha/(d*d)), sum=new Float64Array(N),gB=new Float64Array(N),bB=new Float64Array(N),init=new Float64Array(N);
+ for(let a=0;a<dim;a++)for(let s=0;s<2;s++){
+  const b=p.faces[2*a+s];if(!b||!['D','N','R'].includes(b.type)||![b.temp,b.flux,b.h,b.R].every(Number.isFinite)||b.h<0||b.R<0)throw Error('Revisa las condiciones de borde: h y R deben ser ≥0.');
+ }
+ for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
+  const i=x+nx*(y+ny*z),coords=[x,y,z];let phi=1;
+  for(let a=0;a<dim;a++){
+   phi*=Math.sin(Math.PI*(coords[a]+.5)/n[a]);
+   sum[i]+=rates[a]*((coords[a]>0?1:0)+(coords[a]<n[a]-1?1:0));
+   for(let s=0;s<2;s++)if(coords[a]===(s?n[a]-1:0)){
+    const b=p.faces[2*a+s];let rate=0;
+    if(b.type==='N')bB[i]-=b.flux/(p.rho*p.cp*dx[a]);
+    else {
+     rate=b.type==='D'?2*rates[a]:(b.h===0?0:1/(dx[a]/(2*p.k)+b.R+1/b.h)/(p.rho*p.cp*dx[a]));
+     gB[i]+=rate;bB[i]+=rate*b.temp;sum[i]+=rate;
+    }
+   }
+  }
+  init[i]=p.initial+(p.initialType==='sine'?p.amplitude*phi:0);
+ }
+ let dtMax=Infinity;for(const s of sum)if(s>0)dtMax=Math.min(dtMax,1/s);
+ if(!Number.isFinite(p.factor)||p.factor<=0||p.factor>1)throw Error('El factor de estabilidad debe estar entre 0 y 1.');
+ let dt=p.dtMode==='manual'?p.dt:p.factor*dtMax;
+ if(!Number.isFinite(dt)||dt<=0||dt>dtMax*(1+1e-12))throw Error(`Δt inestable. Para esta malla debe ser ≤ ${dtMax.toFixed(4)} s.`);
+ if(p.dtMode!=='manual'&&p.source==='pulse')dt=Math.min(dt,p.period/200);
+ const duration=p.days*DAY, frames=Math.min(100,Math.max(20,p.frames||65));
+ if(p.source==='pulse'&&duration<p.period)throw Error('La simulación debe cubrir el pulso completo.');
+ const steps=Math.ceil(duration/dt)+2;
+ if(steps*N*(p.calibrate?3:1)>3e8)throw Error('Este cálculo es demasiado grande para el navegador. Reduce la malla o la duración; usa Python para mallas grandes.');
+ if(steps>200000)throw Error('Demasiados pasos. Aumenta Δt o reduce la duración.');
+ const mids=n.map(v=>v%2?[Math.floor(v/2)]:[v/2-1,v/2]);const mid=[];
+ for(const z of mids[2]||[0])for(const y of mids[1]||[0])for(const x of mids[0])mid.push(x+nx*(y+ny*z));
+ const center=T=>mid.reduce((s,i)=>s+T[i],0)/mid.length;
+ function step(T,out,dt,unit,q){
+  for(let i=0;i<N;i++)out[i]=T[i]+dt*(-gB[i]*T[i]+(unit?0:bB[i])+q/(p.rho*p.cp));
+  for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
+   const i=x+nx*(y+ny*z),coords=[x,y,z];
+   for(let a=0;a<dim;a++)if(coords[a]<n[a]-1){const j=i+strides[a],f=dt*rates[a]*(T[j]-T[i]);out[i]+=f;out[j]-=f;}
+  }
+ }
+ return {p,n,L,nx,ny,nz,N,dx,alpha,vol,C,dt,dtMax,duration,frames,steps,init,gB,bB,center,step};
+}
+function solve(p,progress=()=>{}){
+ const m=make(p), {N,dt,duration}=m;let qmax=p.source==='none'?0:p.qmax;
+ const nextTime=t=>{let end=Math.min(t+dt,duration);if(p.source==='pulse'&&t<p.period&&end>p.period)end=p.period;return end;};
+ if(p.calibrate){
+  if(p.source==='none')throw Error('Para calibrar Qmax selecciona una fuente constante o un pulso.');
+  let B=m.init.slice(),U=new Float64Array(N),b=new Float64Array(N),u=new Float64Array(N),t=0,step=0,limit=Infinity;
+  if(m.center(B)>=p.target)throw Error('El centro ya alcanza el objetivo en la condición inicial.');
+  while(t<duration){let end=nextTime(t),h=end-t,q=meanSource(t,end,p);m.step(B,b,h,false,0);m.step(U,u,h,true,q);[B,b]=[b,B];[U,u]=[u,U];t=end;step++;
+   const base=m.center(B),gain=m.center(U);
+   if(base>=p.target)throw Error('Los bordes o el estado inicial ya alcanzan el objetivo sin fuente positiva.');
+   if(gain>1e-15)limit=Math.min(limit,(p.target-base)/gain);
+   if(step%250===0)progress(.45*t/duration);
+  }
+  if(!Number.isFinite(limit)||limit<=0)throw Error('No hay una calibración positiva para estos datos.');qmax=limit;
+ }
+ let T=m.init.slice(),out=new Float64Array(N),t=0,step=0,initialEnergy=0,net=0,residual=0,maxCenter=-Infinity,peakTime=0,maxField=-Infinity;
+ const history=[],fields=[],frameTimes=[],targets=Array.from({length:m.frames},(_,i)=>duration*i/(m.frames-1));let frame=0;
+ for(const v of T)initialEnergy+=v*m.C;
+ function stats(time){let min=Infinity,max=-Infinity,E=0;for(const v of T){min=Math.min(min,v);max=Math.max(max,v);E+=v*m.C;}const center=m.center(T);
+  if(center>maxCenter+1e-8){maxCenter=center;peakTime=time;}maxField=Math.max(maxField,max);
+  const err=E-initialEnergy-net;residual=Math.max(residual,Math.abs(err));
+  history.push({t:time,center,min,max,energy:E-initialEnergy,net,residual:err,q:qmax*shape(time,p)});
+ }
+ stats(0);fields.push(new Float32Array(T));frameTimes.push(0);frame=1;
+ while(t<duration){const end=nextTime(t),h=end-t,q=qmax*meanSource(t,end,p);let P=q*m.vol*N;
+  for(let i=0;i<N;i++)P+=m.C*(m.bB[i]-m.gB[i]*T[i]);net+=h*P;
+  m.step(T,out,h,false,q);
+  while(frame<targets.length&&targets[frame]<=end+1e-8){const w=Math.min(1,(targets[frame]-t)/h),A=new Float32Array(N);for(let i=0;i<N;i++)A[i]=T[i]*(1-w)+out[i]*w;fields.push(A);frameTimes.push(targets[frame]);frame++;}
+  [T,out]=[out,T];t=end;step++;stats(t);if(step%250===0)progress((p.calibrate?.45:0)+(p.calibrate?.55:1)*t/duration);
+ }
+ let exactError=null;
+ const exactOK=p.initialType==='sine'&&p.source==='none'&&p.faces.slice(0,2*p.dim).every(b=>b.type==='D'&&Math.abs(b.temp-p.initial)<1e-12);
+ if(exactOK){exactError=0;let lambda=m.L.reduce((s,L)=>s+(Math.PI/L)**2,0);for(let z=0;z<m.nz;z++)for(let y=0;y<m.ny;y++)for(let x=0;x<m.nx;x++){
+  let phi=1;const co=[x,y,z];for(let a=0;a<p.dim;a++)phi*=Math.sin(Math.PI*(co[a]+.5)/m.n[a]);
+  exactError=Math.max(exactError,Math.abs(T[x+m.nx*(y+m.ny*z)]-(p.initial+p.amplitude*phi*Math.exp(-m.alpha*lambda*duration))));
+ }}
+ for(const v of T)if(!Number.isFinite(v))throw Error('El cálculo dejó de ser finito. Revisa los parámetros.');
+ return {config:p,n:m.n,L:m.L,dx:m.dx,alpha:m.alpha,dt,dtMax:m.dtMax,qmax,history,fields,frameTimes,maxCenter,peakTime,maxField,residual,exactError,steps:step,N,calibrationHorizon:duration};
+}
+const api={make,solve,pulseIntegral,shape};
+if(typeof module!=='undefined'&&module.exports)module.exports=api;
+if(typeof WorkerGlobalScope!=='undefined'&&root instanceof WorkerGlobalScope)root.onmessage=e=>{try{const result=solve(e.data,p=>root.postMessage({type:'progress',value:p}));root.postMessage({type:'result',result},result.fields.map(v=>v.buffer));}catch(err){root.postMessage({type:'error',message:err.message});}};
+root.ThermalSolver=api;
+})(typeof self!=='undefined'?self:globalThis);
+</script><script>(function(){'use strict';
+const $=id=>document.getElementById(id),num=id=>Number($(id).value),DAY=86400;
+const colors=['#317f75','#c88d4e','#8370a5','#bd6370','#6c88a8'];
+const S={dim:3,result:null,pins:[],frame:0,worker:null,playing:false,playTime:0,view:'flat',lastConfig:null,runId:0};
+const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('es-CL',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+const sci=n=>Math.abs(n)<.001&&n!==0?n.toExponential(2):fmt(n,3);
+const faceNames=['x−','x+','y−','y+','z−','z+'];
+function buildFaces(){
+ $('faces').innerHTML=faceNames.map((name,i)=>`<div class="face" data-face="${i}"><div class="face-head"><b>${name}</b><select id="ft${i}" aria-label="Tipo de borde ${name}"><option value="D">Dirichlet</option><option value="N">Neumann</option><option value="R" selected>Robin</option></select></div><div class="field-grid"><label data-kind="temp">T borde / aire [°C]<input id="fb${i}" type="number" step="any" value="20"></label><label data-kind="flux">Flujo saliente [W/m²]<input id="fq${i}" type="number" step="any" value="0"></label><label data-kind="h">h [W/(m²·K)]<input id="fh${i}" type="number" step="any" value="10" min="0"></label><label data-kind="R">R [m²·K/W]<input id="fr${i}" type="number" step="any" value="0" min="0"></label></div></div>`).join('');
+ for(let i=0;i<6;i++)$('ft'+i).onchange=()=>{visibility();dirty();};
+}
+function visibility(){
+ document.querySelectorAll('[data-axis]').forEach(e=>e.hidden=Number(e.dataset.axis)>S.dim);
+ document.querySelectorAll('[data-dim]').forEach(e=>{e.classList.toggle('active',Number(e.dataset.dim)===S.dim);e.setAttribute('aria-pressed',String(Number(e.dataset.dim)===S.dim));});
+ document.querySelectorAll('[data-face]').forEach(e=>{const i=Number(e.dataset.face),type=$('ft'+i).value;e.hidden=i>=2*S.dim;e.querySelectorAll('[data-kind]').forEach(f=>{f.hidden=type==='D'?f.dataset.kind!=='temp':type==='N'?f.dataset.kind!=='flux':f.dataset.kind==='flux';});});
+ $('amplitudeLabel').hidden=$('initialType').value!=='sine';
+ $('sourceFields').hidden=$('source').value==='none';$('periodLabel').hidden=$('source').value!=='pulse';document.querySelector('.formula').hidden=$('source').value!=='pulse';
+ $('targetLabel').hidden=!$('calibrate').checked;$('qmaxLabel').hidden=$('calibrate').checked;
+ $('factorLabel').hidden=$('dtMode').value==='manual';$('dtLabel').hidden=$('dtMode').value!=='manual';
+ $('alphaRead').textContent=`α = ${sci(num('k')/(num('rho')*num('cp')))} m²/s · β = h/k por cara`;
+ $('dimensionHint').textContent=S.dim===1?'1D: temperatura uniforme en la sección transversal; área de referencia 1 m².':S.dim===2?'2D: uniforme en la dirección no resuelta; espesor de referencia 1 m.':'3D: se resuelven largo, ancho y altura; todas las caras son editables.';
+}
+function gather(){return {dim:S.dim,L:['lx','ly','lz'].map(num),n:['nx','ny','nz'].map(num),k:num('k'),rho:num('rho'),cp:num('cp'),initial:num('initial'),initialType:$('initialType').value,amplitude:num('amplitude'),source:$('source').value,period:num('period')*DAY,qmax:num('qmax'),calibrate:$('calibrate').checked&&$('source').value!=='none',target:num('target'),days:num('days'),dtMode:$('dtMode').value,dt:num('dt'),factor:num('factor'),frames:65,faces:faceNames.map((_,i)=>({type:$('ft'+i).value,temp:num('fb'+i),flux:num('fq'+i),h:num('fh'+i),R:num('fr'+i)}))};}
+function setConfig(p){
+ if(!p||![1,2,3].includes(p.dim)||!Array.isArray(p.L)||p.L.length!==3||!Array.isArray(p.n)||p.n.length!==3||!Array.isArray(p.faces)||p.faces.length!==6)throw Error('El archivo no contiene ajustes válidos de THERMA.');
+ S.dim=p.dim;['lx','ly','lz'].forEach((id,i)=>$(id).value=p.L[i]);['nx','ny','nz'].forEach((id,i)=>$(id).value=p.n[i]);
+ ['k','rho','cp','initial','initialType','amplitude','source','qmax','target','days','dtMode','dt','factor'].forEach(id=>{if(p[id]!==undefined)$(id).value=p[id];});$('period').value=p.period/DAY;$('calibrate').checked=!!p.calibrate;
+ p.faces.forEach((b,i)=>{if(!['D','N','R'].includes(b.type))throw Error('Tipo de borde desconocido.');$('ft'+i).value=b.type;[['fb','temp'],['fq','flux'],['fh','h'],['fr','R']].forEach(([prefix,key])=>$(prefix+i).value=b[key]);});
+ visibility();dirty();
+}
+function applyFaces(){for(let i=0;i<2*S.dim;i++){$('ft'+i).value=$('globalType').value;$('fb'+i).value=$('globalTemp').value;$('fq'+i).value=$('globalFlux').value;$('fh'+i).value=$('globalH').value;$('fr'+i).value=$('globalR').value;}visibility();dirty();}
+function dirty(){if(S.result)$('stale').hidden=false;visibility();}
+function preset(name){
+ const p={dim:3,L:[3,3,.6],n:[30,30,6],k:2,rho:2400,cp:900,initial:20,initialType:'uniform',amplitude:30,source:'pulse',period:2*DAY,qmax:1905.58,calibrate:true,target:70,days:14,dtMode:'auto',dt:300,factor:.7,faces:Array.from({length:6},()=>({type:'R',temp:20,flux:0,h:10,R:0}))};
+ if(name==='d20'||name==='d30')p.faces.forEach(b=>{b.type='D';b.temp=name==='d30'?30:20;});
+ if(name==='adiabatic')p.faces.forEach(b=>b.type='N');
+ if(name==='bar3'){p.L=[4,2,1];p.n=[32,16,8];p.faces.forEach(b=>b.type='D');}
+ if(name==='sine'){p.dim=1;p.L=[1,1,1];p.n=[40,16,8];p.initialType='sine';p.amplitude=40;p.source='none';p.calibrate=false;p.days=1;p.faces.forEach(b=>b.type='D');}
+ setConfig(p);$('globalType').value=p.faces[0].type;$('globalTemp').value=p.faces[0].temp;
+}
+function error(message){$('error').textContent=message;$('error').hidden=false;$('status').textContent='Revisa los datos y vuelve a ejecutar.';}
+function run(){
+ if(S.worker)S.worker.terminate();stop();$('error').hidden=true;const p=gather();
+ if(!['uniform','sine'].includes(p.initialType)||!['none','constant','pulse'].includes(p.source)||!['auto','manual'].includes(p.dtMode))return error('Selecciona opciones válidas.');
+ const blob=new Blob([$('solver-source').textContent],{type:'text/javascript'}),url=URL.createObjectURL(blob);
+ const worker=new Worker(url);URL.revokeObjectURL(url);S.worker=worker;S.runId++;const id=S.runId;
+ $('run').disabled=true;$('cancel').hidden=false;$('progress').style.width='3%';$('status').textContent=p.calibrate?'Calculando la respuesta y calibrando Qmax…':'Integrando el balance de energía…';
+ worker.onmessage=e=>{if(id!==S.runId)return;const msg=e.data;if(msg.type==='progress'){$('progress').style.width=Math.max(3,msg.value*100)+'%';return;}
+  finish();if(msg.type==='error'){error(msg.message);return;}
+  S.result=msg.result;S.lastConfig=JSON.parse(JSON.stringify(p));S.frame=0;S.hasPlayed=false;$('timeline').max=S.result.fields.length-1;
+  $('stale').hidden=true;const labels={D:'Dirichlet',N:'Neumann',R:'Robin'},types=[...new Set(p.faces.slice(0,2*p.dim).map(b=>labels[b.type]))];
+  S.result.label=`${p.dim}D · ${types.join(' + ')}`;$('resultState').textContent=`${S.result.label} · ${S.result.N.toLocaleString('es-CL')} celdas`;
+  $('metricPeak').innerHTML=`${fmt(S.result.maxCenter)}<small> °C</small>`;
+  $('metricTime').textContent=`Día ${fmt(S.result.peakTime/DAY,3)} · primer máximo / inicio de meseta`;
+  $('metricQ').innerHTML=`${fmt(S.result.qmax,1)}<small> W/m³</small>`;
+  $('metricQNote').textContent=p.source==='none'?'Fuente desactivada':p.calibrate?`Calibrado para ${fmt(p.target,1)} °C en el centro`:'Intensidad definida manualmente';
+  $('metricDt').innerHTML=`${fmt(S.result.dt,1)} <small>/ ${fmt(S.result.dtMax,1)} s</small>`;
+  $('metricMesh').textContent=`Δ = ${S.result.dx.map(v=>fmt(v,4)).join(' × ')} m`;
+  $('metricEnergy').innerHTML=`${S.result.residual.toExponential(1)}<small> J</small>`;
+  $('numericalDetail').textContent=`α = ${S.result.alpha.toExponential(4)} m²/s · ${S.result.steps.toLocaleString('es-CL')} pasos · malla ${S.result.n.join(' × ')} · máximo en todo el campo: ${fmt(S.result.maxField)} °C`;
+  $('exactNote').textContent=S.result.exactError!==null?`Verificación sinusoidal: error máximo final vs. solución exacta = ${S.result.exactError.toExponential(3)} °C.`:p.calibrate?'Qmax se calibra al máximo central dentro de la duración seleccionada. Cada simulación puede tener un Qmax diferente.':'Una fuente positiva añade energía; los bordes determinan cuánto calor entra o sale.';
+  $('status').textContent='Simulación terminada. Puedes reproducir y exportar los resultados.';$('progress').style.width='100%';
+  try{localStorage.setItem('therma-config-v1',JSON.stringify(p));}catch(_){}
+  const peak=S.result.peakTime;S.frame=S.result.frameTimes.reduce((best,t,i)=>Math.abs(t-peak)<Math.abs(S.result.frameTimes[best]-peak)?i:best,0);
+  updateViewControls();renderLegend();render();
+ };
+ worker.onerror=e=>{finish();error('No se pudo ejecutar el motor: '+e.message);};worker.postMessage(p);
+}
+function finish(){if(S.worker)S.worker.terminate();S.worker=null;$('run').disabled=false;$('cancel').hidden=true;}
+function stop(){S.playing=false;$('play').textContent='▶';$('play').setAttribute('aria-label','Reproducir animación');}
+function togglePlay(){if(!S.result)return;if(S.playing){stop();return;}if(!S.hasPlayed||S.frame>=S.result.fields.length-1)S.frame=0;S.hasPlayed=true;S.playing=true;S.playTime=0;$('play').textContent='Ⅱ';$('play').setAttribute('aria-label','Pausar animación');requestAnimationFrame(tick);}
+function tick(t){if(!S.playing)return;const interval=140/Number($('speed').value);if(!S.playTime||t-S.playTime>interval){S.playTime=t;render();if(S.frame>=S.result.fields.length-1){stop();return;}S.frame++;}requestAnimationFrame(tick);}
+function ctx(id){const c=$(id),r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(100,r.width),h=Math.max(100,r.height);c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);const g=c.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,w,h);return {g,w,h,c};}
+const stops=[[21,19,43],[85,60,118],[172,83,105],[237,144,83],[242,223,136]];
+function heat(v,lo,hi){let f=Math.max(0,Math.min(.999999,(v-lo)/(hi-lo||1)))*4,i=Math.floor(f),a=stops[i],b=stops[i+1],t=f-i;return `rgb(${a.map((v,j)=>Math.round(v*(1-t)+b[j]*t)).join(',')})`;}
+function range(){const r=S.result;let lo=r.config.initial,hi=r.maxField;for(const h of r.history){lo=Math.min(lo,h.min);hi=Math.max(hi,h.max);}if(hi-lo<1e-4)hi=lo+1;return [lo,hi];}
+function updateViewControls(){const r=S.result;if(!r)return;const dim=r.config.dim;$('viewIso').hidden=dim!==3;$('plane').parentElement.hidden=dim!==3;$('slice').parentElement.hidden=dim!==3;if(dim!==3)S.view='flat';const axis={xy:2,xz:1,yz:0}[$('plane').value],n=r.n[axis]||1;$('slice').max=n-1;$('slice').value=Math.min(Number($('slice').value)||Math.floor(n/2),n-1);$('viewFlat').classList.toggle('active',S.view==='flat');$('viewIso').classList.toggle('active',S.view==='iso');}
+function field(){const r=S.result;if(!r)return;const {g,w,h}=ctx('fieldCanvas'),F=r.fields[S.frame], [lo,hi]=range(),nx=r.n[0],ny=r.n[1]||1,nz=r.n[2]||1;
+ const val=(x,y=0,z=0)=>F[x+nx*(y+ny*z)];g.font='11px Segoe UI';g.fillStyle='#65756e';
+ $('colorMin').textContent=fmt(lo,1)+' °C';$('colorMax').textContent=fmt(hi,1)+' °C';$('frameLabel').textContent='Día '+fmt(r.frameTimes[S.frame]/DAY,3);$('timeline').value=S.frame;
+ const plane=$('plane').value,axis=plane==='xy'?2:plane==='xz'?1:0,cut=Math.min(Number($('slice').value), (r.n[axis]||1)-1),pos=(cut+.5)*(r.dx[axis]||1);
+ $('sliceLabel').textContent=`${'xyz'[axis]} = ${fmt(pos,3)} m`;
+ $('fieldTitle').textContent=r.config.dim===1?'Perfil de temperatura':S.view==='iso'?'Bloque 3D y corte interior':'Campo de temperatura';
+ $('fieldNote').textContent=r.config.dim===1?'Perfil 1D · bordes en las caras, valores en centros de celda':r.config.dim===2?'Campo 2D · espesor de referencia 1 m':`Corte interno ${plane.toUpperCase()} a ${'xyz'[axis]} = ${fmt(pos,3)} m · no es la cara exterior`;
+ if(r.config.dim===1){
+  $('fieldCanvas')._plot=null;
+  const left=47,right=w-20,top=20,bottom=h-68;
+  g.strokeStyle='#dce3d6';g.lineWidth=1;
+  for(let j=0;j<=4;j++){const y=bottom-(bottom-top)*j/4;g.beginPath();g.moveTo(left,y);g.lineTo(right,y);g.stroke();g.fillStyle='#65756e';g.textAlign='right';g.fillText(fmt(lo+(hi-lo)*j/4,0),left-8,y+4);}
+  g.fillStyle='#65756e';g.textAlign='left';g.fillText('T [°C]',7,12);g.textAlign='center';g.fillText('Posición x [m]',(left+right)/2,h-7);
+  const px=x=>left+(right-left)*x/r.L[0],py=v=>bottom-(v-lo)/(hi-lo)*(bottom-top);
+  g.strokeStyle='#317f75';g.lineWidth=2;g.beginPath();for(let i=0;i<nx;i++){const x=px((i+.5)*r.dx[0]),y=py(val(i));i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();
+  if(r.config.initialType==='sine'){g.strokeStyle='#a1b096';g.setLineDash([4,4]);g.beginPath();for(let i=0;i<nx;i++){const x=px((i+.5)*r.dx[0]),y=py(r.config.initial+r.config.amplitude*Math.sin(Math.PI*(i+.5)/nx));i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();g.setLineDash([]);g.fillStyle='#65756e';g.textAlign='right';g.fillText('Trazo discontinuo: perfil inicial',right,15);}
+  for(let i=0;i<nx;i++){g.fillStyle=heat(val(i),lo,hi);g.fillRect(left+i*(right-left)/nx,bottom+14,(right-left)/nx+1,10);}for(let j=0;j<=4;j++){g.fillStyle='#65756e';g.textAlign='center';g.fillText(fmt(j*r.L[0]/4,2),px(j*r.L[0]/4),h-28);}return;
+ }
+ let ax=0,ay=1;if(r.config.dim===3){if(plane==='xz'){ax=0;ay=2;}if(plane==='yz'){ax=1;ay=2;}}
+ const na=r.n[ax],nb=r.n[ay],La=r.L[ax],Lb=r.L[ay];
+ const fetchValue=(a,b)=>{const co=[0,0,0];co[ax]=a;co[ay]=b;if(r.config.dim===3)co[axis]=cut;return val(...co);};
+ if(S.view==='iso'&&r.config.dim===3){
+  const L=r.L,yaw=-.65,scale=Math.min((w-75)/(L[0]+L[1]),(h-65)/(L[2]+.43*(L[0]+L[1]))),ox=w/2,oy=h/2+20;
+  const project=(x,y,z)=>[ox+(x-L[0]/2-(y-L[1]/2))*Math.cos(yaw)*scale,oy+((x-L[0]/2)+(y-L[1]/2))*.32*scale-(z-L[2]/2)*scale];
+  const poly=points=>{g.beginPath();points.forEach((p,i)=>{const q=project(...p);i?g.lineTo(...q):g.moveTo(...q);});g.closePath();};
+  // Back wireframe, then the physical interior slice.
+  g.strokeStyle='#b3c1b3';g.lineWidth=1;
+  for(let a=0;a<3;a++){const others=[0,1,2].filter(j=>j!==a);for(const b of [0,L[others[0]]])for(const c of [0,L[others[1]]]){const p=[0,0,0],q=[0,0,0];p[others[0]]=q[others[0]]=b;p[others[1]]=q[others[1]]=c;q[a]=L[a];g.beginPath();g.moveTo(...project(...p));g.lineTo(...project(...q));g.stroke();}}
+  for(let b=nb-1;b>=0;b--)for(let a=0;a<na;a++){const points=[[a,b],[a+1,b],[a+1,b+1],[a,b+1]].map(([a,b])=>{const p=[0,0,0];p[ax]=a*r.dx[ax];p[ay]=b*r.dx[ay];p[axis]=pos;return p;});poly(points);g.fillStyle=heat(fetchValue(a,b),lo,hi);g.fill();}
+  g.fillStyle='#53665b';g.textAlign='center';g.fillText(`x: ${r.L[0]} m · y: ${r.L[1]} m · z: ${r.L[2]} m`,w/2,h-15);$('fieldCanvas')._plot=null;
+ }else{
+  const scale=Math.min((w-80)/La,(h-55)/Lb),pw=La*scale,ph=Lb*scale,left=(w-pw)/2+12,top=(h-ph)/2-5;
+  for(let b=0;b<nb;b++)for(let a=0;a<na;a++){g.fillStyle=heat(fetchValue(a,b),lo,hi);g.fillRect(left+a*pw/na,top+(nb-1-b)*ph/nb,pw/na+.5,ph/nb+.5);}
+  g.strokeStyle='#cbd6c7';g.strokeRect(left,top,pw,ph);g.fillStyle='#65756e';g.textAlign='center';
+  for(let j=0;j<=4;j++){g.fillText(fmt(La*j/4,2),left+pw*j/4,top+ph+17);g.textAlign='right';g.fillText(fmt(Lb*j/4,2),left-9,top+ph-ph*j/4+4);g.textAlign='center';}
+  g.fillText(`${'xyz'[ax]} [m]`,left+pw/2,top+ph+33);g.save();g.translate(left-42,top+ph/2);g.rotate(-Math.PI/2);g.fillText(`${'xyz'[ay]} [m]`,0,0);g.restore();
+  $('fieldCanvas')._plot={left,top,pw,ph,na,nb,ax,ay,axis,cut,fetchValue};
+ }
+}
+function chart(id,series,ylabel,{target=null,cursor=null}={}){
+ const {g,w,h,c}=ctx(id);if(!series.length)return;const left=54,right=w-15,top=20,bottom=h-38;let xmax=0,ymin=Infinity,ymax=-Infinity;
+ series.forEach(s=>s.data.forEach(p=>{xmax=Math.max(xmax,p[0]);ymin=Math.min(ymin,p[1]);ymax=Math.max(ymax,p[1]);}));if(target!==null){ymin=Math.min(ymin,target);ymax=Math.max(ymax,target);}if(ymin===ymax){ymin-=1;ymax+=1;}const pad=(ymax-ymin)*.1;ymin-=pad;ymax+=pad;xmax=xmax||1;
+ const X=t=>left+t/xmax*(right-left),Y=v=>bottom-(v-ymin)/(ymax-ymin)*(bottom-top);
+ g.font='10px Segoe UI';g.lineWidth=1;g.strokeStyle='#e8ede3';g.fillStyle='#73816e';
+ for(let j=0;j<=4;j++){const y=top+(bottom-top)*j/4;g.beginPath();g.moveTo(left,y);g.lineTo(right,y);g.stroke();g.textAlign='right';const v=ymax-(ymax-ymin)*j/4;g.fillText(Math.abs(v)>=10000?v.toExponential(1):fmt(v,Math.abs(ymax-ymin)>10?0:2),left-8,y+3);}
+ const ticks=w<370?3:5;for(let j=0;j<=ticks;j++){const x=left+(right-left)*j/ticks;g.textAlign='center';g.fillText(fmt(xmax*j/ticks,1),x,bottom+16);}
+ g.textAlign='left';g.fillText(ylabel,6,11);g.textAlign='center';g.fillText('Tiempo [días]',(left+right)/2,h-3);
+ g.save();g.beginPath();g.rect(left,top,right-left,bottom-top);g.clip();
+ if(target!==null){g.setLineDash([5,4]);g.strokeStyle='#a4afa0';g.beginPath();g.moveTo(left,Y(target));g.lineTo(right,Y(target));g.stroke();g.setLineDash([]);}
+ series.forEach(s=>{g.strokeStyle=s.color;g.lineWidth=s.width||2;g.setLineDash(s.dash||[]);g.beginPath();const stride=Math.max(1,Math.ceil(s.data.length/1400));let started=false;for(let i=0;i<s.data.length;i+=stride){const p=s.data[i];started?g.lineTo(X(p[0]),Y(p[1])):g.moveTo(X(p[0]),Y(p[1]));started=true;}const last=s.data[s.data.length-1];g.lineTo(X(last[0]),Y(last[1]));g.stroke();g.setLineDash([]);});
+ if(cursor!==null){g.strokeStyle='#8c9d8a';g.lineWidth=1;g.beginPath();g.moveTo(X(cursor),top);g.lineTo(X(cursor),bottom);g.stroke();}
+ g.restore();c._chart={left,right,top,bottom,xmax,ymin,ymax};
+}
+function interpolate(hist,t,key='center'){let lo=0,hi=hist.length-1;if(t<=hist[0].t)return hist[0][key];if(t>=hist[hi].t)return hist[hi][key];while(hi-lo>1){const mid=(lo+hi)>>1;if(hist[mid].t<t)lo=mid;else hi=mid;}const f=(t-hist[lo].t)/(hist[hi].t-hist[lo].t);return hist[lo][key]*(1-f)+hist[hi][key]*f;}
+function renderLegend(){const r=S.result;if(!r)return;const el=$('legend');el.replaceChildren();[r,...S.pins].forEach((v,i)=>{const span=document.createElement('span'),mark=document.createElement('i');mark.style.background=colors[i%colors.length];span.append(mark,document.createTextNode(i===0?'Actual · '+v.label:v.label));if(i>0){const b=document.createElement('button');b.textContent='×';b.setAttribute('aria-label','Quitar comparación');b.onclick=()=>{S.pins.splice(i-1,1);renderLegend();render();};span.append(b);}el.append(span);});}
+function render(){if(!S.result)return;field();const r=S.result,t=r.frameTimes[S.frame]/DAY;
+ chart('centerCanvas',[r,...S.pins].map((v,i)=>({color:colors[i%colors.length],data:v.history.map(p=>[p.t/DAY,p.center])})), 'T [°C]',{target:r.config.calibrate?r.config.target:null,cursor:t});
+ chart('sourceCanvas',[{color:'#c88d4e',data:r.history.map(p=>[p.t/DAY,p.q])}],'q [W/m³]',{cursor:t});
+ chart('energyCanvas',[{color:'#317f75',data:r.history.map(p=>[p.t/DAY,p.energy/1e6])},{color:'#c88d4e',dash:[5,4],data:r.history.map(p=>[p.t/DAY,p.net/1e6])}],'ΔE [MJ]',{cursor:t});
+ $('hoverRead').textContent=`Día ${fmt(t,3)} · centro ${fmt(interpolate(r.history,t*DAY))} °C · q = ${fmt(interpolate(r.history,t*DAY,'q'),1)} W/m³`;
+}
+function download(name,text,type='application/json'){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+function exportConfig(){download('therma-ajustes.json',JSON.stringify(gather(),null,2));}
+function exportCSV(){if(!S.result)return;const r=S.result;const lines=['tiempo_s,tiempo_dias,T_centro_C,T_min_C,T_max_C,q_W_m3,delta_energia_J,aporte_neto_J,residual_J'];r.history.forEach(p=>lines.push([p.t,p.t/DAY,p.center,p.min,p.max,p.q,p.energy,p.net,p.residual].join(',')));download('therma-resultados.csv',lines.join('\n'),'text/csv;charset=utf-8');}
+function exportField(){if(!S.result)return;const r=S.result,F=r.fields[S.frame],nx=r.n[0],ny=r.n[1]||1,nz=r.n[2]||1,lines=['tiempo_s,x_m,y_m,z_m,T_C'];for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++)lines.push([r.frameTimes[S.frame],(x+.5)*r.dx[0],r.config.dim>=2?(y+.5)*r.dx[1]:'',r.config.dim===3?(z+.5)*r.dx[2]:'',F[x+nx*(y+ny*z)]].join(','));download('therma-campo.csv',lines.join('\n'),'text/csv;charset=utf-8');}
+buildFaces();visibility();
+document.querySelectorAll('[data-dim]').forEach(b=>b.onclick=()=>{S.dim=Number(b.dataset.dim);visibility();dirty();});
+$('controls').addEventListener('input',dirty);$('controls').addEventListener('change',dirty);$('controls').onsubmit=e=>{e.preventDefault();run();};
+$('applyFaces').onclick=applyFaces;$('run').onclick=run;$('cancel').onclick=()=>{S.runId++;finish();$('status').textContent='Cálculo detenido. Los resultados anteriores se conservan.';$('progress').style.width='0';};
+$('preset').onchange=()=>{preset($('preset').value);run();};$('play').onclick=togglePlay;$('timeline').oninput=()=>{stop();S.hasPlayed=true;S.frame=Number($('timeline').value);render();};
+$('viewFlat').onclick=()=>{S.view='flat';updateViewControls();render();};$('viewIso').onclick=()=>{S.view='iso';updateViewControls();render();};
+$('plane').onchange=()=>{if(S.result){const a={xy:2,xz:1,yz:0}[$('plane').value];$('slice').value=Math.floor((S.result.n[a]||1)/2);}updateViewControls();render();};$('slice').oninput=render;
+$('pin').onclick=()=>{if(!S.result)return;if(S.pins.length===3)S.pins.pop();S.pins.unshift({label:S.result.label+' · Q='+fmt(S.result.qmax,0),history:S.result.history});renderLegend();render();};
+$('configExport').onclick=exportConfig;$('csvExport').onclick=exportCSV;$('fieldExport').onclick=exportField;$('pngExport').onclick=()=>{if(!S.result)return;const r=S.result,source=$('fieldCanvas'),c=document.createElement('canvas');c.width=source.width;c.height=source.height+140;const g=c.getContext('2d');g.fillStyle='#fafbf7';g.fillRect(0,0,c.width,c.height);g.fillStyle='#203b30';g.font='20px Segoe UI';g.fillText(`THERMA · ${r.label} · día ${fmt(r.frameTimes[S.frame]/DAY,3)}`,24,32);g.font='14px Segoe UI';g.fillText(`L = ${r.L.join(' × ')} m · ${$('fieldNote').textContent}`,24,58);g.drawImage(source,0,75);const [lo,hi]=range(),y=c.height-40;for(let i=0;i<200;i++){g.fillStyle=heat(lo+(hi-lo)*i/199,lo,hi);g.fillRect(90+i*(c.width-180)/200,y,(c.width-180)/200+1,9);}g.fillStyle='#53665b';g.font='13px Segoe UI';g.fillText(fmt(lo,1)+' °C',22,y+10);g.fillText(fmt(hi,1)+' °C',c.width-75,y+10);const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='therma-campo.png';a.click();};
+$('configImport').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const p=JSON.parse(await file.text());setConfig(p);run();}catch(err){error(err.message);}e.target.value='';};
+$('helpBtn').onclick=()=>$('physics').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+$('fieldCanvas').onmousemove=e=>{const plot=$('fieldCanvas')._plot,r=S.result;if(!plot||!r){$('fieldTooltip').hidden=true;return;}const rect=e.target.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;if(x<plot.left||x>plot.left+plot.pw||y<plot.top||y>plot.top+plot.ph){$('fieldTooltip').hidden=true;return;}const a=Math.min(plot.na-1,Math.floor((x-plot.left)/plot.pw*plot.na)),b=Math.min(plot.nb-1,Math.floor((1-(y-plot.top)/plot.ph)*plot.nb));$('fieldTooltip').textContent=`${'xyz'[plot.ax]}=${fmt((a+.5)*r.dx[plot.ax],3)} m · ${'xyz'[plot.ay]}=${fmt((b+.5)*r.dx[plot.ay],3)} m · ${fmt(plot.fetchValue(a,b))} °C`;$('fieldTooltip').hidden=false;};$('fieldCanvas').onmouseleave=()=>$('fieldTooltip').hidden=true;
+function chartPointer(e){const r=S.result,plot=$('centerCanvas')._chart;if(!r||!plot)return;const box=e.target.getBoundingClientRect(),x=Math.max(plot.left,Math.min(plot.right,e.clientX-box.left)),day=(x-plot.left)/(plot.right-plot.left)*plot.xmax;const items=[r,...S.pins].map(v=>`${v===r?'Actual':v.label}: ${fmt(interpolate(v.history,day*DAY))} °C`);$('hoverRead').textContent=`Día ${fmt(day,3)} · ${items.join(' · ')}`;if(e.type==='click'){stop();S.frame=r.frameTimes.reduce((best,t,i)=>Math.abs(t-day*DAY)<Math.abs(r.frameTimes[best]-day*DAY)?i:best,0);render();}}
+$('centerCanvas').onmousemove=chartPointer;$('centerCanvas').onclick=chartPointer;
+let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(render,100);});
+try{const saved=localStorage.getItem('therma-config-v1');if(saved)setConfig(JSON.parse(saved));else preset('robin');}catch(_){preset('robin');}
+window.therma={getResult:()=>S.result,getConfig:gather,setConfig,run,render,state:S};
+run();
+})();
+</script>
+</body></html>
