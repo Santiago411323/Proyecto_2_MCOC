@@ -14,16 +14,21 @@ function make(p){
  if(![p.initial,p.amplitude,p.target,p.qmax].every(Number.isFinite))throw Error('Temperaturas y fuente deben ser números finitos.');
  const nx=n[0],ny=n[1]||1,nz=n[2]||1,N=nx*ny*nz, dx=L.map((v,a)=>v/n[a]),alpha=p.k/(p.rho*p.cp), vol=dx.reduce((a,b)=>a*b,1), C=p.rho*p.cp*vol;
  if(N>50000)throw Error('La malla supera 50.000 celdas. Reduce las celdas por eje.');
+ const mask=p.geometry==='foundation'?p.mask:null;
+ if(mask&&(dim!==3||mask.length!==N||!mask.some(v=>v>0)))throw Error('La máscara IFC no coincide con la malla 3D.');
+ const active=i=>i>=0&&i<N&&(!mask||mask[i]>0);
+ const count=mask?mask.filter(v=>v>0).length:N;
  const strides=[1,nx,nx*ny],rates=dx.map(d=>alpha/(d*d)), sum=new Float64Array(N),gB=new Float64Array(N),bB=new Float64Array(N),init=new Float64Array(N);
  for(let a=0;a<dim;a++)for(let s=0;s<2;s++){
   const b=p.faces[2*a+s];if(!b||!['D','N','R'].includes(b.type)||![b.temp,b.flux,b.h,b.R].every(Number.isFinite)||b.h<0||b.R<0)throw Error('Revisa las condiciones de borde: h y R deben ser ≥0.');
  }
  for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
-  const i=x+nx*(y+ny*z),coords=[x,y,z];let phi=1;
+  const i=x+nx*(y+ny*z),coords=[x,y,z];if(!active(i))continue;let phi=1;
   for(let a=0;a<dim;a++){
    phi*=Math.sin(Math.PI*(coords[a]+.5)/n[a]);
-   sum[i]+=rates[a]*((coords[a]>0?1:0)+(coords[a]<n[a]-1?1:0));
-   for(let s=0;s<2;s++)if(coords[a]===(s?n[a]-1:0)){
+   for(let s=0;s<2;s++){
+    const hasNeighbor=coords[a]+(s?1:-1)>=0&&coords[a]+(s?1:-1)<n[a]&&active(i+(s?1:-1)*strides[a]);
+    if(hasNeighbor){sum[i]+=rates[a];continue;}
     const b=p.faces[2*a+s];let rate=0;
     if(b.type==='N')bB[i]-=b.flux/(p.rho*p.cp*dx[a]);
     else {
@@ -46,15 +51,16 @@ function make(p){
  if(steps>200000)throw Error('Demasiados pasos. Aumenta Δt o reduce la duración.');
  const mids=n.map(v=>v%2?[Math.floor(v/2)]:[v/2-1,v/2]);const mid=[];
  for(const z of mids[2]||[0])for(const y of mids[1]||[0])for(const x of mids[0])mid.push(x+nx*(y+ny*z));
- const center=T=>mid.reduce((s,i)=>s+T[i],0)/mid.length;
+ const centerIds=mid.filter(active);if(!centerIds.length)throw Error('El centro geométrico no pertenece al volumen activo.');
+ const center=T=>centerIds.reduce((s,i)=>s+T[i],0)/centerIds.length;
  function step(T,out,dt,unit,q){
-  for(let i=0;i<N;i++)out[i]=T[i]+dt*(-gB[i]*T[i]+(unit?0:bB[i])+q/(p.rho*p.cp));
+  for(let i=0;i<N;i++)out[i]=active(i)?T[i]+dt*(-gB[i]*T[i]+(unit?0:bB[i])+q/(p.rho*p.cp)):0;
   for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
-   const i=x+nx*(y+ny*z),coords=[x,y,z];
-   for(let a=0;a<dim;a++)if(coords[a]<n[a]-1){const j=i+strides[a],f=dt*rates[a]*(T[j]-T[i]);out[i]+=f;out[j]-=f;}
+   const i=x+nx*(y+ny*z),coords=[x,y,z];if(!active(i))continue;
+   for(let a=0;a<dim;a++)if(coords[a]<n[a]-1&&active(i+strides[a])){const j=i+strides[a],f=dt*rates[a]*(T[j]-T[i]);out[i]+=f;out[j]-=f;}
   }
  }
- return {p,n,L,nx,ny,nz,N,dx,alpha,vol,C,dt,dtMax,duration,frames,steps,init,gB,bB,center,step};
+ return {p,n,L,nx,ny,nz,N,dx,alpha,vol,C,dt,dtMax,duration,frames,steps,init,gB,bB,center,step,active,count,mask};
 }
 function solve(p,progress=()=>{}){
  const m=make(p), {N,dt,duration}=m;let qmax=p.source==='none'?0:p.qmax;
@@ -73,27 +79,27 @@ function solve(p,progress=()=>{}){
  }
  let T=m.init.slice(),out=new Float64Array(N),t=0,step=0,initialEnergy=0,net=0,residual=0,maxCenter=-Infinity,peakTime=0,maxField=-Infinity;
  const history=[],fields=[],frameTimes=[],targets=Array.from({length:m.frames},(_,i)=>duration*i/(m.frames-1));let frame=0;
- for(const v of T)initialEnergy+=v*m.C;
- function stats(time){let min=Infinity,max=-Infinity,E=0;for(const v of T){min=Math.min(min,v);max=Math.max(max,v);E+=v*m.C;}const center=m.center(T);
+ for(let i=0;i<N;i++)if(m.active(i))initialEnergy+=T[i]*m.C;
+ function stats(time){let min=Infinity,max=-Infinity,E=0;const layerSum=[0,0,0],layerCount=[0,0,0];for(let i=0;i<N;i++){if(!m.active(i))continue;const v=T[i];min=Math.min(min,v);max=Math.max(max,v);E+=v*m.C;if(m.mask){const l=m.mask[i]-1;if(l>=0&&l<3){layerSum[l]+=v;layerCount[l]++;}}}const center=m.center(T);
   if(center>maxCenter+1e-8){maxCenter=center;peakTime=time;}maxField=Math.max(maxField,max);
   const err=E-initialEnergy-net;residual=Math.max(residual,Math.abs(err));
-  history.push({t:time,center,min,max,energy:E-initialEnergy,net,residual:err,q:qmax*shape(time,p)});
+  history.push({t:time,center,min,max,energy:E-initialEnergy,net,residual:err,q:qmax*shape(time,p),layers:m.mask?layerSum.map((v,i)=>layerCount[i]?v/layerCount[i]:null):null});
  }
  stats(0);fields.push(new Float32Array(T));frameTimes.push(0);frame=1;
- while(t<duration){const end=nextTime(t),h=end-t,q=qmax*meanSource(t,end,p);let P=q*m.vol*N;
+ while(t<duration){const end=nextTime(t),h=end-t,q=qmax*meanSource(t,end,p);let P=q*m.vol*m.count;
   for(let i=0;i<N;i++)P+=m.C*(m.bB[i]-m.gB[i]*T[i]);net+=h*P;
   m.step(T,out,h,false,q);
   while(frame<targets.length&&targets[frame]<=end+1e-8){const w=Math.min(1,(targets[frame]-t)/h),A=new Float32Array(N);for(let i=0;i<N;i++)A[i]=T[i]*(1-w)+out[i]*w;fields.push(A);frameTimes.push(targets[frame]);frame++;}
   [T,out]=[out,T];t=end;step++;stats(t);if(step%250===0)progress((p.calibrate?.45:0)+(p.calibrate?.55:1)*t/duration);
  }
  let exactError=null;
- const exactOK=p.initialType==='sine'&&p.source==='none'&&p.faces.slice(0,2*p.dim).every(b=>b.type==='D'&&Math.abs(b.temp-p.initial)<1e-12);
+ const exactOK=!m.mask&&p.initialType==='sine'&&p.source==='none'&&p.faces.slice(0,2*p.dim).every(b=>b.type==='D'&&Math.abs(b.temp-p.initial)<1e-12);
  if(exactOK){exactError=0;let lambda=m.L.reduce((s,L)=>s+(Math.PI/L)**2,0);for(let z=0;z<m.nz;z++)for(let y=0;y<m.ny;y++)for(let x=0;x<m.nx;x++){
   let phi=1;const co=[x,y,z];for(let a=0;a<p.dim;a++)phi*=Math.sin(Math.PI*(co[a]+.5)/m.n[a]);
   exactError=Math.max(exactError,Math.abs(T[x+m.nx*(y+m.ny*z)]-(p.initial+p.amplitude*phi*Math.exp(-m.alpha*lambda*duration))));
  }}
  for(const v of T)if(!Number.isFinite(v))throw Error('El cálculo dejó de ser finito. Revisa los parámetros.');
- return {config:p,n:m.n,L:m.L,dx:m.dx,alpha:m.alpha,dt,dtMax:m.dtMax,qmax,history,fields,frameTimes,maxCenter,peakTime,maxField,residual,exactError,steps:step,N,calibrationHorizon:duration};
+ return {config:p,n:m.n,L:m.L,dx:m.dx,alpha:m.alpha,dt,dtMax:m.dtMax,qmax,history,fields,frameTimes,maxCenter,peakTime,maxField,residual,exactError,steps:step,N:m.count,gridN:N,volume:m.vol*m.count,calibrationHorizon:duration};
 }
 const api={make,solve,pulseIntegral,shape};
 if(typeof module!=='undefined'&&module.exports)module.exports=api;

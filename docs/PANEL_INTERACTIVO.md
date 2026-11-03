@@ -1,5 +1,44 @@
 # THERMA · panel térmico interactivo
 
+**Actualización Fase 1:** el modo predeterminado es Python y requiere
+`servidor_therma.py`, puerto 8767. Abrir el HTML como archivo sólo permite
+el modo JavaScript heredado de verificación. Las instrucciones originales
+de uso sin servidor que siguen se refieren a ese modo portátil. La guía
+actual de ejecución, estados y procedencia es `FASE1_IMPLEMENTACION.md`.
+
+## Fundación IFC con tres capas
+
+El HTML abre el laboratorio configurado para la fundación. La pestaña
+«Fundación IFC · 3 capas» contiene las
+mallas reales de `modelo_e02.ifc`, con su GUID, dimensiones, volumen y color
+por vertida. Permite girar, acercar, ver planta/perfil, ocultar capas y
+separarlas visualmente. Los datos se integran al ejecutar `construir_panel.py`;
+no lee cambios sin guardar de Blender ni modifica el IFC. Tras guardar un
+IFC editado, hay que reconstruir el HTML para actualizar su geometría.
+
+El laboratorio tiene un dominio «Fundación del IFC (3D)»: calcula solamente
+en las celdas interiores clasificadas por malla cerrada del IFC; no calienta
+el bloque envolvente. Hay dos mallas: 24×24×6 y 36×36×12. Las dimensiones
+son 18×18×3.3 m y las interfaces z=1.1 y z=2.2 coinciden con caras de celda.
+Se identifica cada celda por capa y se muestran sus medias térmicas.
+Las interfaces entre capas conducen calor normalmente; no se aplica allí
+una condición de borde exterior. El balance y el calor generado sólo
+incluyen el volumen ocupado, cuyo error geométrico se muestra respecto al IFC.
+
+Las tres capas están presentes desde t=0, con un único material y temperatura
+inicial editable. NO se activan en los horarios ilustrativos del IFC.
+El pulso de ensayo es uniforme espacialmente y empieza en t=0 en las tres.
+Siguen pendientes la secuencia de vertidas, clima y ley de hidratación real.
+La geometría y la división en capas siguen siendo provisionales.
+
+Los bordes x±, y±, z± se aplican a todas las caras expuestas de vóxeles
+según orientación, incluidas las escaleras que aproximan las superficies
+inclinadas. Las normales no son las de la malla triangular exacta. Es una
+aproximación cartesiana que requiere refinamiento y tratamiento específico
+de suelo, moldaje y aislación para convertirse en un modelo del caso docente.
+La vista Volumen 3D colorea celdas exteriores; su T no es la T exacta de cara.
+Plano permite inspeccionar cortes internos, respetando las celdas vacías.
+
 Abrir `panel_termico.html` con doble clic desde el explorador de Windows.
 Funciona sin conexión, sin instalar librerías, sin servidor y sin subir datos.
 En VS Code se puede usar «Reveal in File Explorer / Mostrar en el explorador»
@@ -65,8 +104,11 @@ Es un solver cartesiano por celdas con propiedades escalares constantes:
 
 Para que el navegador siga siendo utilizable, hay límites de 50.000 celdas,
 200.000 pasos y trabajo total. Mallas mayores deben ejecutarse en Python.
-No se importan IFC, máscaras, materiales heterogéneos ni clima. Este panel
-sirve para los experimentos rectangulares; no sustituye el modelo de fundación.
+La máscara de fundación se incorpora al construir el HTML desde el IFC
+guardado; no se importa un IFC directamente desde el navegador. No se
+incluyen materiales heterogéneos, clima real ni secuencia de colocación.
+El cálculo de fundación es una primera integración geométrica, con
+parámetros de ensayo; no constituye todavía la predicción final del curso.
 
 ## Archivos y construcción
 

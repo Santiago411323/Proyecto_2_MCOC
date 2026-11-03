@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "THERMA result 1.0",
+  "type": "object",
+  "required": ["schema_version", "simulation_id", "status", "created_utc", "engine", "config", "geometry", "fields", "units", "history", "metrics", "provenance", "validity"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "simulation_id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "status": {"const": "COMPLETED"},
+    "geometry": {"type": "object", "required": ["shape_xyz", "spacing_m", "origin_m", "index_order", "active_static"]},
+    "fields": {"type": "object", "required": ["file", "dtype", "byte_order", "shape", "times_s", "sha256"], "properties": {"dtype": {"const": "float32"}, "byte_order": {"const": "little"}}},
+    "history": {"type": "array"}, "metrics": {"type": "object"},
+    "validity": {"type": "object"}
+  }
+}

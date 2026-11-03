@@ -4,12 +4,40 @@ Avance inicial para E01/E02: IFC → Python, voxelización G04, difusión térmi
 Integrantes: pendiente de completar. Punto meteorológico docente: latitud
 **-52.821770**, longitud **-70.896850** (ver `sitio.json`).
 
+## Construcción por vertidas · Fase 4
+
+Activación física por horarios, hidratación adiabática didáctica por edad,
+conectividad y fronteras reconstruidas con el solver oficial. En el panel elegir
+**Fundación · secuencia constructiva didáctica**. Ver `docs/FASE4_CONSTRUCCION.md`.
+Demo CLI: `.\.venv\Scripts\python.exe demo_construccion.py --malla 0`.
+
+## Thermal Intelligence · Fase 3
+
+Sensores persistentes, investigación de hotspots, archivo local de escenarios y
+comparación A/B con campo B−A. Ver `docs/FASE3_THERMAL_INTELLIGENCE.md` para uso,
+alineación temporal, compatibilidad de grillas y límites de interpretación.
+
 ## Panel interactivo de ejercicios
 
-Abrir **`panel_termico.html`** en Edge o Chrome. Permite cambiar geometría,
+**THERMA Fase 2: visor 3D Three.js local + solver Python real.** Iniciar:
+
+```powershell
+.\.venv\Scripts\python.exe construir_panel.py
+.\.venv\Scripts\python.exe servidor_therma.py
+```
+
+Abrir `http://127.0.0.1:8767/panel_termico.html`. Ver
+`docs/FASE1_IMPLEMENTACION.md` para contrato, estados, reproducción 3D y demo.
+El servidor estático anterior (8766) no ejecuta Python.
+Ver `docs/FASE2_VISOR_3D.md` para cámara, cortes X-Ray, selección, timeline y validaciones.
+
+El panel permite cambiar geometría,
 malla, material, condiciones de borde por cara, fuente, dt y calibración de
 Qmax; muestra campos animados, curvas, comparaciones y exporta CSV/PNG/JSON.
-Es un archivo autónomo sin conexión, para bloques rectangulares de prueba.
+El visor WebGL utiliza recursos locales incluidos en el repo y requiere el servidor.
+No necesita internet. Conserva el laboratorio de verificación y el dominio de fundación voxelizado
+desde el IFC y bloques rectangulares de prueba. Las tres capas de la
+fundación están presentes desde t=0; clima e hidratación son aún de ensayo.
 Ver `docs/PANEL_INTERACTIVO.md` para uso, hipótesis y verificación con Python.
 
 ## Semana 2 — solver general 1D/2D/3D
@@ -171,6 +199,23 @@ temperaturas de colocación; CSV de error de volumen, metadatos JSON y un corte 
 `occupied` indica pertenencia geométrica; `active` indica hormigón ya colocado.
 El volumen geométrico se compara con TODOS los voxeles ocupados, aunque aún no
 se hayan colocado. No se debe confundir volumen total con volumen activo.
+
+## THERMA — suelo efectivo (5A)
+
+La subfase 5A añade contacto basal con un reservorio térmico y resistencia,
+conservando el solver oficial, IFC, construcción por vertidas y escenarios.
+Parámetros del ejemplo explícitamente didácticos; sin clima real y con S25 aún
+NOT EVALUATED. Instrucciones, ecuaciones, resultados, sensibilidad y archivos:
+[FASE5A_SUELO](docs/FASE5A_SUELO.md).
+
+```powershell
+.\.venv\Scripts\python.exe construir_panel.py
+.\.venv\Scripts\python.exe servidor_therma.py --port 8767
+```
+
+Abrir http://127.0.0.1:8767/panel_termico.html. Elegir secuencia constructiva,
+activar **05A Environment & Weather → Contacto basal con suelo efectivo** y
+ejecutar. Caso sin navegador: `.\.venv\Scripts\python.exe demo_suelo.py`.
 
 ## Tests
 

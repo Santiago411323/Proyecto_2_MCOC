@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "THERMA result 1.1 \u2014 construction",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "simulation_id",
+    "status",
+    "created_utc",
+    "engine",
+    "config",
+    "geometry",
+    "fields",
+    "units",
+    "history",
+    "metrics",
+    "provenance",
+    "validity",
+    "activation",
+    "construction"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.1"
+    },
+    "simulation_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "status": {
+      "const": "COMPLETED"
+    },
+    "geometry": {
+      "type": "object",
+      "required": [
+        "shape_xyz",
+        "spacing_m",
+        "origin_m",
+        "index_order",
+        "active_static"
+      ],
+      "properties": {
+        "active_static": {
+          "const": false
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "required": [
+        "file",
+        "dtype",
+        "byte_order",
+        "shape",
+        "times_s",
+        "sha256"
+      ],
+      "properties": {
+        "dtype": {
+          "const": "float32"
+        },
+        "byte_order": {
+          "const": "little"
+        }
+      }
+    },
+    "history": {
+      "type": "array"
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "validity": {
+      "type": "object"
+    },
+    "activation": {
+      "type": "object",
+      "required": [
+        "file",
+        "dtype",
+        "shape",
+        "sha256",
+        "index_order"
+      ],
+      "properties": {
+        "dtype": {
+          "const": "uint8"
+        }
+      }
+    },
+    "environment": {
+      "description": "Extensión opcional 5A: reservorio basal didáctico. No equivale a suelo explícito ni a clima real.",
+      "type": "object",
+      "required": ["stage", "soil", "snapshots", "soil_contact_cells_xfast", "sign_convention"],
+      "properties": {
+        "stage": {"const": "5A"},
+        "soil": {
+          "type": "object",
+          "required": ["model", "temperature_C", "depth_m", "conductivity_W_mK", "contact_R_m2K_W", "parameter_source", "effective_resistance_m2K_W"],
+          "properties": {
+            "model": {"const": "effective_basal_reservoir"},
+            "temperature_C": {"type": "number"},
+            "depth_m": {"type": "number", "exclusiveMinimum": 0},
+            "conductivity_W_mK": {"type": "number", "exclusiveMinimum": 0},
+            "contact_R_m2K_W": {"type": "number", "minimum": 0},
+            "effective_resistance_m2K_W": {"type": "number", "exclusiveMinimum": 0},
+            "parameter_source": {"type": "string", "minLength": 5}
+          }
+        },
+        "soil_contact_cells_xfast": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "snapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["time_s", "soil_into_concrete_J", "air_into_concrete_J", "soil_into_concrete_W", "air_into_concrete_W", "face_regions"]
+          }
+        }
+      }
+    },
+    "construction": {
+      "type": "object",
+      "required": [
+        "snapshots",
+        "events",
+        "parameter_source",
+        "energy_reference"
+      ]
+    }
+  }
+}
