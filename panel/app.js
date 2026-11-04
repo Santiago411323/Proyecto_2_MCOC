@@ -38,8 +38,8 @@ function setConfig(p){
  p.faces.forEach((b,i)=>{if(!['D','N','R'].includes(b.type))throw Error('Tipo de borde desconocido.');$('ft'+i).value=b.type;[['fb','temp'],['fq','flux'],['fh','h'],['fr','R']].forEach(([prefix,key])=>$(prefix+i).value=b[key]);});
  window.ThermaConstructionUI.set(p);window.ThermaEnvironmentUI.set(p);visibility();dirty();
 }
-function applyFaces(){for(let i=0;i<2*S.dim;i++){$('ft'+i).value=$('globalType').value;$('fb'+i).value=$('globalTemp').value;$('fq'+i).value=$('globalFlux').value;$('fh'+i).value=$('globalH').value;$('fr'+i).value=$('globalR').value;}visibility();dirty();}
-function dirty(){S.revision++;if(S.result){$('stale').hidden=false;execution('STALE','Los resultados pertenecen a la configuración de la ejecución anterior.');}visibility();}
+function applyFaces(){for(let i=0;i<2*S.dim;i++){if($('ft'+i).disabled)continue;$('ft'+i).value=$('globalType').value;$('fb'+i).value=$('globalTemp').value;$('fq'+i).value=$('globalFlux').value;$('fh'+i).value=$('globalH').value;$('fr'+i).value=$('globalR').value;}visibility();dirty();}
+function dirty(){S.revision++;if(S.result){$('stale').hidden=false;execution('STALE','Los resultados pertenecen a la configuración de la ejecución anterior.');}visibility();window.dispatchEvent(new Event('therma:inputs'));}
 function preset(name){
  const p={dim:3,L:[3,3,.6],n:[30,30,6],k:2,rho:2400,cp:900,initial:20,initialType:'uniform',amplitude:30,source:'pulse',period:2*DAY,qmax:1905.58,calibrate:true,target:70,days:14,dtMode:'auto',dt:300,factor:.7,faces:Array.from({length:6},()=>({type:'R',temp:20,flux:0,h:10,R:0}))};
  if(name==='foundation'||name==='construction'){p.geometry='foundation';p.meshIndex=1;if(name==='construction'){p.source='none';p.calibrate=false;p.construction=window.ThermaConstructionUI.defaults();}}

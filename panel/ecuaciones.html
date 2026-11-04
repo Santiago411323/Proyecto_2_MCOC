@@ -1,0 +1,18 @@
+<details id="equationViewer" class="panel equation-viewer" open>
+ <summary>LIVE EQUATION VIEWER — BOUNDARY CONDITIONS</summary>
+ <div class="equation-toolbar">
+  <label>Origen de los parámetros<select id="equationSource"><option value="draft">Aplicar a todas · borrador</option><option value="current" selected>Cara · entradas actuales</option><option value="stored">Cara · última simulación</option></select></label>
+  <label>Orientación de la cara<select id="equationFace"><option value="0">x−</option><option value="1">x+</option><option value="2">y−</option><option value="3">y+</option><option value="4">z− · base si hay suelo</option><option value="5">z+</option></select></label>
+  <label class="check"><input type="checkbox" id="equationUseCell"> Evaluar con T_celda de la selección 3D</label>
+  <button type="button" id="equationClearCell" class="quiet">Desvincular celda</button>
+ </div>
+ <p id="equationContext" class="hint" role="status"></p>
+ <div class="equation-grid"><section><div class="eyebrow">A. GENERAL EQUATION</div><div id="equationGeneral" class="live-math"></div></section>
+ <section><div class="eyebrow">C. NUMERICAL SUBSTITUTION</div><div id="equationSubstitution" class="live-math substitution"></div><strong id="equationResult" aria-live="polite"></strong></section></div>
+ <div class="eyebrow">B. CURRENT VALUES</div><div class="equation-table-wrap"><table><thead><tr><th>Variable</th><th>Significado</th><th>Valor actual</th><th>Unidad</th></tr></thead><tbody id="equationValues"></tbody></table></div>
+ <p id="equationExplanation"></p><div id="equationFlow" class="equation-flow"></div>
+ <details id="equationLayers"><summary>Calcular R de una protección fija</summary><p class="hint">Auxiliar algebraico: al editarlo se actualiza el único R de la cara actual (o el borrador global). No se crean capas físicas nuevas. Hipótesis editables, sin caracterización de un material real.</p>
+ <div class="equation-toolbar"><label class="check"><input id="eqFormOn" type="checkbox"> Moldaje</label><label>e moldaje [m]<input id="eqFormE" type="number" value="0.02" min="0" step="any"></label><label>k moldaje [W/(m·K)]<input id="eqFormK" type="number" value="0.15" min="0.00001" step="any"></label><label class="check"><input id="eqInsOn" type="checkbox"> Aislación</label><label>e aislación [m]<input id="eqInsE" type="number" value="0.03" min="0" step="any"></label><label>k aislación [W/(m·K)]<input id="eqInsK" type="number" value="0.04" min="0.00001" step="any"></label></div>
+ <output id="equationLayerSum"></output><p class="hint">R es constante durante cada corrida. Los retiros programados todavía no están implementados en Python; este visor no simula un retiro por cambiar el timeline. Desmarcar una protección cambia el próximo cálculo completo, no un evento dentro de una corrida.</p></details>
+ <p class="hint">Vista algebraica instantánea. Cambiar entradas físicas deja STALE los campos anteriores. Sólo «Ejecutar simulación» recalcula temperaturas. q″ [W/m²] es flujo superficial; q̇ [W/m³] es generación volumétrica; P=A q″ [W] requiere el área.</p>
+</details>

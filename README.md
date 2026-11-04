@@ -217,6 +217,13 @@ Abrir http://127.0.0.1:8767/panel_termico.html. Elegir secuencia constructiva,
 activar **05A Environment & Weather → Contacto basal con suelo efectivo** y
 ejecutar. Caso sin navegador: `.\.venv\Scripts\python.exe demo_suelo.py`.
 
+## Ecuaciones de borde en vivo
+
+En el laboratorio, abrir **03 Condiciones de borde → Ver ecuación en vivo**.
+Dirichlet, Neumann, Robin y suelo efectivo muestran fórmulas, unidades y
+sustituciones inmediatas. Los campos siguen requiriendo Python; las entradas
+editadas marcan STALE. [Uso y verificación](docs/ECUACIONES_EN_VIVO.md).
+
 ## Tests
 
 ```powershell
