@@ -5,7 +5,7 @@ import numpy as np
 from voxelizar import cargar_geometria, dentro_malla
 
 
-def datos_ifc(ruta):
+def datos_ifc(ruta, formas=None):
     ruta = Path(ruta)
     solidos = sorted(cargar_geometria(ruta), key=lambda s: s['VertidaID'])
     capas = []
@@ -19,7 +19,7 @@ def datos_ifc(ruta):
     todos = np.concatenate([s['vertices'] for s in solidos])
     minimo, maximo = todos.min(0), todos.max(0)
     mallas = []
-    for n in [(24, 24, 6), (36, 36, 12)]:
+    for n in (formas or [(24, 24, 6), (36, 36, 12)]):
         paso = (maximo-minimo)/n
         ejes = [minimo[a]+(np.arange(n[a])+.5)*paso[a] for a in range(3)]
         puntos = np.stack(np.meshgrid(*ejes, indexing='ij'), axis=-1).reshape(-1, 3)

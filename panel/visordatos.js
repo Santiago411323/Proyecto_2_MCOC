@@ -12,6 +12,11 @@
  function visible(r,i,cuts,frame){return active(r,i,frame)&&!clipped(xyz(r,i),cuts);}
  function nearest(times,t){return times.reduce((b,v,i)=>Math.abs(v-t)<Math.abs(times[b]-t)?i:b,0);}
  function instanceIndices(r){return Array.from({length:r.fields[0].length},(_,i)=>i).filter(i=>active(r,i));}
- const api={index,ijk,active,xyz,extrema,limits,color,clipped,visible,nearest,instanceIndices};
+ function thermalSpread(stats,times,frame,reference=20){
+  const series=stats.map(e=>e.count&&Number.isFinite(e.max)&&Number.isFinite(e.min)?e.max-e.min:null);
+  let peakIndex=-1;series.forEach((v,i)=>{if(v!==null&&(peakIndex<0||v>series[peakIndex]))peakIndex=i;});
+  return {series,current:series[frame]??null,peak:peakIndex<0?null:series[peakIndex],peakIndex,peakTime:peakIndex<0?null:times[peakIndex],reference,exceeds:series[frame]===null?null:series[frame]>reference,official:'NOT EVALUATED'};
+ }
+ const api={index,ijk,active,xyz,extrema,limits,color,clipped,visible,nearest,instanceIndices,thermalSpread};
  if(typeof module!=='undefined')module.exports=api;else root.ThermaViewData=api;
 })(typeof window==='undefined'?globalThis:window);

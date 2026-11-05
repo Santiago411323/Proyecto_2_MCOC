@@ -134,3 +134,18 @@ Las 14 pruebas cubren 1D/2D/3D con Dirichlet, Neumann, Robin y bordes mixtos,
 campos completos, límites estables, calibración adiabática exacta y seno exacto.
 Los resultados deben interpretarse con la resolución de la malla y el dt;
 la coincidencia entre motores no elimina la necesidad de refinamiento.
+# Histórico: diferencia global máxima–mínima (reemplazada en la vista principal)
+
+El gráfico del visor 3D incluye ejes y unidades, leyenda, eventos de colocación,
+valores del instante seleccionado y un segundo gráfico de
+`ΔT(t) = Tmax(t) − Tmin(t)` del hormigón activo. Los extremos se restan en el
+mismo snapshot y se excluyen voxeles no colocados. Se muestra el mayor ΔT de los
+snapshots y su hora; el botón correspondiente mueve el timeline a ese instante.
+
+La referencia de 20 °C se dibuja sin recortar ni modificar temperaturas. Una
+diferencia superior se destaca. Esta métrica global es **exploratoria**: no es el
+criterio docente de Tmax menos la mínima de puntos S25. Su indicador oficial
+sigue NOT EVALUATED. El máximo mostrado corresponde a los snapshots exportados,
+no necesariamente a todos los pasos internos del solver.
+
+La vista principal actual sigue dos voxeles fijos: núcleo y exterior. El control de moldaje y la malla editable se describen en [NUCLEO_MOLDAJE_Y_MALLA.md](NUCLEO_MOLDAJE_Y_MALLA.md).

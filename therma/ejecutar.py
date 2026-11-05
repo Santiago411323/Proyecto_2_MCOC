@@ -8,13 +8,14 @@ from termico_cartesiano import TermicoCartesiano
 from calibrar_qmax import integral_pulso, temperatura_centro
 from panel.exportar_ifc import datos_ifc
 from .resultados import guardar
+from .moldaje import validar_moldaje,resistencia_extra
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
-@lru_cache(maxsize=2)
-def ifc_actual(mtime):
-    return datos_ifc(ROOT/'modelo_e02.ifc')
+@lru_cache(maxsize=6)
+def ifc_actual(mtime,forma=None):
+    return datos_ifc(ROOT/'modelo_e02.ifc',formas=[forma] if forma else None)
 
 
 def validar(config):
@@ -23,7 +24,7 @@ def validar(config):
     defaults=dict(geometry='block',meshIndex=0,dim=1,L=[1.,1.,1.],n=[20,16,8],k=2.,rho=2400.,cp=900.,
         initial=20.,initialType='uniform',amplitude=30.,source='none',period=172800.,qmax=0.,calibrate=False,
         target=70.,days=1.,dtMode='auto',dt=300.,factor=.7,frames=65,origin=[0.,0.,0.])
-    allowed=set(defaults)|{'faces','mask','construction','environment'}
+    allowed=set(defaults)|{'faces','mask','construction','environment','formwork'}
     if set(p)-allowed:raise ValueError('Parámetros desconocidos: '+', '.join(sorted(set(p)-allowed)))
     p={**defaults,**p}
     if p['geometry'] not in ('block','foundation') or isinstance(p['dim'],bool) or p['dim'] not in (1,2,3):raise ValueError('Geometría o dimensión inválida.')
@@ -36,8 +37,14 @@ def validar(config):
     if p['source']=='pulse' and p['days']*86400<p['period']:raise ValueError('La simulación debe cubrir todo el pulso.')
     if not isinstance(p['frames'],int) or not 20<=p['frames']<=100:raise ValueError('Usar entre 20 y 100 fotogramas.')
     if p['geometry']=='foundation':
-        if p['meshIndex'] not in (0,1):raise ValueError('Malla IFC desconocida.')
-        d=ifc_actual((ROOT/'modelo_e02.ifc').stat().st_mtime_ns);m=d['mallas'][p['meshIndex']]
+        if isinstance(p['meshIndex'],bool) or p['meshIndex'] not in (0,1,2):raise ValueError('Malla IFC desconocida.')
+        shape=None
+        if p['meshIndex']==2:
+            raw=p['n']
+            if not isinstance(raw,list) or len(raw)!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v!=int(v) or not 2<=v<=160 for v in raw):raise ValueError('Malla personalizada: tres cantidades de celdas enteras entre 2 y 160.')
+            shape=tuple(map(int,raw))
+            if math.prod(shape)>50000:raise ValueError('Máximo 50.000 celdas; aumenta el tamaño del voxel.')
+        d=ifc_actual((ROOT/'modelo_e02.ifc').stat().st_mtime_ns,shape);m=d['mallas'][0 if shape else p['meshIndex']]
         p.update(dim=3,L=np.subtract(d['max'],d['min']).tolist(),n=list(m['n']),mask=m['ids'],origin=d['min'])
     else:
         # Nunca aceptar máscaras arbitrarias del navegador en Fase 1.
@@ -53,6 +60,7 @@ def validar(config):
         for k in ('temp','flux','h','R'):
             if isinstance(b.get(k),bool) or not isinstance(b.get(k),(float,int)) or not math.isfinite(b[k]):raise ValueError('Valor de borde inválido: '+k)
         if min(b['h'],b['R'])<0:raise ValueError('h y R no pueden ser negativos.')
+    validar_moldaje(p)
     if p.get("construction") is not None:
         from .construccion import validar_construccion
         validar_construccion(p)
@@ -72,7 +80,7 @@ def preparar(p,homogeneo=False):
             b=p['faces'][2*a+s]
             borders[f"{'xyz'[a]}{'+' if s else '-'}"]={'tipo':{'D':'dirichlet','N':'neumann','R':'robin'}[b['type']],
                 'temperatura_C':0. if homogeneo else b['temp'],'flujo_saliente_W_m2':0. if homogeneo else b['flux'],
-                'h_W_m2K':b['h'],'R_m2K_W':b['R']}
+                'h_W_m2K':b['h'],'R_m2K_W':b['R']+resistencia_extra(p,2*a+s)}
     m=TermicoCartesiano(shape,p['L'][:p['dim']],k=p['k'],rho=p['rho'],cp=p['cp'],bordes=borders,activo=None if mask is None else mask>0)
     dt=p['dt'] if p['dtMode']=='manual' else p['factor']*m.dt_max
     if p['dtMode']=='auto' and p['source']=='pulse':dt=min(dt,p['period']/200)
@@ -124,6 +132,7 @@ def integrar(m,p,dt,inicial,qmax,mask=None,guardar_campos=True,progress=lambda v
 
 def ejecutar(config,identificador,carpeta,progress=lambda v:None):
     p=validar(config)
+    validar_moldaje(p)
     if p.get("construction") is not None:
         from .construccion import ejecutar_construccion
         return ejecutar_construccion(p,identificador,carpeta,ifc_actual((ROOT/"modelo_e02.ifc").stat().st_mtime_ns),progress)

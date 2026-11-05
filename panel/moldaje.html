@@ -1,0 +1,6 @@
+<details id="formworkOptions" open><summary><span>03B</span> Moldaje físico · Python</summary><div class="detail-body">
+<label class="check"><input id="formworkEnabled" type="checkbox"> Incorporar moldaje en las caras elegidas</label>
+<div id="formworkFields" hidden><div class="field-grid"><label>Espesor e [m]<input id="formworkThickness" type="number" value="0.02" step="any" min="0.00001"></label><label>Conductividad k [W/(m·K)]<input id="formworkConductivity" type="number" value="0.15" step="any" min="0.00001"></label></div>
+<div id="formworkFaces" class="formwork-faces"></div><label>Procedencia<input id="formworkSource" type="text" value="Hipótesis didáctica: e=0.02 m y k=0.15 W/(m K); sin caracterización de un moldaje real." maxlength="500"></label><output id="formworkResistance"></output></div>
+<p class="hint">Rtotal = media celda + R adicional del panel + e/k moldaje + 1/h. Actúa sobre caras expuestas, no entre vertidas ni sobre la base de suelo. Permanece durante toda la corrida; no se modela su capacidad térmica. Activar/desactivar exige ejecutar Python.</p>
+</div></details>

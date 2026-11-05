@@ -16,6 +16,33 @@ from servidor_therma import Servidor
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def test_thermal_spread_uses_simultaneous_extremes_and_reports_peak_time():
+    data=dict(stats=[dict(count=1,max=60,min=50),dict(count=1,max=40,min=10)],times=[0,7200],frame=0)
+    v=js('console.log(JSON.stringify(D.thermalSpread(r.stats,r.times,r.frame)));',data)
+    assert v['series']==[10,30] and v['current']==10
+    assert v['peak']==30 and v['peakTime']==7200  # No 60 - 10 de tiempos distintos.
+    assert v['official']=='NOT EVALUATED'
+
+
+@pytest.mark.parametrize('delta,exceeds',[(20,False),(20.01,True)])
+def test_thermal_spread_warns_above_twenty_without_clamping(delta,exceeds):
+    v=js('console.log(JSON.stringify(D.thermalSpread(r.stats,[0],0)));',dict(stats=[dict(count=1,max=10+delta,min=10)]))
+    assert v['current']==delta and v['exceeds'] is exceeds
+    assert v['official']=='NOT EVALUATED'
+
+
+def test_thermal_spread_has_no_temperature_for_unplaced_concrete():
+    v=js('console.log(JSON.stringify(D.thermalSpread(r.stats,[0,1],0)));',dict(stats=[dict(count=0,max=999,min=-999),dict(count=1,max=18,min=18)]))
+    assert v['series']==[None,0] and v['current'] is None and v['exceeds'] is None
+    assert v['peak']==0 and v['peakIndex']==1
+
+
+def test_thermal_spread_excludes_inactive_voxels_from_extremes():
+    data=dict(n=[2,1,1],config=dict(mask=[1,1]),fields=[[1000,20],[30,25]],activeFrames=[[0,1],[1,1]])
+    v=js('console.log(JSON.stringify(D.thermalSpread(r.fields.map((_,j)=>D.extrema(r,j)),[0,24],1)));',data)
+    assert v['series']==[0,5] and v['current']==5
+
+
 def js(code, data):
     node=shutil.which('node')
     assert node, 'Node es necesario para verificar la correspondencia Python/visor.'

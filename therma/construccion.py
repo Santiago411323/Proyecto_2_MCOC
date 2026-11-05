@@ -6,6 +6,7 @@ import math
 import time
 import numpy as np
 from .activacion import ConstruccionTermica
+from .moldaje import resistencia_extra
 from .hidratacion import AdiabaticaExponencial
 from .resultados import guardar,a_xfast
 
@@ -36,7 +37,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
     pours=[dict(id=layer['id'],guid=layer['guid'],name=layer['nombre'],material_id=1,
                 inicio_s=by_id[layer['id']]['start_h']*3600,temperatura_C=by_id[layer['id']]['placement_C']) for layer in ifc['capas']]
     borders={f"{'xyz'[a]}{sign}":dict(tipo={'D':'dirichlet','N':'neumann','R':'robin'}[b['type']],
-        temperatura_C=b['temp'],flujo_saliente_W_m2=b['flux'],h_W_m2K=b['h'],R_m2K_W=b['R'])
+        temperatura_C=b['temp'],flujo_saliente_W_m2=b['flux'],h_W_m2K=b['h'],R_m2K_W=b['R']+resistencia_extra(p,2*a+s))
         for a in range(3) for s,sign in enumerate(('-','+')) for b in [p['faces'][2*a+s]]}
     ground=None
     if p.get('environment'):

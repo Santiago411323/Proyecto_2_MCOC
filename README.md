@@ -226,6 +226,10 @@ editadas marcan STALE. [Uso y verificación](docs/ECUACIONES_EN_VIVO.md).
 
 ## Tests
 
+El panel permite seguir un **núcleo y un voxel exterior fijos**, usar **03B
+Moldaje físico** y editar Δx/Δy/Δz en **Malla → Personalizada**. Se recalcula la
+máscara IFC en Python. [Uso, ecuaciones y discrepancia de volumen pendiente](docs/NUCLEO_MOLDAJE_Y_MALLA.md).
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
 ```

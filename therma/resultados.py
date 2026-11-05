@@ -52,6 +52,9 @@ def guardar(carpeta, identificador, config, campos, tiempos, historia, metricas,
                     'construction_schedule':'NOT IMPLEMENTED','weather':'NOT CONNECTED'},
         'warnings':['No es una predicción validada de Punta Arenas.','Las capas están presentes desde t=0.',
                     'No se interpreta el pulso prescrito como hidratación calibrada.']}
+    if config.get('formwork'):
+        from .moldaje import informacion
+        meta['formwork']=informacion(config)
     (carpeta/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
     (carpeta/'config.json').write_text(json.dumps(config,ensure_ascii=False,indent=2),encoding='utf-8')
     return meta
