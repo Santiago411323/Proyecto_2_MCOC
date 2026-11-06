@@ -1,0 +1,78 @@
+{
+  "geometry": "foundation",
+  "source": "none",
+  "calibrate": false,
+  "days": 14.0,
+  "frames": 100,
+  "faces": [
+    {
+      "type": "R",
+      "temp": 20.0,
+      "h": 10.0,
+      "R": 0.0,
+      "flux": 0.0
+    },
+    {
+      "type": "R",
+      "temp": 20.0,
+      "h": 10.0,
+      "R": 0.0,
+      "flux": 0.0
+    },
+    {
+      "type": "R",
+      "temp": 20.0,
+      "h": 10.0,
+      "R": 0.0,
+      "flux": 0.0
+    },
+    {
+      "type": "R",
+      "temp": 20.0,
+      "h": 10.0,
+      "R": 0.0,
+      "flux": 0.0
+    },
+    {
+      "type": "R",
+      "temp": 20.0,
+      "h": 10.0,
+      "R": 0.0,
+      "flux": 0.0
+    },
+    {
+      "type": "R",
+      "temp": 20.0,
+      "h": 10.0,
+      "R": 0.0,
+      "flux": 0.0
+    }
+  ],
+  "construction": {
+    "model": "exponential_adiabatic",
+    "parameter_source": "Supuesto did\u00e1ctico: theta_inf=40 C, tau=24 h; sin calibraci\u00f3n experimental.",
+    "pours": [
+      {
+        "id": 1,
+        "start_h": 0.0,
+        "placement_C": 18.0,
+        "theta_inf_C": 40.0,
+        "tau_h": 24.0
+      },
+      {
+        "id": 2,
+        "start_h": 24.0,
+        "placement_C": 18.0,
+        "theta_inf_C": 40.0,
+        "tau_h": 24.0
+      },
+      {
+        "id": 3,
+        "start_h": 48.0,
+        "placement_C": 18.0,
+        "theta_inf_C": 40.0,
+        "tau_h": 24.0
+      }
+    ]
+  }
+}

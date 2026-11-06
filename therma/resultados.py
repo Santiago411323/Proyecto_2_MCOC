@@ -27,11 +27,21 @@ def guardar(carpeta, identificador, config, campos, tiempos, historia, metricas,
     np.savez_compressed(carpeta/'campos.npz', T_C=campos, tiempo_s=tiempos,
                         active=ids>0,pour_ids=ids if config.get('mask') is not None else np.zeros_like(ids),material_ids=(ids>0).astype(np.int32))
     canon = json.dumps(config, sort_keys=True, allow_nan=False).encode()
-    git = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
-    dirty = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'status','--porcelain'],cwd=ROOT,capture_output=True,text=True)
+    commit = None
+    working_tree_dirty = None
+    git_warning = None
+    try:
+        git = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
+        dirty = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'status','--porcelain'],cwd=ROOT,capture_output=True,text=True)
+        commit = git.stdout.strip() if git.returncode == 0 else None
+        working_tree_dirty = bool(dirty.stdout.strip()) if dirty.returncode == 0 else None
+        if commit is None or working_tree_dirty is None:
+            git_warning = 'No se pudo registrar completamente la revisión Git.'
+    except OSError:
+        git_warning = 'Git no está disponible: commit y estado del repositorio desconocidos.'
     meta = {'schema_version':'1.0', 'simulation_id':identificador, 'status':'COMPLETED',
         'created_utc':datetime.now(timezone.utc).isoformat(), 'engine':'termico_cartesiano.py',
-        'commit':git.stdout.strip() if git.returncode==0 else None,'working_tree_dirty':bool(dirty.stdout.strip()),
+        'commit':commit,'working_tree_dirty':working_tree_dirty,
         'config_sha256':hashlib.sha256(canon).hexdigest(), 'config':config,
         'units':{'temperature':'degC','time':'s','length':'m','source':'W/m3','energy':'J'},
         'geometry':{'shape_xyz':list(campos.shape[1:]),'origin_m':config.get('origin',[0,0,0]),
@@ -55,6 +65,8 @@ def guardar(carpeta, identificador, config, campos, tiempos, historia, metricas,
     if config.get('formwork'):
         from .moldaje import informacion
         meta['formwork']=informacion(config)
+    if git_warning:
+        meta['warnings'].append(git_warning)
     (carpeta/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
     (carpeta/'config.json').write_text(json.dumps(config,ensure_ascii=False,indent=2),encoding='utf-8')
     return meta

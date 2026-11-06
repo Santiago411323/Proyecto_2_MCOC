@@ -18,6 +18,20 @@ def config(dim=1,k=2.):
                 initial=20.,initialType='sine',amplitude=10.,source='none',days=1.,frames=20)
 
 
+def test_guardar_sin_git(tmp_path, monkeypatch):
+    def sin_git(*args, **kwargs):
+        raise FileNotFoundError(2, 'Git no encontrado')
+    monkeypatch.setattr('therma.resultados.subprocess.run', sin_git)
+    meta = guardar(tmp_path, uuid.uuid4().hex,
+                   {'dim': 1, 'L': [1.], 'n': [2]},
+                   np.array([[20., 20.], [21., 21.]]), [0., 1.], [], {}, {})
+    assert meta['status'] == 'COMPLETED'
+    assert meta['commit'] is None
+    assert meta['working_tree_dirty'] is None
+    assert any('Git no está disponible' in aviso for aviso in meta['warnings'])
+    assert json.loads((tmp_path/'metadata.json').read_text(encoding='utf-8')) == meta
+
+
 def test_orden_3d_asimetrico_y_binario(tmp_path):
     xyz=np.indices((3,4,5));campo=100*xyz[0]+10*xyz[1]+xyz[2]
     datos=a_xfast(campo)

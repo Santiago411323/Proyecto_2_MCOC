@@ -1,0 +1,63 @@
+diff --git a/tests/test_fase1_python.py b/tests/test_fase1_python.py
+index bc3a452..036963a 100644
+--- a/tests/test_fase1_python.py
++++ b/tests/test_fase1_python.py
+@@ -18,6 +18,20 @@ def config(dim=1,k=2.):
+                 initial=20.,initialType='sine',amplitude=10.,source='none',days=1.,frames=20)
+ 
+ 
++def test_guardar_sin_git(tmp_path, monkeypatch):
++    def sin_git(*args, **kwargs):
++        raise FileNotFoundError(2, 'Git no encontrado')
++    monkeypatch.setattr('therma.resultados.subprocess.run', sin_git)
++    meta = guardar(tmp_path, uuid.uuid4().hex,
++                   {'dim': 1, 'L': [1.], 'n': [2]},
++                   np.array([[20., 20.], [21., 21.]]), [0., 1.], [], {}, {})
++    assert meta['status'] == 'COMPLETED'
++    assert meta['commit'] is None
++    assert meta['working_tree_dirty'] is None
++    assert any('Git no está disponible' in aviso for aviso in meta['warnings'])
++    assert json.loads((tmp_path/'metadata.json').read_text(encoding='utf-8')) == meta
++
++
+ def test_orden_3d_asimetrico_y_binario(tmp_path):
+     xyz=np.indices((3,4,5));campo=100*xyz[0]+10*xyz[1]+xyz[2]
+     datos=a_xfast(campo)
+diff --git a/therma/resultados.py b/therma/resultados.py
+index d262fc4..7ea2957 100644
+--- a/therma/resultados.py
++++ b/therma/resultados.py
+@@ -27,11 +27,21 @@ def guardar(carpeta, identificador, config, campos, tiempos, historia, metricas,
+     np.savez_compressed(carpeta/'campos.npz', T_C=campos, tiempo_s=tiempos,
+                         active=ids>0,pour_ids=ids if config.get('mask') is not None else np.zeros_like(ids),material_ids=(ids>0).astype(np.int32))
+     canon = json.dumps(config, sort_keys=True, allow_nan=False).encode()
+-    git = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
+-    dirty = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'status','--porcelain'],cwd=ROOT,capture_output=True,text=True)
++    commit = None
++    working_tree_dirty = None
++    git_warning = None
++    try:
++        git = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True)
++        dirty = subprocess.run(['git','-c','safe.directory='+ROOT.as_posix(),'status','--porcelain'],cwd=ROOT,capture_output=True,text=True)
++        commit = git.stdout.strip() if git.returncode == 0 else None
++        working_tree_dirty = bool(dirty.stdout.strip()) if dirty.returncode == 0 else None
++        if commit is None or working_tree_dirty is None:
++            git_warning = 'No se pudo registrar completamente la revisión Git.'
++    except OSError:
++        git_warning = 'Git no está disponible: commit y estado del repositorio desconocidos.'
+     meta = {'schema_version':'1.0', 'simulation_id':identificador, 'status':'COMPLETED',
+         'created_utc':datetime.now(timezone.utc).isoformat(), 'engine':'termico_cartesiano.py',
+-        'commit':git.stdout.strip() if git.returncode==0 else None,'working_tree_dirty':bool(dirty.stdout.strip()),
++        'commit':commit,'working_tree_dirty':working_tree_dirty,
+         'config_sha256':hashlib.sha256(canon).hexdigest(), 'config':config,
+         'units':{'temperature':'degC','time':'s','length':'m','source':'W/m3','energy':'J'},
+         'geometry':{'shape_xyz':list(campos.shape[1:]),'origin_m':config.get('origin',[0,0,0]),
+@@ -55,6 +65,8 @@ def guardar(carpeta, identificador, config, campos, tiempos, historia, metricas,
+     if config.get('formwork'):
+         from .moldaje import informacion
+         meta['formwork']=informacion(config)
++    if git_warning:
++        meta['warnings'].append(git_warning)
+     (carpeta/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
+     (carpeta/'config.json').write_text(json.dumps(config,ensure_ascii=False,indent=2),encoding='utf-8')
+     return meta
