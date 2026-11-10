@@ -1,0 +1,28 @@
+{
+  "snapshot_sha256": "9fdf63d3d95fefb334379000f1e2de05cfd3aec4a2f993b8e009db2ecfde5d70",
+  "start_utc": "2026-11-11T08:00:00-03:00",
+  "cases": {
+    "protegido": {
+      "Tmax_C": 53.37910604826738,
+      "residual_relative": 6.901471363256103e-16,
+      "final_boundary_J": -34938052093.282585,
+      "final_energy_J": 24594932426.767838
+    },
+    "retiro": {
+      "Tmax_C": 53.37899482061688,
+      "residual_relative": 1.4753947262216634e-15,
+      "final_boundary_J": -35335093769.52236,
+      "final_energy_J": 24197890750.528015
+    }
+  },
+  "limits": [
+    "No usa viento para h ni radiación.",
+    "No valida propiedades ni fisuración.",
+    "No es una predicción del 27 de noviembre."
+  ],
+  "verification": {
+    "pytest_passed": 244,
+    "panel": "COMPLETED: forecast cargado, suelo y retiro habilitados",
+    "note": "La demo CLI usa suelo a 8 C; la prueba visual conserva el valor inicial de panel de 10 C."
+  }
+}

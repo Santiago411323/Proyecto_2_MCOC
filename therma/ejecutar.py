@@ -24,7 +24,7 @@ def validar(config):
     defaults=dict(geometry='block',meshIndex=0,dim=1,L=[1.,1.,1.],n=[20,16,8],k=2.,rho=2400.,cp=900.,
         initial=20.,initialType='uniform',amplitude=30.,source='none',period=172800.,qmax=0.,calibrate=False,
         target=70.,days=1.,dtMode='auto',dt=300.,factor=.7,frames=65,origin=[0.,0.,0.])
-    allowed=set(defaults)|{'faces','mask','construction','environment','formwork'}
+    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather'}
     if set(p)-allowed:raise ValueError('Parámetros desconocidos: '+', '.join(sorted(set(p)-allowed)))
     p={**defaults,**p}
     if p['geometry'] not in ('block','foundation') or isinstance(p['dim'],bool) or p['dim'] not in (1,2,3):raise ValueError('Geometría o dimensión inválida.')
@@ -67,6 +67,12 @@ def validar(config):
     if p.get("environment") is not None:
         from .suelo import validar_entorno
         validar_entorno(p)
+    if p.get('weather') is not None:
+        from .meteorologia import ForzanteAire
+        if not p.get('construction'):raise ValueError('La serie meteorológica requiere construcción IFC.')
+        if not any(b['type']=='R' and b['h']>0 for i,b in enumerate(p['faces']) if not (i==4 and p.get('environment'))):
+            raise ValueError('La serie meteorológica requiere alguna cara de aire con Robin y h positivo.')
+        ForzanteAire(p['weather'],p['days']*86400)
     return p
 
 

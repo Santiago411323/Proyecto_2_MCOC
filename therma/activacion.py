@@ -39,6 +39,14 @@ class ConstruccionTermica:
         if not np.isfinite(a).all():raise ValueError('Campo no finito.')
         return a
 
+    def actualizar_bordes(self, bordes):
+        """Reconstruye G y CFL sin cambiar temperaturas ni agregar energía."""
+        self.bordes=bordes
+        if self.activo.any():
+            efectivos=self.suelo.bordes(self.activo,bordes) if self.suelo else bordes
+            self.modelo=TermicoCartesiano(self.forma,self.longitudes,self.k,self.rho,self.cp,efectivos,self.activo)
+            if self.suelo:self.G_suelo,self.P_suelo=self.suelo.terminos_diagnosticos(self.modelo)
+
     def activar(self):
         nuevos=[]
         for ident,v in self.vertidas.items():

@@ -1,0 +1,3 @@
+# Preservar los bytes LF verificados por el manifiesto del proveedor en Windows.
+panel/vendor/three/*.js text eol=lf
+panel/vendor/three/LICENSE text eol=lf

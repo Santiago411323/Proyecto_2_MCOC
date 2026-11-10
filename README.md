@@ -1,5 +1,14 @@
 # Proyecto 2 — G9: Punta Arenas / Tehuel Aike
 
+## E10 — Clima trazable y retiro de moldaje
+
+Ver [guía de E10](docs/E10_ENTORNO_Y_CLIMA.md). `clima.py descargar` guarda forecasts
+sin sobrescribir; `demo_e10.py` conecta aire horario, suelo efectivo y moldaje al
+motor constructivo. El panel permite cargar `docs/e10/weather_para_panel.json`
+en **05B Forecast trazable**. El retiro global se configura en **03B Moldaje**.
+Sin extrapolación: si falta cobertura se rechaza la corrida. h constante;
+viento y radiación no conectados. La guía incluye comandos y limitaciones.
+
 Avance inicial para E01/E02: IFC → Python, voxelización G04, difusión térmica 1D y tests.
 Integrantes: pendiente de completar. Punto meteorológico docente: latitud
 **-52.821770**, longitud **-70.896850** (ver `sitio.json`).

@@ -36,9 +36,17 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
     config=p['construction'];by_id={int(v['id']):v for v in config['pours']}
     pours=[dict(id=layer['id'],guid=layer['guid'],name=layer['nombre'],material_id=1,
                 inicio_s=by_id[layer['id']]['start_h']*3600,temperatura_C=by_id[layer['id']]['placement_C']) for layer in ifc['capas']]
-    borders={f"{'xyz'[a]}{sign}":dict(tipo={'D':'dirichlet','N':'neumann','R':'robin'}[b['type']],
-        temperatura_C=b['temp'],flujo_saliente_W_m2=b['flux'],h_W_m2K=b['h'],R_m2K_W=b['R']+resistencia_extra(p,2*a+s))
-        for a in range(3) for s,sign in enumerate(('-','+')) for b in [p['faces'][2*a+s]]}
+    weather=None
+    if p.get('weather'):
+        from .meteorologia import ForzanteAire
+        weather=ForzanteAire(p['weather'],p['days']*86400)
+    removal=p.get('formwork',{}).get('remove_at_h',math.inf)*3600
+    def bordes_en(t):
+        return {f"{'xyz'[a]}{sign}":dict(tipo={'D':'dirichlet','N':'neumann','R':'robin'}[b['type']],
+            temperatura_C=weather.temperatura(t) if weather and b['type']=='R' else b['temp'],
+            flujo_saliente_W_m2=b['flux'],h_W_m2K=b['h'],R_m2K_W=b['R']+resistencia_extra(p,2*a+s,t))
+            for a in range(3) for s,sign in enumerate(('-','+')) for b in [p['faces'][2*a+s]]}
+    borders=bordes_en(0.)
     ground=None
     if p.get('environment'):
         from .suelo import validar_entorno
@@ -47,6 +55,8 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
     models={ident:AdiabaticaExponencial(v['theta_inf_C'],v['tau_h']*3600) for ident,v in by_id.items()}
     duration=p['days']*86400;targets=set(map(float,np.linspace(0,duration,p['frames'])))
     starts=sorted(set(v['inicio_s'] for v in pours))
+    if 0<removal<=duration:
+        targets.update([removal,max(0.,removal-1)])
     for t in starts:
         if 0<t<=duration:
             targets.add(t);previous=max([s for s in starts if s<t]+[0.]);targets.add(max(0.,t-min(1.,(t-previous)/2)))
@@ -73,6 +83,8 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
             max=float(vals.max()) if count else None,hottest_xyz=location,active_cells=count,active_volume_m3=count*m.volumen,
             energy=E,net=net,residual=m.residual(),placed_J=m.energia_colocacion_J,source_J=m.energia_fuente_J,
             boundary_J=m.energia_borde_J,q=q,layers=[float(m.T[(ids==v['id'])&m.activo].mean()) if np.any((ids==v['id'])&m.activo) else None for v in pours])
+        if weather:h['air_temperature_C']=weather.temperatura(m.t)
+        if math.isfinite(removal):h['formwork_present']=m.t<removal
         if ground:
             soil_power=float(np.sum((m.P_suelo-m.G_suelo*m.T)*m.activo))
             total_power=float(np.sum((m.modelo.P_borde_constante-m.modelo.G_borde*m.T)*m.activo)) if m.modelo else 0.
@@ -88,6 +100,8 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
 
     snapshot(measure());target_index=1
     while m.t<duration-1e-9:
+        current=bordes_en(m.t)
+        if current!=m.bordes:m.actualizar_bordes(current)
         limit=m.dt_max
         if p['dtMode']=='manual':
             dt=p['dt']
@@ -95,7 +109,9 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
         else:
             active_tau=[model.tau_s for ident,model in models.items() if model.theta_inf_C>0 and np.any((ids==ident)&m.activo)]
             dt=min(p['factor']*limit,min(active_tau,default=144000.)/40,3600.)
-        end=min(m.t+dt,targets[target_index],m.siguiente_evento_s,duration);h=end-m.t
+        end=min(m.t+dt,targets[target_index],m.siguiente_evento_s,duration,
+                weather.siguiente(m.t) if weather else math.inf,
+                removal if m.t<removal else math.inf);h=end-m.t
         if h<=0:raise ValueError('El integrador no puede avanzar; revisar cronograma.')
         q=np.zeros(n)
         for ident,model in models.items():
@@ -103,7 +119,10 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
             if cells.any():q[cells]=model.fuente_media(m.edad_s(ident),m.edad_s(ident)+h,p['rho'],p['cp'])
         dt_used.append(h)
         if math.isfinite(limit):dt_critical.append(limit)
-        m.paso(h,q);m.t=end;state=measure();steps+=1
+        m.paso(h,q);m.t=end
+        current=bordes_en(m.t)
+        if current!=m.bordes:m.actualizar_bordes(current)
+        state=measure();steps+=1
         if abs(m.t-targets[target_index])<1e-8:
             snapshot(state);target_index+=1
         if steps>200000 or steps*np.prod(n)>3e8:raise ValueError('Construcción demasiado costosa; reducir malla, horizonte o resolución temporal.')
@@ -176,5 +195,15 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
         meta['validity']['ground']='EFFECTIVE_DIDACTIC_RESERVOIR'
         meta['provenance']['soil_parameter_source']=ground.parameter_source
         meta['construction']['exposed_boundary_policy']='Contacto basal exclusivo con suelo efectivo; demás caras expuestas con borde por orientación; contacto interno perfecto al activar.'
+    if weather:
+        meta['weather']=dict(**p['weather'],interpolation='Constante por intervalo horario; sin extrapolación.',
+            used_in_physics=['temperature_2m'],not_connected=['wind_speed_10m','shortwave_radiation'],
+            h_model='Constante declarado por cara; no correlación con viento.',
+            soil_policy='El reservorio basal mantiene su propia temperatura, sin reemplazarla por el aire.')
+        meta['validity']['weather']=p['weather']['kind'].upper()+'_BOUNDARY_SERIES'
+        meta['warnings'][2]='Aire horario trazable con h constante; sin radiación solar ni onda larga. Suelo efectivo sólo si se configura.'
+    if math.isfinite(removal):
+        meta['construction']['formwork_removal']=dict(time_s=removal,
+            occurred=removal<=duration,semantics='Retiro global de orientaciones seleccionadas; R adicional de aislación se conserva.')
     (folder/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
     return meta

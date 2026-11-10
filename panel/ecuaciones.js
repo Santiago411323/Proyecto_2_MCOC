@@ -14,6 +14,14 @@ function update(){if(!window.therma)return;try{const current=window.therma.getCo
  }}
  if(result)context+=` Referencia: ${result.simulationId||result.label||'verificación JS'} · ${(result.frameTimes[frame]/3600).toFixed(5)} h. ${$('executionState').textContent}.`;
  if(T!==null)context+=' T_celda tomada de ese snapshot. Con entradas cambiadas, el flujo es sólo una reevaluación algebraica usando una temperatura anterior.';
+ const time=source==='stored'&&result?result.frameTimes[frame]:0;
+ if(config.formwork?.remove_at_h!==undefined&&time>=config.formwork.remove_at_h*3600){delete config.formwork;context+=' Moldaje retirado en este instante.';}
+ if(config.weather&&config.faces[face].type==='R'&&classification!=='soil'){
+ const w=config.weather,epoch=Date.parse(w.start_utc)+time*1000;let j=-1;
+ for(let i=0;i<w.time_utc.length;i++){if(Date.parse(w.time_utc[i])<=epoch)j=i;else break;}
+ if(j<0||epoch>Date.parse(w.time_utc.at(-1)))throw Error('Instante fuera de cobertura meteorológica.');
+ config.faces[face].temp=w.temperature_C[j];context+=' Aire horario de la serie cargada; h constante.';
+ }
  const view=M.describe(config,face,{cellTemperature:T,classification});math('equationGeneral',view.formula);math('equationSubstitution',view.substitution);$('equationValues').replaceChildren();for(const row of view.rows){const tr=document.createElement('tr');for(const value of row){const td=document.createElement('td');td.textContent=fmt(value);tr.append(td);}$('equationValues').append(tr);}
  $('equationResult').textContent=view.flux===null?'Sin flujo numérico disponible':`${view.type==='N'?'Flujo impuesto':'Vista previa algebraica'}: q″salida = ${fmt(view.flux)} W/m²`;
  $('equationExplanation').textContent=view.explanation;$('equationFlow').textContent=view.flux===null?'Hormigón │ frontera │ entorno · signo exterior positivo':view.flux>0?'HORMIGÓN → ENTORNO · sale calor':view.flux<0?'HORMIGÓN ← ENTORNO · entra calor':'HORMIGÓN │ ENTORNO · flujo cero';$('equationContext').textContent=context;
