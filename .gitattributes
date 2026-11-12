@@ -1,3 +1,6 @@
 # Preservar los bytes LF verificados por el manifiesto del proveedor en Windows.
 panel/vendor/three/*.js text eol=lf
 panel/vendor/three/LICENSE text eol=lf
+# Los snapshots y sus evidencias tienen hashes sobre bytes, sin conversión CRLF.
+data/weather/**/forecast.json -text
+docs/e11/evidencia/** -text

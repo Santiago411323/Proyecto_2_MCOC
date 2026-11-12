@@ -233,7 +233,19 @@ Dirichlet, Neumann, Robin y suelo efectivo muestran fórmulas, unidades y
 sustituciones inmediatas. Los campos siguen requiriendo Python; las entradas
 editadas marcan STALE. [Uso y verificación](docs/ECUACIONES_EN_VIVO.md).
 
-## Tests
+## Meteorología real y resultados 3D (E11)
+
+La [guía E11](docs/E11_CLIMA_Y_VTK.md) recorre los ocho pasos de la revisión:
+snapshot real y metadata, gráfico del aire, BC Robin, corrida de 72 h y visor
+PyVista con corte móvil/clipping, núcleo y exterior. Incluye evidencia VTK ya
+generada en `docs/e11/evidencia/vtk/serie.pvd` y comandos para repetir el caso.
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-viz.txt
+.\.venv\Scripts\python.exe ver_resultados_3d.py docs/e11/evidencia/vtk
+```
+
+## Verificación del proyecto
 
 El panel permite seguir un **núcleo y un voxel exterior fijos**, usar **03B
 Moldaje físico** y editar Δx/Δy/Δz en **Malla → Personalizada**. Se recalcula la
