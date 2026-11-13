@@ -1,5 +1,21 @@
 # Proyecto 2 — G9: Punta Arenas / Tehuel Aike
 
+## E12 — Caso determinista de 14 días
+
+`ejecutar_e12.py` usa una sola fuente del archivo entregado (`M1_SS`, en W/m³),
+con cola constante explícita, forecast archivado, vertidas, suelo y moldaje.
+La entrega y las limitaciones del diagnóstico están en [E12](docs/e12/ENTREGA.md).
+
+```powershell
+.\.venv\Scripts\python.exe ejecutar_e12.py --salida resultados/e12_nueva
+.\.venv\Scripts\python.exe ver_resultados_3d.py docs/e12/evidencia/vtk
+```
+
+En THERMA Lab, **Cargar ajustes** permite abrir `docs/e12/evidencia/config.json`;
+conserva la fuente tabulada y deshabilita los parámetros exponenciales ajenos a ella.
+El diagnóstico reconstruido de superficie y su máximo se calculan con el script E12;
+el par núcleo/exterior del visor web sigue siendo un par de centros de voxel.
+
 ## E10 — Clima trazable y retiro de moldaje
 
 Ver [guía de E10](docs/E10_ENTORNO_Y_CLIMA.md). `clima.py descargar` guarda forecasts

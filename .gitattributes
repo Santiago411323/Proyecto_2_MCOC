@@ -4,3 +4,5 @@ panel/vendor/three/LICENSE text eol=lf
 # Los snapshots y sus evidencias tienen hashes sobre bytes, sin conversión CRLF.
 data/weather/**/forecast.json -text
 docs/e11/evidencia/** -text
+data/hydration/source_terms.txt -text
+docs/e12/evidencia/** -text

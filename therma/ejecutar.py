@@ -136,12 +136,12 @@ def integrar(m,p,dt,inicial,qmax,mask=None,guardar_campos=True,progress=lambda v
     return hist,np.array(campos),times,T
 
 
-def ejecutar(config,identificador,carpeta,progress=lambda v:None):
+def ejecutar(config,identificador,carpeta,progress=lambda v:None,observer=None):
     p=validar(config)
     validar_moldaje(p)
     if p.get("construction") is not None:
         from .construccion import ejecutar_construccion
-        return ejecutar_construccion(p,identificador,carpeta,ifc_actual((ROOT/"modelo_e02.ifc").stat().st_mtime_ns),progress)
+        return ejecutar_construccion(p,identificador,carpeta,ifc_actual((ROOT/"modelo_e02.ifc").stat().st_mtime_ns),progress,observer)
     m,dt,mask=preparar(p)
     perfil=np.prod([np.sin(np.pi*x/L) for x,L in zip(m.coordenadas,m.longitudes)],axis=0)
     inicial=p['initial']+(p['amplitude']*perfil if p['initialType']=='sine' else 0.)

@@ -15,23 +15,28 @@ def validar_construccion(p):
     c=p['construction']
     if p['geometry']!='foundation' or p['dim']!=3:raise ValueError('La construcción usa exclusivamente la fundación IFC 3D.')
     if p['calibrate'] or p['source']!='none':raise ValueError('Construcción: sin calibración a 70 °C ni pulso adicional; usar hidratación por edad.')
-    if not isinstance(c,dict) or set(c)!={'model','parameter_source','pours'} or c['model']!='exponential_adiabatic':raise ValueError('Configuración constructiva desconocida.')
+    if not isinstance(c,dict):raise ValueError('Configuración constructiva desconocida.')
+    tabulated=c.get('model')=='tabulated_source'
+    if set(c)!=({'model','parameter_source','pours','curve'} if tabulated else {'model','parameter_source','pours'}) or c['model'] not in ('exponential_adiabatic','tabulated_source'):raise ValueError('Configuración constructiva desconocida.')
+    if tabulated:
+        from .fuente_tabulada import FuenteTabulada
+        FuenteTabulada(c['curve'],p['rho'],p['cp'])
     if not isinstance(c['parameter_source'],str) or not 5<=len(c['parameter_source'])<=500:raise ValueError('Declara la procedencia de los parámetros de hidratación.')
     if not isinstance(c['pours'],list):raise ValueError('Se requiere una lista de vertidas.')
     actual=set(v for v in p['mask'] if v)
     if len(c['pours'])!=len(actual):raise ValueError('Una configuración por vertida del IFC.')
     ids=[]
     for v in c['pours']:
-        if not isinstance(v,dict) or set(v)!={'id','start_h','placement_C','theta_inf_C','tau_h'}:raise ValueError('Parámetros de vertida desconocidos.')
+        if not isinstance(v,dict) or set(v)!=({'id','start_h','placement_C'} if tabulated else {'id','start_h','placement_C','theta_inf_C','tau_h'}):raise ValueError('Parámetros de vertida desconocidos.')
         if any(isinstance(x,bool) or not isinstance(x,(int,float)) or not math.isfinite(x) for x in v.values()):raise ValueError('Parámetros de vertida finitos.')
-        if int(v['id'])!=v['id'] or v['id'] not in actual or v['start_h']<0 or v['theta_inf_C']<0 or v['tau_h']<=0:raise ValueError('ID/horario/elevación/tau de vertida inválidos.')
-        if v['start_h']>365*24 or v['tau_h']<.01:raise ValueError('Horario máximo 365 días y tau mínimo 0.01 h para este prototipo.')
+        if int(v['id'])!=v['id'] or v['id'] not in actual or v['start_h']<0 or (not tabulated and (v['theta_inf_C']<0 or v['tau_h']<=0)):raise ValueError('ID/horario/elevación/tau de vertida inválidos.')
+        if v['start_h']>365*24 or (not tabulated and v['tau_h']<.01):raise ValueError('Horario máximo 365 días y tau mínimo 0.01 h para este prototipo.')
         ids.append(v['id'])
     if set(ids)!=actual or len(set(ids))!=len(ids):raise ValueError('IDs duplicados o ausentes.')
     if min(v['start_h'] for v in c['pours'])>=p['days']*24:raise ValueError('El horizonte debe incluir hormigón colocado.')
 
 
-def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
+def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,observer=None):
     start=time.perf_counter();n=tuple(map(int,p['n']));ids=np.asarray(p['mask']).reshape(n[::-1]).transpose(2,1,0)
     config=p['construction'];by_id={int(v['id']):v for v in config['pours']}
     pours=[dict(id=layer['id'],guid=layer['guid'],name=layer['nombre'],material_id=1,
@@ -52,7 +57,10 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
         from .suelo import validar_entorno
         ground=validar_entorno(p)
     m=ConstruccionTermica(ids,p['L'],pours,p['k'],p['rho'],p['cp'],borders,suelo=ground)
-    models={ident:AdiabaticaExponencial(v['theta_inf_C'],v['tau_h']*3600) for ident,v in by_id.items()}
+    if config['model']=='tabulated_source':
+        from .fuente_tabulada import FuenteTabulada
+        models={ident:FuenteTabulada(config['curve'],p['rho'],p['cp']) for ident in by_id}
+    else:models={ident:AdiabaticaExponencial(v['theta_inf_C'],v['tau_h']*3600) for ident,v in by_id.items()}
     duration=p['days']*86400;targets=set(map(float,np.linspace(0,duration,p['frames'])))
     starts=sorted(set(v['inicio_s'] for v in pours))
     if 0<removal<=duration:
@@ -91,6 +99,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
             h.update(soil_J=m.energia_suelo_J,air_J=m.energia_aire_J,soil_into_concrete_W=soil_power,
                      air_into_concrete_W=total_power-soil_power)
         hist.append(h)
+        if observer is not None:observer(m,p,h)
         if count and h['max']>critical_value:
             critical_value=h['max'];critical=(m.t,m.T.copy(),m.activo.copy(),state)
         return state
@@ -107,8 +116,8 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
             dt=p['dt']
             if not math.isfinite(dt) or dt<=0 or dt>limit*(1+1e-12):raise ValueError(f'Paso manual inestable para la etapa en t={m.t:g} s; dt crítico={limit:g} s.')
         else:
-            active_tau=[model.tau_s for ident,model in models.items() if model.theta_inf_C>0 and np.any((ids==ident)&m.activo)]
-            dt=min(p['factor']*limit,min(active_tau,default=144000.)/40,3600.)
+            active_steps=[getattr(model,'recommended_step_s',getattr(model,'tau_s',144000.)/40) for ident,model in models.items() if np.any((ids==ident)&m.activo)]
+            dt=min(p['factor']*limit,min(active_steps,default=3600.),3600.)
         end=min(m.t+dt,targets[target_index],m.siguiente_evento_s,duration,
                 weather.siguiente(m.t) if weather else math.inf,
                 removal if m.t<removal else math.inf);h=end-m.t
@@ -181,7 +190,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
     meta['schema_version']='1.1';meta['geometry']['active_static']=False
     meta['activation']=dict(file='active.bin',dtype='uint8',shape=list(flat.shape),sha256=hashlib.sha256((folder/'active.bin').read_bytes()).hexdigest(),
         semantics='1=concrete active at snapshot time; 0=not placed or outside geometry',index_order=meta['geometry']['index_order'])
-    meta['construction']=dict(model='exponential_adiabatic',snapshots=states,events=m.eventos,
+    meta['construction']=dict(model=config['model'],snapshots=states,events=m.eventos,
         timeline_semantics='Estados posteriores a activación en t_inicio. Salida adicional hasta 1 s antes de cada evento.',
         energy_reference='0 °C; E_activa = E_colocacion + E_hidratacion + E_borde; no se resta la energía del hormigón nuevo como error.',
         parameter_source=config['parameter_source'],exposed_boundary_policy='Mismos bordes por orientación en toda cara expuesta de la máscara activa; contacto interno perfecto al activar.')
@@ -205,5 +214,9 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None):
     if math.isfinite(removal):
         meta['construction']['formwork_removal']=dict(time_s=removal,
             occurred=removal<=duration,semantics='Retiro global de orientaciones seleccionadas; R adicional de aislación se conserva.')
+    if config['model']=='tabulated_source':
+        meta['validity']['hydration']='PROVIDED_Q_AGE_CURVE_WITH_DECLARED_TAIL'
+        meta['warnings'][1]='Fuente Q tabulada del archivo entregado; edad cero alineada al inicio de ventana retenida; cola constante explícita. Sin cinética dependiente de temperatura.'
+        meta['provenance']['mode']='Construcción con fuente Q tabulada entregada'
     (folder/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
     return meta
