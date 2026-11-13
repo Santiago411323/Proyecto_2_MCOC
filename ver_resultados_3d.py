@@ -48,7 +48,7 @@ def visualizar(carpeta, campo=None, captura=None, clip=False):
         plotter.add_point_labels([point['xyz_m']], [f'{name}: {temperature:.2f} C'],
             point_color=color, text_color=color, point_size=15, font_size=17,
             always_visible=True, shape_color='white')
-    plotter.add_text(f"E11 | t = {info['time_s']/3600:.2f} h | {mesh.n_cells} voxeles activos\n"
+    plotter.add_text(f"THERMA | t = {info['time_s']/3600:.2f} h | {mesh.n_cells} voxeles activos\n"
                      + ('Clipping' if clip else 'Corte: plano Y')
                      + '\nPuntos: centros de voxel; exterior no equivale a S25',
                      position='upper_left', font_size=13, color='#182a3a')
@@ -61,7 +61,7 @@ def visualizar(carpeta, campo=None, captura=None, clip=False):
         plotter.screenshot(str(captura))
         plotter.close()
     else:
-        plotter.show(title='THERMA E11 - corte y temperatura 3D')
+        plotter.show(title='THERMA - corte y temperatura 3D')
 
 
 def main():

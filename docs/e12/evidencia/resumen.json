@@ -1,0 +1,152 @@
+{
+  "status": "COMPLETED_WITH_DECLARED_ASSUMPTIONS",
+  "start": "2026-11-13T10:00:00-03:00",
+  "duration_days": 14,
+  "metrics": {
+    "maxCenter": 145.12406151537797,
+    "peakTime": 665100.0,
+    "maxField": 145.5723213176619,
+    "hottest_xyz": [
+      17,
+      17,
+      5
+    ],
+    "global_peak_time_s": 695700.0,
+    "global_peak_field_exported": true,
+    "residual": 0.00042724609375,
+    "energy_residual_relative": 3.872686453986199e-15,
+    "exactError": null,
+    "qmax": 0.0,
+    "dt": 900.0,
+    "dtMax": 25443.92523364486,
+    "alpha": 9.259259259259259e-07,
+    "steps": 1442,
+    "N": 7120,
+    "gridN": 15552,
+    "volume": 489.50000000000006,
+    "geometric_volume_m3": 489.50000000000006,
+    "runtime_s": 10.503246799999033,
+    "connectivity_rebuilds": 3,
+    "final_soil_into_concrete_J": -29878034806.96317,
+    "final_air_into_concrete_J": -83618674780.53706
+  },
+  "Tmax_xyz_m": [
+    -0.25,
+    -0.25,
+    1.5125000000000002
+  ],
+  "differential": {
+    "time_s": 841500.0,
+    "delta_C": 126.80777870393474,
+    "pour_id": 2,
+    "core_index": [
+      17,
+      17,
+      5
+    ],
+    "core_xyz_m": [
+      -0.25,
+      -0.25,
+      1.5125000000000002
+    ],
+    "surface_cell_index": [
+      1,
+      11,
+      4
+    ],
+    "surface_xyz_m": [
+      -8.25,
+      -3.25,
+      1.375
+    ],
+    "face": 5,
+    "core_C": 144.24541188272897,
+    "surface_C": 17.43763317879423,
+    "S25_estimated_C": 18.892337326143508,
+    "delta_S25_estimated_C": 125.35307455658547
+  },
+  "points": {
+    "nucleo": {
+      "index_xyz": [
+        17,
+        17,
+        5
+      ],
+      "xyz_m": [
+        -0.25,
+        -0.25,
+        1.5125000000000002
+      ],
+      "celda_original": 7109
+    },
+    "exterior": {
+      "index_xyz": [
+        31,
+        17,
+        5
+      ],
+      "xyz_m": [
+        6.75,
+        -0.25,
+        1.5125000000000002
+      ],
+      "celda_original": 7123
+    }
+  },
+  "weather": {
+    "schema_version": 1,
+    "provider": "Open-Meteo",
+    "product": "forecast",
+    "retrieved_at_utc": "2026-11-12T12:43:25.279292+00:00",
+    "request_url": "https://api.open-meteo.com/v1/forecast?latitude=-52.82177&longitude=-70.89685&hourly=temperature_2m%2Cwind_speed_10m&temperature_unit=celsius&wind_speed_unit=ms&timeformat=unixtime&timezone=GMT&forecast_days=16&models=best_match",
+    "request": {
+      "latitude": -52.82177,
+      "longitude": -70.89685,
+      "hourly": "temperature_2m,wind_speed_10m",
+      "temperature_unit": "celsius",
+      "wind_speed_unit": "ms",
+      "timeformat": "unixtime",
+      "timezone": "GMT",
+      "forecast_days": 16,
+      "models": "best_match"
+    },
+    "requested_coordinates": {
+      "latitude": -52.82177,
+      "longitude": -70.89685
+    },
+    "returned_coordinates": {
+      "latitude": -52.829525,
+      "longitude": -70.91934
+    },
+    "model_requested": "best_match",
+    "model_run_issued_at": null,
+    "model_note": "best_match combina modelos; descarga no equivale a hora de emisión de una corrida.",
+    "timezone": "UTC",
+    "units": {
+      "time": "unixtime",
+      "temperature_2m": "°C",
+      "wind_speed_10m": "m/s"
+    },
+    "first_valid_utc": "2026-11-12T00:00:00+00:00",
+    "last_valid_utc": "2026-11-27T23:00:00+00:00",
+    "hours": 384,
+    "raw_sha256": "3a6a828efa343ee586a3a8e211475decb13678c6a8227d700316f2875d1c5dab",
+    "variables_used_in_physics": [
+      "temperature_2m"
+    ],
+    "variables_archived_only": [
+      "wind_speed_10m"
+    ],
+    "source_documentation": "https://open-meteo.com/en/docs"
+  },
+  "hydration": {
+    "column": "M1_SS_W_m3",
+    "raw_sha256": "27196495c1da43f54e941d81fee22932b7a0e31911b32680d123715eeb3b7815",
+    "tail": "constant_last",
+    "time_origin": "Edad 0 de vertida alineada al inicio de ventana retenida (registro +2 h); no se inventan las dos horas ausentes."
+  },
+  "thermal_pass": false,
+  "differential_pass": false,
+  "surface_method": "Perfil lineal en media celda usando el flujo Robin del solver; estimación, no S25 resuelto.",
+  "source_commit": "cb3511ecf86ba4bda86522bb8c63fd1acab85d33"
+}
