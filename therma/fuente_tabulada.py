@@ -6,6 +6,8 @@ class FuenteTabulada:
     recommended_step_s = 900.
 
     def __init__(self, config, rho, cp):
+        from .fuentes_vigentes import comprobar_fuente
+        comprobar_fuente(config)
         self.t = np.asarray(config['time_h'], dtype=float)*3600
         self.q = np.asarray(config['Q_W_m3'], dtype=float)
         if self.t.ndim != 1 or len(self.t)<2 or self.q.shape!=self.t.shape or self.t[0]!=0 or not np.all(np.diff(self.t)>0) or not np.isfinite(self.t).all() or not np.isfinite(self.q).all() or np.any(self.q<0):

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "provider": "Open-Meteo",
+  "product": "forecast",
+  "retrieved_at_utc": "2026-11-16T21:46:36.704354+00:00",
+  "request_url": "https://api.open-meteo.com/v1/forecast?latitude=-52.82177&longitude=-70.89685&hourly=temperature_2m%2Cwind_speed_10m&temperature_unit=celsius&wind_speed_unit=ms&timeformat=unixtime&timezone=GMT&forecast_days=16&models=best_match",
+  "request": {
+    "latitude": -52.82177,
+    "longitude": -70.89685,
+    "hourly": "temperature_2m,wind_speed_10m",
+    "temperature_unit": "celsius",
+    "wind_speed_unit": "ms",
+    "timeformat": "unixtime",
+    "timezone": "GMT",
+    "forecast_days": 16,
+    "models": "best_match"
+  },
+  "requested_coordinates": {
+    "latitude": -52.82177,
+    "longitude": -70.89685
+  },
+  "returned_coordinates": {
+    "latitude": -52.829525,
+    "longitude": -70.91934
+  },
+  "model_requested": "best_match",
+  "model_run_issued_at": null,
+  "model_note": "best_match combina modelos; descarga no equivale a hora de emisión de una corrida.",
+  "timezone": "UTC",
+  "units": {
+    "time": "unixtime",
+    "temperature_2m": "°C",
+    "wind_speed_10m": "m/s"
+  },
+  "first_valid_utc": "2026-11-16T00:00:00+00:00",
+  "last_valid_utc": "2026-12-01T23:00:00+00:00",
+  "hours": 384,
+  "raw_sha256": "8543f17581ddb5250da07f6c825f723d51e84c52ec487dcc1a92cb6cce112039",
+  "variables_used_in_physics": [
+    "temperature_2m"
+  ],
+  "variables_archived_only": [
+    "wind_speed_10m"
+  ],
+  "source_documentation": "https://open-meteo.com/en/docs"
+}

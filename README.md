@@ -1,5 +1,11 @@
 # Proyecto 2 — G9: Punta Arenas / Tehuel Aike
 
+**Actualización de fuentes, 16-11-2026:** el usuario retiró por incorrecta la
+fuente PINN anterior. `data/hydration/source_terms.txt` contiene ahora el archivo
+FV/Tikhonov corregido, idéntico al alias `source_terms_fv_tikhonov.txt` del último
+pull. [Procedencia y estado](data/hydration/README.md). La [entrega E12 anterior](docs/e12/README.md)
+es histórica y no vigente; sus resultados no corresponden a estos datos.
+
 ## E12 — Caso determinista de 14 días
 
 `ejecutar_e12.py` usa una sola fuente del archivo entregado (`M1_SS`, en W/m³),

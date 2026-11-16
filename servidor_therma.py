@@ -26,6 +26,8 @@ def catalogo_simulaciones(folder):
             if m.get('status')!='COMPLETED' or m.get('simulation_id')!=ident or not (file.parent/'fields.bin').is_file():continue
             p=m['config'];g=m['geometry']
             if not isinstance(p,dict) or not isinstance(g,dict):continue
+            from therma.fuentes_vigentes import comprobar_fuente
+            comprobar_fuente((p.get('construction') or {}).get('curve') or {})
             items.append(dict(simulation_id=ident,created_utc=m.get('created_utc'),geometry=p['geometry'],
                 dim=p['dim'],lengths_m=g['lengths_m'],days=p.get('days'),custom_geometry=bool(p.get('foundation_parameters'))))
         except (OSError,ValueError,KeyError,TypeError):continue

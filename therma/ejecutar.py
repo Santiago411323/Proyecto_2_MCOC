@@ -30,7 +30,7 @@ def validar(config):
     defaults=dict(geometry='block',meshIndex=0,dim=1,L=[1.,1.,1.],n=[20,16,8],k=2.,rho=2400.,cp=900.,
         initial=20.,initialType='uniform',amplitude=30.,source='none',period=172800.,qmax=0.,calibrate=False,
         target=70.,days=1.,dtMode='auto',dt=300.,factor=.7,frames=65,origin=[0.,0.,0.])
-    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather','s25','foundation_parameters'}
+    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather','s25','foundation_parameters','cooling'}
     if set(p)-allowed:raise ValueError('Parámetros desconocidos: '+', '.join(sorted(set(p)-allowed)))
     p={**defaults,**p}
     if p['geometry'] not in ('block','foundation') or isinstance(p['dim'],bool) or p['dim'] not in (1,2,3):raise ValueError('Geometría o dimensión inválida.')
@@ -76,6 +76,8 @@ def validar(config):
             if isinstance(b.get(k),bool) or not isinstance(b.get(k),(float,int)) or not math.isfinite(b[k]):raise ValueError('Valor de borde inválido: '+k)
         if min(b['h'],b['R'])<0:raise ValueError('h y R no pueden ser negativos.')
     validar_moldaje(p)
+    from .enfriamiento import validar_enfriamiento
+    validar_enfriamiento(p)
     from .s25_ifc import validar_s25
     validar_s25(p)
     if p.get("construction") is not None:

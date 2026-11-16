@@ -1,22 +1,19 @@
-"""PINN versus FV manteniendo el mismo plan y físicos; NO mezcla sus pesos."""
+"""Auditoría histórica: PINN retirado; no ejecuta nuevas simulaciones con él."""
 import argparse
 from pathlib import Path
-from ejecutar_lotes_defensa import build_catalog
-from therma.lotes import ejecutar_catalogo, write_csv, write_json
+from ejecutar_lotes_defensa import audit_sources
+from therma.lotes import write_csv, write_json
 
 
 def main(output):
-    rows=[]
-    for method in ('fv','pinn'):
-        cat=build_catalog(method)
-        cat['plans']=[next(p for p in cat['plans'] if p['id']=='propuesto')]
-        cat['sources']=cat['sources'][:1]
-        cat['scenarios']=[dict(cat['scenarios'][0],weight='1')]
-        _,records=ejecutar_catalogo(cat,output/method)
-        rows.append(dict(method=method,**records[0]))
-    write_csv(output/'comparacion_metodos.csv',rows)
-    write_json(output/'comparacion_metodos.json',dict(rows=rows,
-        scope='M1_SS, Propuesto, mismos clima, malla, rho/cp y k. Métodos distintos, no réplicas aleatorias. No se agregan probabilidades entre archivos.'))
+    audit=audit_sources()
+    write_csv(output/'auditoria_historica_fuentes.csv',[
+        dict(method=source['method'],status=source['status'],sha256=source['sha256'],**curve)
+        for source in audit for curve in source['curves']])
+    write_json(output/'estado_fuentes.json',dict(
+        status='PINN_RETIRED_NO_THERMAL_COMPARISON_RUN',sources=audit,
+        note='El usuario declaró incorrectas las fuentes PINN el 16-11-2026. Comparación de archivos sólo para trazabilidad; no se ejecutan casos PINN ni se asignan pesos.'))
+    print('Auditoría guardada. PINN retirado: no se ejecutó ninguna simulación.')
 
 
 if __name__=='__main__':

@@ -1,0 +1,3 @@
+﻿caso,simulation_id,Tmax_C,Delta_S25_estimado_C,t_Tmax_h,t_Delta_h,energia_extraida_MJ,error_balance_relativo,S25_completo,folder,url
+sin_tuberias,20153a9ec8a94c08b09538f686802468,47.17176421045495,18.140797750794402,209.75,790.0,0.0,2.267713734057564e-15,True,C:\Users\nico0\OneDrive\Desktop\MCOC2\resultados\servidor_therma\20153a9ec8a94c08b09538f686802468,http://127.0.0.1:8767/?result=20153a9ec8a94c08b09538f686802468
+con_tuberias,4a8cd148431d498db73e4c573a6d6510,44.72298496305518,23.10062077025797,135.5,165.0,18281.66225983095,2.296610040650332e-15,True,C:\Users\nico0\OneDrive\Desktop\MCOC2\resultados\servidor_therma\4a8cd148431d498db73e4c573a6d6510,http://127.0.0.1:8767/?result=4a8cd148431d498db73e4c573a6d6510

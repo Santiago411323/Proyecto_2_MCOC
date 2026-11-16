@@ -1,5 +1,12 @@
 # F02 — Lotes, duración física y riesgo térmico
 
+> Actualización 16-11-2026: el usuario confirmó FV/Tikhonov y retiró PINN por
+> incorrecto. La descripción de PINN como sensibilidad en este documento es
+> histórica; ya no es una alternativa admisible. El comando de sensibilidad
+> entre fuentes ahora sólo audita archivos, sin simular PINN.
+> La ruta principal vigente es `data/hydration/source_terms.txt`; el alias FV
+> conserva los mismos bytes usados por las corridas archivadas.
+
 La pregunta es minimizar el tiempo de colocación D sujeto a
 P(Tmax > 70 °C **o** DeltaTmax > 20 °C) <= 0,05.
 La defensa indicada es el 19 de noviembre de 2026. No se encontró una pauta F02

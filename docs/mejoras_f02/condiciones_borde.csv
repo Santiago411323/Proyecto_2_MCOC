@@ -1,0 +1,5 @@
+﻿region,modelo,ecuacion,parametros
+Aire,Robin,q_saliente=(Tsuperficie-Taire)/(1/h+Rmoldaje+Raislacion),h=10 W/m2K; Rmoldaje=0.02/0.15 lateral; Raislacion=e/0.038; serie horaria
+Suelo,Reservorio efectivo,q_saliente=(Tsuperficie-8)/(0.05+1/1.5+Rbasal_adicional),"Rbasal adicional sólo en planes identificados; 0, 0.5 o 1 m2K/W"
+Interfaces colocadas,Contacto perfecto,Continuidad de flujo y temperatura,Mismo material; sin resistencia de contacto interna
+Interior,Fuente volumétrica,rho cp dT/dt=div(k grad T)+Q(edad),Curva completa FV; reinicio de edad por vertida; cola Q constante al último valor

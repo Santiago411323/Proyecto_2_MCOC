@@ -1,0 +1,125 @@
+{
+  "source": "data/hydration/source_terms.txt",
+  "raw_sha256": "182b4a500dd02060b89dc452f007a379c7ab6cdc569e67de59a04c00d3497956",
+  "units": {
+    "time": "h",
+    "source": "W/m3",
+    "integrated_energy": "MJ/m3"
+  },
+  "common_end_h": 163.0,
+  "time_origin": "Inicio de ventana retenida: inicio del registro +2 h. Edad desde mezcla no establecida.",
+  "status": "DATA_AUDIT_ONLY_NO_PROBABILITY_ASSIGNED",
+  "curves": [
+    {
+      "curve": "M1_SS",
+      "campaign": "SS",
+      "samples": 1443,
+      "end_h": 240.333,
+      "Q_peak_W_m3": 467.75,
+      "peak_h": 13.833,
+      "Q_end_W_m3": 1.57,
+      "energy_observed_MJ_m3": 88.14834777599982,
+      "energy_common_MJ_m3": 87.11583674399999,
+      "equivalent_adiabatic_rise_observed_C": 34.8006938065842,
+      "missing_to_age_336_h": 95.667
+    },
+    {
+      "curve": "M2_SS",
+      "campaign": "SS",
+      "samples": 1443,
+      "end_h": 240.333,
+      "Q_peak_W_m3": 531.11,
+      "peak_h": 13.333,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 95.71522170599997,
+      "energy_common_MJ_m3": 95.351900634,
+      "equivalent_adiabatic_rise_observed_C": 37.78807212228596,
+      "missing_to_age_336_h": 95.667
+    },
+    {
+      "curve": "M3_SS",
+      "campaign": "SS",
+      "samples": 1443,
+      "end_h": 240.333,
+      "Q_peak_W_m3": 553.01,
+      "peak_h": 12.333,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 94.14901087199998,
+      "energy_common_MJ_m3": 93.239899794,
+      "equivalent_adiabatic_rise_observed_C": 37.16973695156789,
+      "missing_to_age_336_h": 95.667
+    },
+    {
+      "curve": "M4_SS",
+      "campaign": "SS",
+      "samples": 1443,
+      "end_h": 240.333,
+      "Q_peak_W_m3": 568.94,
+      "peak_h": 12.5,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 100.16611077599981,
+      "energy_common_MJ_m3": 98.841376854,
+      "equivalent_adiabatic_rise_observed_C": 39.54526929727725,
+      "missing_to_age_336_h": 95.667
+    },
+    {
+      "curve": "M1_22A",
+      "campaign": "22A",
+      "samples": 979,
+      "end_h": 163.0,
+      "Q_peak_W_m3": 473.38,
+      "peak_h": 17.333,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 61.212021138000026,
+      "energy_common_MJ_m3": 61.212021138,
+      "equivalent_adiabatic_rise_observed_C": 24.166315746710957,
+      "missing_to_age_336_h": 173.0
+    },
+    {
+      "curve": "M2_22A",
+      "campaign": "22A",
+      "samples": 979,
+      "end_h": 163.0,
+      "Q_peak_W_m3": 625.29,
+      "peak_h": 17.333,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 82.44622565999998,
+      "energy_common_MJ_m3": 82.44622566000001,
+      "equivalent_adiabatic_rise_observed_C": 32.54951371287527,
+      "missing_to_age_336_h": 173.0
+    },
+    {
+      "curve": "M3_22A",
+      "campaign": "22A",
+      "samples": 979,
+      "end_h": 163.0,
+      "Q_peak_W_m3": 589.7,
+      "peak_h": 17.333,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 73.288830276,
+      "energy_common_MJ_m3": 73.28883027600001,
+      "equivalent_adiabatic_rise_observed_C": 28.934202469217684,
+      "missing_to_age_336_h": 173.0
+    },
+    {
+      "curve": "M4_22A",
+      "campaign": "22A",
+      "samples": 979,
+      "end_h": 163.0,
+      "Q_peak_W_m3": 596.08,
+      "peak_h": 17.167,
+      "Q_end_W_m3": 0.0,
+      "energy_observed_MJ_m3": 73.62834362999997,
+      "energy_common_MJ_m3": 73.62834362999999,
+      "equivalent_adiabatic_rise_observed_C": 29.06824128643777,
+      "missing_to_age_336_h": 173.0
+    }
+  ],
+  "unknowns": [
+    "El encabezado declara 350.77 kg/m³ de cemento y rho/cp; faltan composición detallada y temperaturas de ensayo por muestra.",
+    "No se establece que M1-M4 y las campañas sean réplicas de una misma población.",
+    "Fuente vigente recuperada por FV/Tikhonov; el encabezado declara menor confianza de 22A. Falta validación independiente de la fundación."
+  ],
+  "policy": "Sin suavizado, derivación, relleno de NaN ni extrapolación. Se integra Q original lineal por tramos.",
+  "adiabatic_note": "Elevación equivalente = integral Q/(2476*1023), no temperatura medida ni resultado de fundación."
+}

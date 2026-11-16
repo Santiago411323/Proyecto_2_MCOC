@@ -6,6 +6,10 @@ data/weather/**/forecast.json -text
 docs/e11/evidencia/** -text
 data/hydration/source_terms.txt -text
 data/hydration/source_terms_fv_tikhonov.txt -text
+data/hydration/retiradas/** -text
+# Los datos originales conservan incluso los espacios del encabezado del proveedor.
+data/hydration/*.txt -whitespace
+data/hydration/retiradas/*.txt -whitespace
 docs/defensa/evidencia/** -text
 docs/s25_ifc/evidencia/** -text
 docs/e12/** -text
@@ -13,3 +17,6 @@ docs/e12/** -text
 docs/s25_final/evidencia/** -text
 
 docs/exploracion/evidencia/** -text
+docs/mejoras_f02/** -text whitespace=cr-at-eol
+docs/tuberias_f02/** -text whitespace=cr-at-eol
+docs/e13/** -text whitespace=cr-at-eol

@@ -14,7 +14,7 @@ NAMES=[f'M{i}_{c}' for c in ('SS','22A') for i in range(1,5)]
 
 def audit_sources():
     audit=[]
-    for file,method in [('source_terms.txt','PINN'),('source_terms_fv_tikhonov.txt','FV_Tikhonov_beta2.5')]:
+    for file,method in [('retiradas/source_terms_pinn_obsoleto.txt','PINN'),('source_terms.txt','FV_Tikhonov_beta2.5')]:
         path=ROOT/'data/hydration'/file
         raw=np.loadtxt(path)
         rows=[]
@@ -30,12 +30,14 @@ def audit_sources():
                              peak_W_m3=float(q.max()),energy_MJ_m3=float(np.trapezoid(q,t*3600)/1e6),
                              theta_with_selected_capacity_C=float(np.trapezoid(q,t*3600)/(2476*1023)),last_W_m3=float(q[-1])))
         audit.append(dict(file=str(path.relative_to(ROOT)),sha256=sha(path),method=method,curves=rows,
+                          status='RETIRED_INVALID_USER_DATA' if method=='PINN' else 'CURRENT_USER_PROVIDED',
                           header='\n'.join(l for l in path.read_text(encoding='utf-8').splitlines() if l.startswith('#'))))
     return audit
 
 
 def build_catalog(method='fv',rate=20.):
-    file='source_terms_fv_tikhonov.txt' if method=='fv' else 'source_terms.txt'
+    if method!='fv':raise ValueError('PINN fue retirado por el usuario. Sólo FV/Tikhonov es una fuente vigente.')
+    file='source_terms.txt'
     raw_path=ROOT/'data/hydration'/file
     data=np.loadtxt(raw_path)
     sources=[]

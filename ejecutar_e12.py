@@ -28,6 +28,7 @@ def main():
         time_origin='Edad 0 de vertida alineada al inicio de ventana retenida (registro +2 h); no se inventan las dos horas ausentes.')
     config=json.loads((ROOT/'docs/e11/evidencia/config.json').read_text(encoding='utf-8'))
     config.update(days=14.,meshIndex=1,frames=100)
+    config.update(rho=2476.,cp=1023.)  # Propiedades del encabezado vigente FV/Tikhonov.
     for key in ('mask','n','L','origin'):config.pop(key,None)
     config['weather']=configuracion_snapshot(ROOT/'data/weather/20261112T124325279292Z_a139765f','2026-11-13T10:00:00-03:00')
     ForzanteAire(config['weather'],14*86400)
