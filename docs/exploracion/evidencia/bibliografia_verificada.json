@@ -1,0 +1,18 @@
+{
+  "EPS": {
+    "conductivity_W_mK": 0.038,
+    "document_date": "04/2026",
+    "url": "https://knauf.com/api/download-center/v1/assets/7d13a70b-0055-4d0b-a93f-41e6995ce7bc?download=true",
+    "erratum": "Search index said 12/2023; frozen catalogue original string retained for traceability. Numerical conductivity unchanged."
+  },
+  "placement": {
+    "values_C": [
+      12,
+      18,
+      24
+    ],
+    "status": "Sensitivity hypotheses; field feasibility not confirmed.",
+    "ACI_url": "https://www.concrete.org/frequentlyaskedquestions.aspx?faqid=15",
+    "limitation": "35 C discharge FAQ explicitly excludes mass concrete; not a justification of placement temperatures for this foundation."
+  }
+}

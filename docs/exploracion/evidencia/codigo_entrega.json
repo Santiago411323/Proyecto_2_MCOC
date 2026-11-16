@@ -1,0 +1,18 @@
+{
+  "scope": "C\u00f3digo de entrega. Los cat\u00e1logos congelados registran los CLI ejecutados; f\u00edsica y reconstrucci\u00f3n mantienen exactamente el fingerprint de la bater\u00eda.",
+  "engine_fingerprint": "596940a9ae3e97a46b0fd196021bd241647407129273c280f41c04a3dd8e8238",
+  "files": {
+    "therma/lotes.py": "c71eb64280935871d162db8456a073e99915fe70b35cd33581c6f325f2d8541b",
+    "therma/lotes_ifc.py": "56517d88d0357feb641d9d35d8766cf910b2e9f9d8f94affcb905387afacf3ab",
+    "therma/exploracion.py": "5051931569af389686d34f71f7d3ca8680e0f38478215785effc8a8142e7ebec",
+    "therma/s25_ifc.py": "ace924ca496287218a291723a4f578fa3695529774c2b76f9b65e267dc69ad63",
+    "explorar_planes_s25.py": "3e9f7826dfd3d58a193927343fd3902f7aff49ac398b163af260f9356c0aa49a",
+    "refinar_planes_s25.py": "de0ed23831d6546b48bd65a533a7e76fc4c0ebcd50774554eb4ef414849f28e1",
+    "exportar_exploracion.py": "d4cb84d3ab73ed4491662f7a9f2452c4b210adf4cb38aec3b36190648e99f948",
+    "verificar_cierre_s25.py": "414a726cfe542aea3fa30bcdcd22f95532ef21de284cc15c635a2a8a7c1cebe8",
+    "servidor_therma.py": "b8ba8ad585e030ee70b15d3f0bbe125c8134704f0df82efb3dc6e52f0a31abae",
+    "panel/app.js": "117ea2f192f7507f1f2d87ce425efc74926bf021039015885f41ec15a8f20df3",
+    "panel_termico.html": "f09e3a3583e1691e87e6a3c4b3e33456a8044e0c5b2507c3d8bfd224b5f7b817",
+    "tests/test_exploracion.py": "accf9fc9492feee852f2bd5937da88e6f88197feda672de1dc86e5e5a864cf1d"
+  }
+}

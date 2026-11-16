@@ -2,11 +2,15 @@
 const $=id=>document.getElementById(id),data=JSON.parse($('foundation-data').textContent),palette=['#6a9eaa','#d1ad71','#b47470'];
 const state={visible:data.capas.map(()=>true),view:'orbit',zoom:1},fmt=(v,d=2)=>v.toLocaleString('es-CL',{maximumFractionDigits:d,minimumFractionDigits:d});
 const dims=data.max.map((v,i)=>v-data.min[i]);
-$('foundationDimensions').textContent=`Base ${fmt(dims[0])} × ${fmt(dims[1])} m · altura total ${fmt(dims[2])} m · diámetro superior ${fmt(data.capas.at(-1).max[0]-data.capas.at(-1).min[0])} m`;
 const layers=$('foundationLayers');
+function refreshData(next){Object.assign(data,next);dims.splice(0,3,...data.max.map((v,i)=>v-data.min[i]));state.visible=data.capas.map(()=>true);
+$('foundationDimensions').textContent=`Base ${fmt(dims[0])} × ${fmt(dims[1])} m · altura total ${fmt(dims[2])} m · diámetro superior ${fmt(data.capas.at(-1).max[0]-data.capas.at(-1).min[0])} m`;
+layers.replaceChildren();
 data.capas.forEach((c,i)=>{const row=document.createElement('div');row.className='foundation-layer';const label=document.createElement('label');label.className='check';const input=document.createElement('input');input.type='checkbox';input.checked=true;input.setAttribute('aria-label','Mostrar '+c.nombre);input.onchange=()=>{state.visible[i]=input.checked;draw();};const swatch=document.createElement('i');swatch.style.background=palette[i%3];const title=document.createElement('b');title.textContent=c.nombre;label.append(input,swatch,title);const note=document.createElement('p');note.textContent=`z: ${fmt(c.min[2])} → ${fmt(c.max[2])} m · espesor ${fmt(c.max[2]-c.min[2])} m\nVolumen IFC: ${fmt(c.volumen_m3)} m³`;const solo=document.createElement('button');solo.className='quiet';solo.textContent='Ver sólo esta capa';solo.onclick=()=>{state.visible=state.visible.map((_,j)=>j===i);sync();draw();};row.append(label,note,solo);layers.append(row);});
 $('foundationSource').textContent=`Fuente: ${data.archivo} · huella ${data.sha256.slice(0,12)}… · volumen total ${fmt(data.capas.reduce((s,c)=>s+c.volumen_m3,0))} m³.`;
-$('foundationVolumeAudit').textContent='Volumen objetivo comunicado: 636,775 m³ (pendiente de confirmar su despiece). El IFC actual, con tres alturas de 1,10 m, suma '+fmt(data.capas.reduce((v,c)=>v+c.volumen_m3,0),3)+' m³. La resolución de voxel no cambia ese volumen geométrico. Revisar cotas antes de modificar la forma.';
+$('foundationVolumeAudit').textContent='Volumen calculado de la geometría IFC: '+fmt(data.capas.reduce((v,c)=>v+c.volumen_m3,0),3)+' m³. El tamaño de voxel no modifica ese volumen geométrico. La geometría sigue siendo provisional.';
+draw();}
+refreshData(data);
 function sync(){layers.querySelectorAll('input').forEach((e,i)=>e.checked=state.visible[i]);}
 function draw(){
  if($('foundationPage').hidden)return;const canvas=$('foundationCanvas'),rect=canvas.getBoundingClientRect(),w=Math.max(280,rect.width),h=Math.max(300,rect.height),dpr=devicePixelRatio||1;canvas.width=w*dpr;canvas.height=h*dpr;const g=canvas.getContext('2d');g.scale(dpr,dpr);g.fillStyle='#fafbf7';g.fillRect(0,0,w,h);
@@ -41,5 +45,5 @@ document.querySelectorAll('[data-fview]').forEach(b=>b.onclick=()=>{state.view=b
 $('resetFoundation').onclick=()=>{state.visible=state.visible.map(()=>true);state.zoom=1;state.view='orbit';$('explodeFoundation').value=0;$('foundationYaw').value=-40;$('foundationPitch').value=28;document.querySelectorAll('[data-fview]').forEach(b=>b.classList.toggle('active',b.dataset.fview==='orbit'));sync();draw();};
 let drag=null;const canvas=$('foundationCanvas');canvas.onpointerdown=e=>{if(state.view!=='orbit')return;drag={x:e.clientX,y:e.clientY,yaw:Number($('foundationYaw').value),pitch:Number($('foundationPitch').value)};canvas.setPointerCapture(e.pointerId);};canvas.onpointermove=e=>{if(!drag)return;$('foundationYaw').value=Math.max(-180,Math.min(180,drag.yaw+(e.clientX-drag.x)*.5));$('foundationPitch').value=Math.max(10,Math.min(80,drag.pitch+(e.clientY-drag.y)*.35));draw();};canvas.onpointerup=()=>drag=null;canvas.onpointercancel=()=>drag=null;canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(.5,Math.min(2,state.zoom*(e.deltaY>0?.9:1.1)));draw();},{passive:false});
 $('foundationPNG').onclick=()=>{const a=document.createElement('a');a.download='fundacion-ifc-tres-capas.png';a.href=canvas.toDataURL('image/png');a.click();};
-window.addEventListener('resize',draw);window.foundationViewer={data,draw,state};mode(false);
+window.addEventListener('resize',draw);window.foundationViewer={data,draw,state,setData:refreshData};mode(false);
 })();

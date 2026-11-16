@@ -5,4 +5,11 @@ panel/vendor/three/LICENSE text eol=lf
 data/weather/**/forecast.json -text
 docs/e11/evidencia/** -text
 data/hydration/source_terms.txt -text
+data/hydration/source_terms_fv_tikhonov.txt -text
+docs/defensa/evidencia/** -text
+docs/s25_ifc/evidencia/** -text
 docs/e12/** -text
+
+docs/s25_final/evidencia/** -text
+
+docs/exploracion/evidencia/** -text

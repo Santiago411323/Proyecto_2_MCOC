@@ -1,0 +1,4 @@
+﻿active_pours,samples,normal_offset_error_max_m,rejected_points,excluded_internal,soil_points,air_points
+[1],5376,6.800116025829084e-16,0,0,2592,2784
+"[1, 2]",5856,6.800116025829084e-16,0,5184,2592,3264
+"[1, 2, 3]",6048,6.800116025829084e-16,0,6912,2592,3456

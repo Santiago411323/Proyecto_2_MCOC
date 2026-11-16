@@ -1,0 +1,18 @@
+{
+  "therma/auditoria_geometrica.py": "00a1e0a11df7bbc3ad30c4dbbd6aab95bd1b63e0653e6f5f99f4f6967527874a",
+  "therma/criterio_s25.py": "a26f2e3e4dc3e9eddaa6a3378769f14cdc3c92e0e46ca5458abbff47bf33d02c",
+  "therma/reconstruccion_s25.py": "1d9c96cca1c3c41fb624072b960677c725edbd4b34d91a5426b8387897350b89",
+  "therma/s25_ifc.py": "e4729be98e20e65cf76bf1f209a2563fe998556b5783a5f57e4820719720228f",
+  "therma/superficies_ifc.py": "32ca70a88cafa8624fcfaf6eb8e03be641d17c0f7dcb7195aa48677882502bd5",
+  "therma/construccion.py": "1d9f45e185fb929eeee225236547526187ad99408974d63793e4e21da7c7c651",
+  "therma/ejecutar.py": "1eb9a3d7c988216336f38a7a25e1eeaa88543774f8ba1cf84114f8f03380ed3d",
+  "auditar_s25_final.py": "85f35db060e3ccc209a20d178a04e5d989d993be94b4b1cab8ddda7832ce356e",
+  "casos_frontera_staircase.py": "8e1ba64a718b7c4ab2181c485e23a6fb89921d7eb2c41ab0e2a77dbb5e3de389",
+  "panel/visor.html": "95a6f601c7bbcc56dc0bfa1e72e5269a9d9a56899197531cdba07d647679ac8b",
+  "panel/visor3d.js": "3246d66ad86865d89400a77f9c4aab7e06a092197ebece1685581c2f139801eb",
+  "panel/visordatos.js": "dbe49d968d873dfe2b54cf1518e81a20532f82bbd5d586285b4d4e29829a2110",
+  "tests/test_validacion_final_s25.py": "cbdb476db70449a73e0bda78d1c4f31e450c075bcc30659bb870588b681b41b9",
+  "tests/test_s25_ifc_resolucion.py": "5551e2135659a5d9a994dc633fb0683779d8e53b169f3797e40ffa305d41d331",
+  "docs/VALIDACION_FINAL_S25.md": "c92febd4e9fc3cadb15e541717706a7e669a44d04775b3da44cd77600d543b1d",
+  "panel_termico.html": "2292f258833f6e2cf7070e72021d1c261d7fed893e9d2d1f0ae9ec17709474eb"
+}

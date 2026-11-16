@@ -2,13 +2,13 @@
 const $=id=>document.getElementById(id),num=id=>Number($(id).value),DAY=86400;
 const colors=['#317f75','#c88d4e','#8370a5','#bd6370','#6c88a8'];
 const S={dim:3,result:null,pins:[],frame:0,worker:null,playing:false,playTime:0,view:'flat',lastConfig:null,runId:0};
-S.revision=0;
+S.revision=0;S.frames=65;
 function execution(state,text=''){ $('executionState').textContent=state+($('engineMode').value==='python'?' · Python':' · JavaScript (verificación)');if(text)$('executionOrigin').textContent=text;}
 const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('es-CL',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
 const sci=n=>Math.abs(n)<.001&&n!==0?n.toExponential(2):fmt(n,3);
 const faceNames=['x−','x+','y−','y+','z−','z+'];
 const IFC=JSON.parse($('foundation-data').textContent);
-function foundationSettings(){const custom=$('foundationMesh').value==='2',L=IFC.max.map((v,a)=>v-IFC.min[a]),steps=['voxelDx','voxelDy','voxelDz'].map(num),n=custom?L.map((v,a)=>Number.isFinite(steps[a])&&steps[a]>0?Math.max(2,Math.ceil(v/steps[a]-1e-10)):0):IFC.mallas[Number($('foundationMesh').value)].n;S.dim=3;['lx','ly','lz'].forEach((id,a)=>$(id).value=L[a]);['nx','ny','nz'].forEach((id,a)=>$(id).value=n[a]);$('customVoxelInfo').textContent=custom?'Malla: '+n.join(' × ')+' · paso real: '+L.map((v,a)=>(v/n[a]).toFixed(5)).join(' × ')+' m · '+n.reduce((a,b)=>a*b,1)+' celdas en la caja.':'';}
+function foundationSettings(){const custom=$('foundationMesh').value==='2',L=IFC.max.map((v,a)=>v-IFC.min[a]),steps=['voxelDx','voxelDy','voxelDz'].map(num),n=custom?L.map((v,a)=>Number.isFinite(steps[a])&&steps[a]>0?Math.max(2,Math.ceil(v/steps[a]-1e-10)):0):IFC.mallas[Number($('foundationMesh').value)].n;S.dim=3;['lx','ly','lz'].forEach((id,a)=>$(id).value=L[a]);['nx','ny','nz'].forEach((id,a)=>$(id).value=n[a]);$('customVoxelInfo').textContent=custom?'Malla: '+n.join(' × ')+' · paso real: '+L.map((v,a)=>(v/n[a]).toFixed(5)).join(' × ')+' m · '+n.reduce((a,b)=>a*b,1)+' celdas en la caja.':'';window.ThermaResolutionUI?.refresh();}
 function buildFaces(){
  $('faces').innerHTML=faceNames.map((name,i)=>`<div class="face" data-face="${i}"><div class="face-head"><b>${name}</b><select id="ft${i}" aria-label="Tipo de borde ${name}"><option value="D">Dirichlet</option><option value="N">Neumann</option><option value="R" selected>Robin</option></select></div><div class="field-grid"><label data-kind="temp">T borde / aire [°C]<input id="fb${i}" type="number" step="any" value="20"></label><label data-kind="flux">Flujo saliente [W/m²]<input id="fq${i}" type="number" step="any" value="0"></label><label data-kind="h">h [W/(m²·K)]<input id="fh${i}" type="number" step="any" value="10" min="0"></label><label data-kind="R">R [m²·K/W]<input id="fr${i}" type="number" step="any" value="0" min="0"></label></div></div>`).join('');
  for(let i=0;i<6;i++)$('ft'+i).onchange=()=>{visibility();dirty();};
@@ -29,14 +29,15 @@ function visibility(){
  $('alphaRead').textContent=`α = ${sci(num('k')/(num('rho')*num('cp')))} m²/s · β = h/k por cara`;
  $('dimensionHint').textContent=S.dim===1?'1D: temperatura uniforme en la sección transversal; área de referencia 1 m².':S.dim===2?'2D: uniforme en la dirección no resuelta; espesor de referencia 1 m.':'3D: se resuelven largo, ancho y altura; todas las caras son editables.';
 }
-function gather(){const geometry=$('geometry').value;return {geometry,meshIndex:Number($('foundationMesh').value),mask:geometry==='foundation'&&$('foundationMesh').value!=='2'?IFC.mallas[Number($('foundationMesh').value)].ids:null,origin:geometry==='foundation'?IFC.min:[0,0,0],dim:S.dim,L:['lx','ly','lz'].map(num),n:['nx','ny','nz'].map(num),k:num('k'),rho:num('rho'),cp:num('cp'),initial:num('initial'),initialType:$('initialType').value,amplitude:num('amplitude'),source:$('source').value,period:num('period')*DAY,qmax:num('qmax'),calibrate:$('calibrate').checked&&$('source').value!=='none',target:num('target'),days:num('days'),dtMode:$('dtMode').value,dt:num('dt'),factor:num('factor'),frames:65,...(window.ThermaWeatherUI.config()?{weather:window.ThermaWeatherUI.config()}:{}),...(window.ThermaFormworkUI.config()?{formwork:window.ThermaFormworkUI.config()}:{}),...(window.ThermaEnvironmentUI.config()?{environment:window.ThermaEnvironmentUI.config()}:{}),...(window.ThermaConstructionUI.config()?{construction:window.ThermaConstructionUI.config()}:{}),faces:faceNames.map((_,i)=>({type:$('ft'+i).value,temp:num('fb'+i),flux:num('fq'+i),h:num('fh'+i),R:num('fr'+i)}))};}
+function gather(){const geometry=$('geometry').value;return {geometry,meshIndex:Number($('foundationMesh').value),mask:geometry==='foundation'&&$('foundationMesh').value!=='2'?IFC.mallas[Number($('foundationMesh').value)].ids:null,origin:geometry==='foundation'?IFC.min:[0,0,0],dim:S.dim,L:['lx','ly','lz'].map(num),n:['nx','ny','nz'].map(num),k:num('k'),rho:num('rho'),cp:num('cp'),initial:num('initial'),initialType:$('initialType').value,amplitude:num('amplitude'),source:$('source').value,period:num('period')*DAY,qmax:num('qmax'),calibrate:$('calibrate').checked&&$('source').value!=='none',target:num('target'),days:num('days'),dtMode:$('dtMode').value,dt:num('dt'),factor:num('factor'),frames:S.frames,...(window.ThermaWeatherUI.config()?{weather:window.ThermaWeatherUI.config()}:{}),...(window.ThermaFormworkUI.config()?{formwork:window.ThermaFormworkUI.config()}:{}),...(window.ThermaEnvironmentUI.config()?{environment:window.ThermaEnvironmentUI.config()}:{}),...(window.ThermaConstructionUI.config()?{construction:window.ThermaConstructionUI.config()}:{}),...(window.ThermaResolutionUI?.config()?{s25:window.ThermaResolutionUI.config()}:{}),...(window.ThermaFoundationEditor?.config()?{foundation_parameters:window.ThermaFoundationEditor.config()}:{}),faces:faceNames.map((_,i)=>({type:$('ft'+i).value,temp:num('fb'+i),flux:num('fq'+i),h:num('fh'+i),R:num('fr'+i)}))};}
 function setConfig(p){
+ window.ThermaFoundationEditor?.set(p);
  if(!p||![1,2,3].includes(p.dim)||!Array.isArray(p.L)||p.L.length!==3||!Array.isArray(p.n)||p.n.length!==3||!Array.isArray(p.faces)||p.faces.length!==6)throw Error('El archivo no contiene ajustes válidos de THERMA.');
- S.dim=p.dim;['lx','ly','lz'].forEach((id,i)=>$(id).value=p.L[i]);['nx','ny','nz'].forEach((id,i)=>$(id).value=p.n[i]);
+ S.frames=Number.isInteger(p.frames)&&p.frames>=20&&p.frames<=100?p.frames:65;S.dim=p.dim;['lx','ly','lz'].forEach((id,i)=>$(id).value=p.L[i]);['nx','ny','nz'].forEach((id,i)=>$(id).value=p.n[i]);
  $('geometry').value=p.geometry==='foundation'?'foundation':'block';$('foundationMesh').value=String([0,1,2].includes(p.meshIndex)?p.meshIndex:0);if(p.meshIndex===2)['voxelDx','voxelDy','voxelDz'].forEach((id,a)=>$(id).value=Number((p.L[a]/p.n[a]).toPrecision(12)));if(p.geometry==='foundation')foundationSettings();
  ['k','rho','cp','initial','initialType','amplitude','source','qmax','target','days','dtMode','dt','factor'].forEach(id=>{if(p[id]!==undefined)$(id).value=p[id];});$('period').value=p.period/DAY;$('calibrate').checked=!!p.calibrate;
  p.faces.forEach((b,i)=>{if(!['D','N','R'].includes(b.type))throw Error('Tipo de borde desconocido.');$('ft'+i).value=b.type;[['fb','temp'],['fq','flux'],['fh','h'],['fr','R']].forEach(([prefix,key])=>$(prefix+i).value=b[key]);});
- window.ThermaConstructionUI.set(p);window.ThermaWeatherUI.set(p);window.ThermaEnvironmentUI.set(p);window.ThermaFormworkUI.set(p);visibility();dirty();
+ window.ThermaConstructionUI.set(p);window.ThermaWeatherUI.set(p);window.ThermaEnvironmentUI.set(p);window.ThermaFormworkUI.set(p);window.ThermaResolutionUI?.set(p);visibility();dirty();
 }
 function applyFaces(){for(let i=0;i<2*S.dim;i++){if($('ft'+i).disabled)continue;$('ft'+i).value=$('globalType').value;$('fb'+i).value=$('globalTemp').value;$('fq'+i).value=$('globalFlux').value;$('fh'+i).value=$('globalH').value;$('fr'+i).value=$('globalR').value;}visibility();dirty();}
 function dirty(){S.revision++;if(S.result){$('stale').hidden=false;execution('STALE','Los resultados pertenecen a la configuración de la ejecución anterior.');}visibility();window.dispatchEvent(new Event('therma:inputs'));}
@@ -50,14 +51,16 @@ function preset(name){
  setConfig(p);$('globalType').value=p.faces[0].type;$('globalTemp').value=p.faces[0].temp;
 }
 function error(message){$('error').textContent=message;$('error').hidden=false;$('status').textContent='Revisa los datos y vuelve a ejecutar.';if(S.result)$('stale').hidden=false;execution('FAILED',message);}
-function run(example=false){
+async function run(example=false){
+ try{if(!example)await window.ThermaFoundationEditor?.prepare();}catch(e){error(e.message);return;}
  if(S.worker)S.worker.terminate();stop();$('error').hidden=true;let p;try{p=gather();}catch(e){return error(e.message);}
+ if(p.geometry==='foundation'){try{const e=ThermaResolution.estimate(p.L,p.L.map((v,a)=>v/p.n[a]),IFC.capas.reduce((v,c)=>v+c.volumen_m3,0),{...p,dt:p.dtMode==='manual'?p.dt:900});if(!e.allowed)return error('Malla bloqueada antes de generar: '+e.reasons.join(' '));}catch(e){return error(e.message);}}
  if(!['uniform','sine'].includes(p.initialType)||!['none','constant','pulse'].includes(p.source)||!['auto','manual'].includes(p.dtMode))return error('Selecciona opciones válidas.');
  if((p.construction||p.formwork||p.weather)&&$('engineMode').value!=='python')return error('La construcción requiere el motor Python.');
  const submittedRevision=S.revision,usePython=example||$('engineMode').value==='python';
  let worker;if(usePython){worker=new ThermaBackend(example);}else{const blob=new Blob([$('solver-source').textContent],{type:'text/javascript'}),url=URL.createObjectURL(blob);worker=new Worker(url);URL.revokeObjectURL(url);}S.worker=worker;S.runId++;const id=S.runId;
  execution('RUNNING',example?'Leyendo campos 3D ya calculados por Python; no se resuelve de nuevo.':usePython?'Ejecutando termico_cartesiano.py en Python.':'Ejercicio de referencia calculado con JavaScript.');
- $('cancel').textContent=usePython?'Dejar de esperar (Python continúa)':'Detener cálculo';
+ $('cancel').textContent=usePython?'Cancelar Python':'Detener cálculo';
  $('run').disabled=true;$('cancel').hidden=false;$('progress').style.width='3%';$('status').textContent=p.calibrate?'Calculando la respuesta y calibrando Qmax…':'Integrando el balance de energía…';
  worker.onmessage=e=>{if(id!==S.runId)return;const msg=e.data;if(msg.type==='progress'){$('progress').style.width=Math.max(3,msg.value*100)+'%';return;}
   finish();if(msg.type==='error'){error(msg.message);return;}
@@ -66,7 +69,7 @@ function run(example=false){
  worker.onerror=e=>{finish();error('No se pudo ejecutar el motor: '+e.message);};worker.postMessage(p);
 }
 function showResult(result,p,submittedRevision,usePython,example=false){
-  S.result=result;S.lastConfig=JSON.parse(JSON.stringify(result.config||p));S.frame=0;S.hasPlayed=false;$('timeline').max=S.result.fields.length-1;
+  S.result=result;window.ThermaResolutionUI?.result(result);S.lastConfig=JSON.parse(JSON.stringify(result.config||p));S.frame=0;S.hasPlayed=false;$('timeline').max=S.result.fields.length-1;
   execution(submittedRevision===S.revision?'COMPLETED':'STALE',usePython?`${S.result.engine} · ID ${S.result.simulationId} · ${S.result.metadata?.created_utc}`:'Resultado JavaScript de verificación; no fue ejecutado en Python.');
   $('stale').hidden=submittedRevision===S.revision;const labels={D:'Dirichlet',N:'Neumann',R:'Robin'},types=[...new Set(S.result.config.faces.slice(0,2*S.result.config.dim).map(b=>labels[b.type]))];
   S.result.label=`${p.geometry==='foundation'?'Fundación IFC · ':''}${p.dim}D · ${types.join(' + ')}`;$('resultState').textContent=`${S.result.label} · ${S.result.N.toLocaleString('es-CL')} celdas de hormigón`;
@@ -182,8 +185,9 @@ function exportCSV(){if(!S.result)return;const r=S.result,on=!!r.config.construc
 function exportField(){if(!S.result)return;const r=S.result,F=r.fields[S.frame],nx=r.n[0],ny=r.n[1]||1,nz=r.n[2]||1,origin=r.config.origin||[0,0,0],lines=['tiempo_s,x_m,y_m,z_m,T_C,capa_id'];for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){const i=x+nx*(y+ny*z);if(!window.ThermaViewData.active(r,i,S.frame))continue;lines.push([r.frameTimes[S.frame],origin[0]+(x+.5)*r.dx[0],r.config.dim>=2?origin[1]+(y+.5)*r.dx[1]:'',r.config.dim===3?origin[2]+(z+.5)*r.dx[2]:'',F[i],r.config.mask?r.config.mask[i]:''].join(','));}download('therma-campo.csv',lines.join('\n'),'text/csv;charset=utf-8');}
 buildFaces();visibility();
 document.querySelectorAll('[data-dim]').forEach(b=>b.onclick=()=>{S.dim=Number(b.dataset.dim);visibility();dirty();});
-$('controls').addEventListener('input',dirty);$('controls').addEventListener('change',dirty);$('controls').onsubmit=e=>{e.preventDefault();run();};
-$('applyFaces').onclick=applyFaces;$('run').onclick=()=>run();$('cancel').onclick=()=>{S.runId++;finish();execution(S.result?'STALE':'READY','Se dejó de esperar. Un trabajo Python ya enviado puede terminar y conservar sus archivos.');$('status').textContent='Espera detenida; los resultados anteriores se conservan.';$('progress').style.width='0';};
+function controlChanged(e){if(e.target.name!=='studyStep')dirty();}
+$('controls').addEventListener('input',controlChanged);$('controls').addEventListener('change',controlChanged);$('controls').onsubmit=e=>{e.preventDefault();run();};
+$('applyFaces').onclick=applyFaces;$('run').onclick=()=>run();$('cancel').onclick=()=>{S.runId++;finish();execution(S.result?'STALE':'READY','Cancelación solicitada al motor Python; se detiene cooperativamente.');$('status').textContent='Cancelación solicitada; los resultados anteriores se conservan.';$('progress').style.width='0';};
 $('engineMode').onchange=dirty;$('loadPython3d').onclick=()=>{$('engineMode').value='python';run(true);};
 $('metadataExport').onclick=()=>{if(S.result?.metadata)download('therma-'+S.result.simulationId+'-metadata.json',JSON.stringify(S.result.metadata,null,2));};$('npzExport').onclick=()=>{if(S.result?.simulationId){const a=document.createElement('a');a.href=`/api/results/${S.result.simulationId}/campos.npz`;a.download='therma-'+S.result.simulationId+'.npz';a.click();}};
 $('startConstruction').onclick=()=>{stop();S.frame=0;S.hasPlayed=true;render();togglePlay();};
@@ -201,6 +205,18 @@ function chartPointer(e){const r=S.result,plot=$('centerCanvas')._chart;if(!r||!
 $('centerCanvas').onmousemove=chartPointer;$('centerCanvas').onclick=chartPointer;
 let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(render,100);});
 try{const saved=JSON.parse(localStorage.getItem('therma-config-v1')||'null');if(saved?.geometry==='foundation')setConfig(saved);else preset('foundation');}catch(_){preset('foundation');}
-window.therma={loadResult:r=>{finish();stop();if(r.config.faces?.length===6)setConfig(r.config);showResult(r,r.config,S.revision,!!r.metadata,r.engine?.includes('NPZ'));},getResult:()=>S.result,getConfig:gather,setConfig,run,render,state:S,setFrame:f=>{stop();S.hasPlayed=true;S.frame=Math.max(0,Math.min(S.result.fields.length-1,f));render();}};
-run();
+window.therma={setFoundationData:data=>{if(!data.parameters)delete IFC.parameters;Object.assign(IFC,data);for(let i=0;i<2;i++)$('foundationMesh').options[i].disabled=!!data.parameters;if(data.parameters)$('foundationMesh').value='2';if($('geometry').value==='foundation')foundationSettings();},loadResult:r=>{finish();stop();if(r.metadata?.provenance?.ifc?.geometry)window.therma.setFoundationData(r.metadata.provenance.ifc.geometry);if(r.config.faces?.length===6)setConfig(r.config);window.ThermaFoundationEditor?.set(r.config,r.metadata?.provenance?.ifc?.geometry);showResult(r,r.config,S.revision,!!r.metadata,r.engine?.includes('NPZ'));},getResult:()=>S.result,getConfig:gather,setConfig,run,render,state:S,setFrame:f=>{stop();S.hasPlayed=true;S.frame=Math.max(0,Math.min(S.result.fields.length-1,f));render();}};
+async function loadArchived(ident){
+ if(!/^[0-9a-f]{32}$/.test(ident))throw Error('ID de resultado inválido.');
+ $('engineMode').value='python';execution('RUNNING','Cargando plan ya calculado; no se ejecuta el solver.');
+ const base='/api/results/'+ident+'/',get=async(name,json=false)=>{const response=await fetch(base+name,{cache:'no-store'});if(!response.ok)throw Error('Resultado guardado no disponible: '+name);return json?response.json():response.arrayBuffer();};
+ const meta=await get('metadata.json',true);if(meta.simulation_id!==ident)throw Error('Identificación de corrida incompatible.');
+ const buffer=await get('fields.bin'),active=meta.geometry.active_static===false?await get('active.bin'):null;
+ const check=async(data,expected)=>{const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data))).map(v=>v.toString(16).padStart(2,'0')).join('');if(hash!==expected)throw Error('Campo guardado con SHA-256 incorrecto.');};
+ await check(buffer,meta.fields.sha256);if(active)await check(active,meta.activation.sha256);
+ const r=window.ThermaContract.adaptar(meta,buffer,active);window.therma.loadResult(r);
+ execution('COMPLETED',`Plan guardado · ${ident} · ${meta.created_utc} · no recalculado.`);$('status').textContent='Resultado de lote cargado. Puedes consultar cortes, sensores y S25 del mismo instante.';
+}
+const archivedId=new URLSearchParams(location.search).get('result');
+if(archivedId)loadArchived(archivedId).catch(e=>error(e.message));else{execution('READY','Configura un plan y pulsa Ejecutar simulación.');$('status').textContent='Listo para calcular. No se ejecuta Python hasta que lo solicites.';}
 })();

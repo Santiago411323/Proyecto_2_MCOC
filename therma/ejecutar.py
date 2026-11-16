@@ -17,6 +17,12 @@ ROOT=Path(__file__).resolve().parents[1]
 def ifc_actual(mtime,forma=None):
     return datos_ifc(ROOT/'modelo_e02.ifc',formas=[forma] if forma else None)
 
+def datos_fundacion(p,forma=None):
+    if p.get('foundation_parameters'):
+        from .geometria_editable import datos
+        return datos(p['foundation_parameters'],forma)
+    return ifc_actual((ROOT/'modelo_e02.ifc').stat().st_mtime_ns,forma)
+
 
 def validar(config):
     if not isinstance(config,dict):raise ValueError('La configuración debe ser un objeto JSON.')
@@ -24,10 +30,14 @@ def validar(config):
     defaults=dict(geometry='block',meshIndex=0,dim=1,L=[1.,1.,1.],n=[20,16,8],k=2.,rho=2400.,cp=900.,
         initial=20.,initialType='uniform',amplitude=30.,source='none',period=172800.,qmax=0.,calibrate=False,
         target=70.,days=1.,dtMode='auto',dt=300.,factor=.7,frames=65,origin=[0.,0.,0.])
-    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather'}
+    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather','s25','foundation_parameters'}
     if set(p)-allowed:raise ValueError('Parámetros desconocidos: '+', '.join(sorted(set(p)-allowed)))
     p={**defaults,**p}
     if p['geometry'] not in ('block','foundation') or isinstance(p['dim'],bool) or p['dim'] not in (1,2,3):raise ValueError('Geometría o dimensión inválida.')
+    if 'foundation_parameters' in p:
+        if p['geometry']!='foundation':raise ValueError('Parámetros de fundación sólo en dominio IFC.')
+        from .geometria_editable import validar_parametros
+        p['foundation_parameters']=validar_parametros(p['foundation_parameters'])
     for key,values in [('initialType',('uniform','sine')),('source',('none','constant','pulse')),('dtMode',('auto','manual'))]:
         if p[key] not in values:raise ValueError('Opción inválida: '+key)
     if not isinstance(p['calibrate'],bool):raise ValueError('calibrate debe ser booleano.')
@@ -43,8 +53,13 @@ def validar(config):
             raw=p['n']
             if not isinstance(raw,list) or len(raw)!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v!=int(v) or not 2<=v<=160 for v in raw):raise ValueError('Malla personalizada: tres cantidades de celdas enteras entre 2 y 160.')
             shape=tuple(map(int,raw))
-            if math.prod(shape)>50000:raise ValueError('Máximo 50.000 celdas; aumenta el tamaño del voxel.')
-        d=ifc_actual((ROOT/'modelo_e02.ifc').stat().st_mtime_ns,shape);m=d['mallas'][0 if shape else p['meshIndex']]
+            from .resolucion import MAX_CELLS
+            if math.prod(shape)>MAX_CELLS:raise ValueError('Máximo 80.000 celdas; aumenta el tamaño del voxel.')
+            if p['dtMode']=='manual':
+                if p['dt']<=0:raise ValueError('Paso temporal positivo.')
+                if math.prod(shape)*math.ceil(p['days']*86400/p['dt'])>3e8:
+                    raise ValueError('Costo excesivo antes de voxelizar: más de 300 millones de celda-pasos.')
+        d=datos_fundacion(p,shape);m=d['mallas'][0 if shape else p['meshIndex']]
         p.update(dim=3,L=np.subtract(d['max'],d['min']).tolist(),n=list(m['n']),mask=m['ids'],origin=d['min'])
     else:
         # Nunca aceptar máscaras arbitrarias del navegador en Fase 1.
@@ -52,7 +67,7 @@ def validar(config):
     for key in ('L','n','origin'):
         if not isinstance(p[key],list) or len(p[key])!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in p[key]):raise ValueError('Se requieren tres números en '+key)
     if any(v<=0 for v in p['L']) or any(int(n)!=n or not 2<=n<=160 for n in p['n']):raise ValueError('Longitudes positivas y celdas enteras entre 2 y 160.')
-    if np.prod(p['n'][:p['dim']])>50000:raise ValueError('Máximo 50.000 celdas en esta fase.')
+    if np.prod(p['n'][:p['dim']])>80000:raise ValueError('Máximo 80.000 celdas en esta fase.')
     p.setdefault('faces',[dict(type='D',temp=20.,flux=0.,h=10.,R=0.) for _ in range(6)])
     if not isinstance(p['faces'],list) or len(p['faces'])!=6:raise ValueError('Se requieren seis condiciones de cara.')
     for b in p['faces']:
@@ -61,6 +76,8 @@ def validar(config):
             if isinstance(b.get(k),bool) or not isinstance(b.get(k),(float,int)) or not math.isfinite(b[k]):raise ValueError('Valor de borde inválido: '+k)
         if min(b['h'],b['R'])<0:raise ValueError('h y R no pueden ser negativos.')
     validar_moldaje(p)
+    from .s25_ifc import validar_s25
+    validar_s25(p)
     if p.get("construction") is not None:
         from .construccion import validar_construccion
         validar_construccion(p)
@@ -141,7 +158,24 @@ def ejecutar(config,identificador,carpeta,progress=lambda v:None,observer=None):
     validar_moldaje(p)
     if p.get("construction") is not None:
         from .construccion import ejecutar_construccion
-        return ejecutar_construccion(p,identificador,carpeta,ifc_actual((ROOT/"modelo_e02.ifc").stat().st_mtime_ns),progress,observer)
+        inspector=None
+        if p.get('s25'):
+            from .s25_ifc import ObservadorIFC
+            from .geometria_editable import modelo
+            path=modelo(p['foundation_parameters'])[0] if p.get('foundation_parameters') else ROOT/'modelo_e02.ifc'
+            inspector=ObservadorIFC(p,path)
+        def observe(m,p,h):
+            if observer:observer(m,p,h)
+            if inspector:inspector(m,p,h)
+        if inspector:observe.extra_snapshots=inspector.extra_snapshots
+        meta=ejecutar_construccion(p,identificador,carpeta,datos_fundacion(p,tuple(p['n']) if p['meshIndex']==2 else None),progress,observe)
+        if p.get('foundation_parameters'):
+            d=datos_fundacion(p,tuple(p['n']) if p['meshIndex']==2 else None)
+            meta['provenance']['ifc']['geometry']=d
+            import json
+            (Path(carpeta)/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
+        if inspector:inspector.export(carpeta,meta)
+        return meta
     m,dt,mask=preparar(p)
     perfil=np.prod([np.sin(np.pi*x/L) for x,L in zip(m.coordenadas,m.longitudes)],axis=0)
     inicial=p['initial']+(p['amplitude']*perfil if p['initialType']=='sine' else 0.)
@@ -166,9 +200,10 @@ def ejecutar(config,identificador,carpeta,progress=lambda v:None,observer=None):
         qmax=qmax,dt=dt,dtMax=m.dt_max,alpha=p['k']/(p['rho']*p['cp']),steps=len(hist)-1,
         N=int(m.activo.sum()),gridN=int(np.prod(m.forma)),volume=float(m.activo.sum()*m.volumen))
     provenance=dict(solver='termico_cartesiano.TermicoCartesiano.paso',mode='ensayo de fundación' if mask is not None else 'verificación',
-        ifc=None if mask is None else {k:ifc_actual((ROOT/'modelo_e02.ifc').stat().st_mtime_ns)[k] for k in ('archivo','sha256')})
+        ifc=None if mask is None else {k:datos_fundacion(p)[k] for k in ('archivo','sha256')})
     if mask is not None:
-        d=ifc_actual((ROOT/'modelo_e02.ifc').stat().st_mtime_ns)
+        d=datos_fundacion(p)
+        if p.get('foundation_parameters'):provenance['ifc']['geometry']=d
         provenance['pours']=[dict(id=c['id'],guid=c['guid'],name=c['nombre'],material_id=1,
             active_from_s=0.,ifc_start_h_not_applied=c['inicio_h'],ifc_placement_C_not_applied=c['temperatura_colocacion_C']) for c in d['capas']]
     return guardar(carpeta,identificador,p,fields,times,hist,metrics,provenance)

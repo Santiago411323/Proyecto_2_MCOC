@@ -11,15 +11,19 @@ BASE=Path(__file__).resolve().parent
 
 def anillos(config):
     mitad=config["ancho_m"]/2
+    mitad_x=config.get('largo_m',config['ancho_m'])/2
     corto=config["semilado_tramo_recto_m"]
     angulos=list(np.linspace(0,2*np.pi,config["segmentos_circulo"],endpoint=False))
     for x,y in [(corto,mitad),(mitad,corto),(-corto,mitad),(-mitad,corto),
                 (corto,-mitad),(mitad,-corto),(-corto,-mitad),(-mitad,-corto)]:
         angulos.append(np.arctan2(y,x)%(2*np.pi))
     angulos=np.unique(angulos)
+    # Para bases rectangulares, transformar las direcciones normalizadas del octágono.
+    if mitad_x!=mitad:angulos=np.unique(np.arctan2(np.sin(angulos)*mitad,np.cos(angulos)*mitad_x)%(2*np.pi))
     direcciones=np.column_stack([np.cos(angulos),np.sin(angulos)])
     absdir=np.abs(direcciones)
-    radios=np.minimum(mitad/absdir.max(axis=1),(mitad+corto)/absdir.sum(axis=1))
+    radios=np.minimum(np.minimum(mitad_x/np.maximum(absdir[:,0],1e-15),mitad/np.maximum(absdir[:,1],1e-15)),
+                      (1+corto/mitad)/(absdir[:,0]/mitad_x+absdir[:,1]/mitad))
     return direcciones*radios[:,None],direcciones*config["diametro_superior_m"]/2
 
 
@@ -34,12 +38,13 @@ def malla_capa(inferior,superior,z0,z1):
     return vertices,caras
 
 
-def crear(destino=BASE/"modelo_e02.ifc"):
-    config=json.loads((BASE/"geometria_fundacion.json").read_text(encoding="utf-8"))
+def crear(destino=BASE/"modelo_e02.ifc",config=None,identidad=None):
+    config=config or json.loads((BASE/"geometria_fundacion.json").read_text(encoding="utf-8"))
     destino=Path(destino)
     guids={}
-    if destino.exists():
-        viejo=ifcopenshell.open(str(destino))
+    previo=Path(identidad) if identidad is not None else destino
+    if previo.exists():
+        viejo=ifcopenshell.open(str(previo))
         guids={o.Name:o.GlobalId for o in viejo.by_type("IfcElement")}
     modelo=ifcopenshell.open(str(BASE/"modelo_inicial.ifc"))
     modelo.by_type("IfcProject")[0].Name="G9 - Fundacion eolica provisional"

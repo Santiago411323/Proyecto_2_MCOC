@@ -1,0 +1,18 @@
+{
+  "job": {
+    "simulation_id": "b11b901c2dca4594afceaa74bb470255",
+    "status": "RUNNING",
+    "status_url": "/api/jobs/b11b901c2dca4594afceaa74bb470255"
+  },
+  "cancel": {
+    "simulation_id": "b11b901c2dca4594afceaa74bb470255",
+    "status": "RUNNING",
+    "cancel_requested": true
+  },
+  "final": {
+    "simulation_id": "b11b901c2dca4594afceaa74bb470255",
+    "status": "CANCELLED",
+    "progress": 0.0,
+    "message": "C\u00e1lculo cancelado por el usuario."
+  }
+}

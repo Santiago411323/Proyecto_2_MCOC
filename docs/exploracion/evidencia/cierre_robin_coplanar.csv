@@ -1,0 +1,11 @@
+﻿case,cell_size_m,reference_C,S25_C,fit_RMSE_C,boundary_constraint_residual_W_m2,condition,error_C,scope
+flat_linear,0.25,22.45833333333,22.45833333333,2.5121479338940403e-15,-1.4210854715202004e-14,2.4096076842219634,0.0,"Known linear field, coplanar centers; boundary closure exact. Not foundation validation."
+flat_linear,0.125,22.45833333333,22.458333333330003,3.552713678800501e-15,0.0,2.1553232664006994,3.552713678800501e-15,"Known linear field, coplanar centers; boundary closure exact. Not foundation validation."
+flat_linear,0.0625,22.45833333333,22.45833333333,2.5121479338940403e-15,-1.4210854715202004e-14,2.0280784120440694,0.0,"Known linear field, coplanar centers; boundary closure exact. Not foundation validation."
+inclined_linear,0.25,22.45833333333,22.45833333333,1.7763568394002505e-15,-1.4210854715202004e-14,2.4414864088197015,0.0,"Known linear field, coplanar centers; boundary closure exact. Not foundation validation."
+inclined_linear,0.125,22.45833333333,22.45833333333,0.0,-1.4210854715202004e-14,2.1985492165719944,0.0,"Known linear field, coplanar centers; boundary closure exact. Not foundation validation."
+inclined_linear,0.0625,22.45833333333,22.458333333329996,3.552713678800501e-15,-1.4210854715202004e-14,2.0791613855525206,3.552713678800501e-15,"Known linear field, coplanar centers; boundary closure exact. Not foundation validation."
+transient_Robin_exact,0.5,23.99877903278799,23.817495455687148,0.0,0.0,3.9593289047168696,0.1812835771008423,"Single plane + exact Robin constraint; linear truncation quantified, no FV field error."
+transient_Robin_exact,0.25,23.99877903278799,23.951581647329064,3.076740298213702e-15,0.0,3.5652771103484615,0.04719738545892582,"Single plane + exact Robin constraint; linear truncation quantified, no FV field error."
+transient_Robin_exact,0.125,23.99877903278799,23.988069318645934,3.972054645195637e-15,0.0,3.3675992819423137,0.010709714142056015,"Single plane + exact Robin constraint; linear truncation quantified, no FV field error."
+transient_Robin_exact,0.0625,23.99877903278799,23.99761142983038,0.0,0.0,3.2686135133939236,0.0011676029576115354,"Single plane + exact Robin constraint; linear truncation quantified, no FV field error."

@@ -1,0 +1,41 @@
+/* Guía y catálogo: muestra resultados reales, no contiene un solver. */
+(function(root){'use strict';
+function facts(r){const p=r.config,c=p.construction,fmt=v=>Number.isFinite(v)?Number(v.toFixed(3)).toLocaleString('es-CL'):'—';return [
+ ['Dominio',p.geometry==='foundation'?'Fundación IFC'+(p.foundation_parameters?' · variante geométrica':''):'Ejercicio '+p.dim+'D'],
+ ['Dimensiones y malla',r.L.map(fmt).join(' × ')+' m · '+r.n.join(' × ')+' celdas'],
+ ['Horizonte disponible',fmt(r.frameTimes[0]/3600)+' a '+fmt(r.frameTimes.at(-1)/3600)+' h · '+r.frameTimes.length+' campos guardados'],
+ ['Colocación',c?c.pours.map(v=>'V'+v.id+': '+fmt(v.start_h)+' h / '+fmt(v.placement_C)+' °C').join(' · '):'Dominio presente desde el inicio · T inicial '+fmt(p.initial)+' °C'],
+ ['Material','k='+fmt(p.k)+' W/(m·K) · ρ='+fmt(p.rho)+' kg/m³ · cp='+fmt(p.cp)+' J/(kg·K)'],
+ ['Calor y ambiente',(c?.curve?.column||c?.model||p.source||'no declarado')+' · '+(p.weather?'clima horario cargado':'temperaturas de borde configuradas')],
+ ['Inicio climático',p.weather?.start_utc||'Sin fecha climática declarada; tiempo relativo de simulación']
+ ];}
+function status(raw,hasResult,detail=""){if(raw.includes("RUNNING")&&detail.includes("Cargando plan"))return ["Cargando resultado","Se están leyendo campos guardados. No se está ejecutando de nuevo el solver."];if(raw.includes('RUNNING'))return ['Calculando en Python','Python está calculando una nueva corrida. La geometría y las temperaturas previas, si existen, todavía corresponden al cálculo anterior.'];if(raw.includes('STALE'))return ['Resultados anteriores','Cambiaste las entradas. Estos resultados conservan los datos originales que ves arriba. Pulsa Ejecutar Python para obtener temperaturas con tus cambios.'];if(raw.includes('FAILED'))return ['Cálculo fallido','Revisa el mensaje de error. Una ejecución fallida no genera un resultado válido nuevo.'];return hasResult?['Resultado calculado','Reproducir sólo recorre campos ya calculados. Cambiar datos y ejecutar Python crea otra corrida con su propio identificador.']:['Sin resultados','Empieza abriendo una simulación guardada. Ejecuta Python cuando quieras probar tus propios datos.'];}
+if(typeof module!=='undefined'&&module.exports)module.exports={facts,status};
+if(typeof document==='undefined')return;
+const $=id=>document.getElementById(id);let lastResult=null,loading=false,priorStatus='',catalogNames=new Map(),groups=[];
+async function catalog(){if(loading)return;loading=true;$('simulationCatalogNote').textContent='Leyendo corridas guardadas; no se ejecuta ninguna simulación.';const selected=$('simulationCatalog').value;try{
+ const replies=await Promise.allSettled(['/api/simulation-catalog','/api/plan-results'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('Catálogo no disponible; comprueba el servidor actualizado.');return r.json();}));
+ const local=replies[0].status==='fulfilled'?replies[0].value.simulations:[],published=replies[1].status==='fulfilled'?replies[1].value:{plans:[],runs:[]};
+ catalogNames=new Map();groups=[];let total=0;const seen=new Set();
+ function group(name,entries,key){const values=[];for(const [id,label] of entries){if(seen.has(id)||!/^[0-9a-f]{32}$/.test(id))continue;seen.add(id);values.push([id,label]);catalogNames.set(id,label);total++;}groups.push({name,values,key});}
+ group('Mis corridas Python guardadas en este computador',(local||[]).map(r=>[r.simulation_id,(r.geometry==='foundation'?'Fundación'+(r.custom_geometry?' modificada':''):'Ejercicio '+r.dim+'D')+' · '+r.days+' días · '+r.simulation_id.slice(0,8)]),'local');
+ for(const mm of [250,500]){const plans=(published.plans||[]).filter(p=>Number(p.mesh_xy_mm)===mm);group('Planes exploratorios · '+mm+' mm',(published.runs||[]).flatMap(r=>{const plan=plans.find(p=>p.plan_id===r.plan_id&&p.lote===r.lote);return plan?[[r.simulation_id,r.plan_name+' · '+r.source_id.replace('fv_','')+' · '+mm+' mm']]:[]}),String(mm));}
+ renderCatalog(selected);
+ if(replies.some(r=>r.status==='rejected'))$('simulationCatalogNote').textContent+=' Parte del catálogo no pudo cargarse; reinicia el servidor actualizado.';
+ }catch(e){$('simulationCatalogNote').textContent=e.message;}finally{loading=false;update();}}
+function renderCatalog(selected=$('simulationCatalog').value){const collection=$('simulationCollection').value,list=$('simulationCatalog');list.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='Elige una simulación…';list.append(blank);let count=0;for(const group of groups){if(collection!=='all'&&group.key!==collection)continue;const optgroup=document.createElement('optgroup');optgroup.label=group.name;for(const [id,label] of group.values){if(collection!=='all'&&collection!=='local'&&!label.includes('M4_SS'))continue;const option=document.createElement('option');option.value=id;option.textContent=label;optgroup.append(option);count++;}if(optgroup.children.length)list.append(optgroup);}if(Array.from(list.options).some(o=>o.value===selected))list.value=selected;if(!list.value){const suggested=Array.from(list.options).find(o=>o.textContent.startsWith('Propuesto ·'))||list.options[1];if(suggested)list.value=suggested.value;}$('simulationCatalogNote').textContent=count+' corridas en esta colección. Abrir carga sus datos originales, sin recalcular. Guarda tus ajustes antes de cambiar. Los escenarios A/B se conservan en Comparar planes.';update();}
+$('simulationCollection').onchange=()=>renderCatalog('');
+function update(){const r=window.therma?.getResult(),raw=$('executionState').textContent,[label,explanation]=status(raw,!!r,$('executionOrigin').textContent),running=raw.includes('RUNNING');$('simulationStatus').textContent=label;$('simulationExplain').textContent=explanation;$('simulationPlay').disabled=!r;$('simulationPeak').disabled=!r;$('simulationRun').disabled=running;$('openSimulation').disabled=running||!$('simulationCatalog').value;$('simulationCancel').hidden=!running;
+ $('simulationPlay').textContent=window.therma?.state.playing?'Pausar reproducción':'Reproducir resultados';
+ if(r){$('simulationTitle').textContent=(catalogNames.get(r.simulationId)||'Corrida '+(r.simulationId||'de verificación'));
+ $('simulationDescription').textContent='Datos del resultado guardado · '+(r.engine||'motor no declarado')+' · instante mostrado: '+(r.frameTimes[window.therma.state.frame]/3600).toLocaleString('es-CL',{maximumFractionDigits:2})+' h. '+(r.config.geometry==='foundation'?'Geometría provisional; S25 estimado, sin cumplimiento validado.':'Ejercicio de verificación: no representa la fundación.');
+ if(lastResult!==r){lastResult=r;$('simulationGuide').open=false;$('simulationInputs').replaceChildren();for(const [name,value] of facts(r)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=name;dd.textContent=value;$('simulationInputs').append(dt,dd);}}}
+ if(raw!==priorStatus){if(raw.includes('COMPLETED'))catalog();priorStatus=raw;}}
+$('simulationCatalog').onchange=update;$('refreshSimulations').onclick=catalog;
+$('openSimulation').onclick=()=>{const id=$('simulationCatalog').value;if(/^[0-9a-f]{32}$/.test(id))location.assign('?result='+id);};
+$('simulationPlay').onclick=()=>{$('play').click();update();document.querySelector('.timeline-shell').scrollIntoView({block:'center',behavior:'smooth'});};
+$('simulationPeak').onclick=()=>{const r=window.therma.getResult();if(!r)return;const peak=window.ThermaIntelligence.globalMaximum(r);if(peak.frame<0)return;window.therma.setFrame(peak.frame);if(r.n.length===3){$('locateHot').click();$('viewerSection').scrollIntoView({block:'start',behavior:'smooth'});}else document.querySelector('.timeline-shell').scrollIntoView({block:'center',behavior:'smooth'});update();};
+$('simulationRun').onclick=()=>{$('engineMode').value='python';$('engineMode').dispatchEvent(new Event('change'));$('run').click();};$('simulationCancel').onclick=()=>$('cancel').click();
+window.addEventListener('therma:frame',update);window.addEventListener('therma:inputs',update);new MutationObserver(update).observe($('executionState'),{childList:true,subtree:true,characterData:true});
+update();catalog();
+})(typeof window==='undefined'?globalThis:window);

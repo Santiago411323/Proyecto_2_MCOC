@@ -1,0 +1,37 @@
+{
+  "base_git_sha": "12edb005f4d94ab1428b3792a284886c0e9f8dbf",
+  "working_tree_dirty": true,
+  "files": {
+    "cancelacion_real.json": "954ce3a45f98e6c8e50bd89299299818206f3af62fc2197581ea3d3566a735d6",
+    "config_representativo.json": "e1b2be277fdd219637669352234058d09f002d6ff2f00a88c090a0efa4deb12f",
+    "errores_reconstruccion_y_solver.csv": "b50c6e42a11c582d016424f8f9af32e3252e9c5c45fdb4e6a69ec8fae52e73d4",
+    "error_geometrico_cilindro.csv": "ca3f8a18cdade14bc1e5bc564de1ea9f5ea93b0f1660dcaba1f05fed4e2decd0",
+    "geometria_ifc_estados.csv": "62e156891a216ca561e6a2770a926c4c0609db1fb425a500ca331bb3c8cfe801",
+    "mesh_study.csv": "a7ef702a3929d121c81da6959bc1a6f0eda605988e138f99993476535d69e84a",
+    "mesh_study.json": "1f47acf2e4b914e0e5ce510921ffff815117f7cc58af9c817c54c8af512a49f2",
+    "mesh_study.png": "4a27ffa008d377e38729e50d1f44d0b65788aa100f5709c23d4c18003dcb5127",
+    "panel_s25.png": "04d38fb037212a011865c171a56a501d38e3519834ef5e2f2c4609c8b720bf24",
+    "reproduccion_panel.json": "2b3ec19cbc6df6aef187e2fe2f948b44e820baff53336be94e668abe9fadd6a9",
+    "RESULTADOS.md": "780d98728ac39fec3cd2b7e0147f09671e40e93492d72665126bf7507b6de49f",
+    "sensibilidad_muestreo_superficie.csv": "daa22b1fe8c751a4c5865cee610b45b1d77c45d311e80f442fc816bad4efad27",
+    "validacion_s25_ifc.json": "28fc71c6dbeda280325981460deb6144a1ae5ce34704c05f67176a6e3f9de1b0"
+  },
+  "code": {
+    "therma/superficies_ifc.py": "681dd54fba64780ec827003e6bf20ce0488b4f8f8874ddd2189f155f04dc175e",
+    "therma/reconstruccion_s25.py": "3fcb383844a3f017095f60e147970125f06649c481ef36105aad391ae898debe",
+    "therma/s25_ifc.py": "1032cac2e38da8861259f5b11d1cf38bf55a19a3039f32b1f6359a4028975af4",
+    "therma/resolucion.py": "ddeb064bb08b8152bfb8d7f13edcc1f56f26962b8a54e1a87115335236b01e75",
+    "therma/convergencia.py": "69f59cddf379cec07eae9182a6931d7ba4687e8283abe4519ef39224b7bddb63",
+    "termico_cartesiano.py": "63e38eb3c722967304f777b1193f3d14b1cd98cf76aec0a209b9d161e89ef993",
+    "therma/ejecutar.py": "ad75a594b1d172707213e1f6903a5ff96c72e1eaf775859d2ef661154b6e831e",
+    "servidor_therma.py": "66bbaf74cb1dbfcae6b6fb63f42b900706420861fec0a886a50133dcbd255a6b",
+    "panel/app.js": "1d8315bc82c048ad8fd6782cdf4b95e155cf5a144af770f04a4b3a96b3528362",
+    "panel/resolucion_modelo.js": "2e247726a90ca5514492b3a8d758a3b47b6ef54f1ff8e82babe9fdef120a41e2",
+    "panel/resolucion_ui.js": "1955b1d6c6dd86bdd1ea09929847bc79ad87bb86a6fb81e388725b3e117e0b96",
+    "panel/api.js": "a03176b9443b8749a2ddc89cd1ddb35eb1ec6155498daf12b13a2e6e46606aa3",
+    "construir_panel.py": "0671154003b00e7faf95f6de98808e7a8e589867f58b3dc672278936d6f3c968"
+  },
+  "status": "S25_NOT_VALIDATED",
+  "tests": "302 passed in 107.90s",
+  "note": "Fuentes Python nuevas y cambios locales: no atribuir al SHA base un código que aún no está confirmado."
+}

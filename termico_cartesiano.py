@@ -126,13 +126,17 @@ class TermicoCartesiano:
         fuente_total = float(np.sum(fuente*self.volumen*self.activo))
         entradas_acumuladas = [0.]
         while t < duracion_s:
-            paso = min(dt_s, objetivos[siguiente]-t, duracion_s-t)
+            objetivo = objetivos[siguiente]
+            restante = objetivo-t
+            paso = min(dt_s, restante, duracion_s-t)
             P_ext = float(np.sum((self.P_borde_constante-self.G_borde*T)*self.activo))
             T = self.paso(T, paso, fuente)
-            t = min(t+paso, duracion_s)
+            # Alcanzar el objetivo exactamente; no avanzar el índice por una
+            # tolerancia antes de llegar (podía agotar objetivos con t<duración).
+            t = objetivo if paso == restante else min(t+paso, duracion_s)
             tiempos.append(t); energias.append(self.energia(T))
             entradas_acumuladas.append(entradas_acumuladas[-1]+paso*(P_ext+fuente_total))
-            if abs(t-objetivos[siguiente]) < 1e-10:
+            if t == objetivo:
                 snapshots[objetivos[siguiente]] = T.copy(); siguiente += 1
         return {"T":T,"snapshots":snapshots,"tiempo_s":np.array(tiempos),
                 "energia_J":np.array(energias),"entrada_acumulada_J":np.array(entradas_acumuladas),

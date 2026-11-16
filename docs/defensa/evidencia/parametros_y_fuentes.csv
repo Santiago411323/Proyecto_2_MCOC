@@ -1,0 +1,10 @@
+﻿parameter,value,source
+cp,1023.0,"Hipótesis de ensayo, salvo rho/cp del encabezado FV"
+days,14.0,"Hipótesis de ensayo, salvo rho/cp del encabezado FV"
+dt,900.0,"Hipótesis de ensayo, salvo rho/cp del encabezado FV"
+k,2.0,"Hipótesis de ensayo, salvo rho/cp del encabezado FV"
+rho,2476.0,"Hipótesis de ensayo, salvo rho/cp del encabezado FV"
+R_moldaje,.02/.15 m2 K/W,Tablero hipotético del caso E12
+tasa_colocacion,20.0,"Hipótesis, no capacidad acreditada de planta"
+volumen_IFC_m3,487.06951765784174,IFC provisional
+clima,forecast_12nov,"Open-Meteo archivado, no observación"

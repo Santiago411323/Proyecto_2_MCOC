@@ -99,7 +99,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
             h.update(soil_J=m.energia_suelo_J,air_J=m.energia_aire_J,soil_into_concrete_W=soil_power,
                      air_into_concrete_W=total_power-soil_power)
         hist.append(h)
-        if observer is not None:observer(m,p,h)
+        if observer is not None:observer(m,p,{**h,'construction_state':state})
         if count and h['max']>critical_value:
             critical_value=h['max'];critical=(m.t,m.T.copy(),m.activo.copy(),state)
         return state
@@ -141,6 +141,10 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
     if hit is None:
         j=int(np.searchsorted(times,t));times.insert(j,t);fields.insert(j,T);active.insert(j,mask);states.insert(j,state)
     else:times[hit]=t;fields[hit]=T;active[hit]=mask;states[hit]=state
+    for extra_t,extra_T,extra_mask,extra_state in getattr(observer,'extra_snapshots',lambda:[])():
+        hit=next((j for j,v in enumerate(times) if abs(v-extra_t)<1e-7),None)
+        if hit is None:
+            j=int(np.searchsorted(times,extra_t));times.insert(j,extra_t);fields.insert(j,extra_T);active.insert(j,extra_mask);states.insert(j,extra_state)
     centers=[h for h in hist if h['center'] is not None];central_peak=max(centers,key=lambda h:h['center']) if centers else None
     residual=max(abs(h['residual']) for h in hist);scale=max(1.,max(abs(h['energy']) for h in hist))
     metrics=dict(maxCenter=central_peak['center'] if central_peak else None,peakTime=central_peak['t'] if central_peak else t,

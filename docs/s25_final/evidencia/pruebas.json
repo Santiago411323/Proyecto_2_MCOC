@@ -1,0 +1,22 @@
+{
+  "full_suite": {
+    "passed": 316,
+    "seconds": 66.45
+  },
+  "focused": {
+    "passed": 40,
+    "seconds": 24.45
+  },
+  "initial_full_suite": {
+    "passed": 315,
+    "failed": 1,
+    "issue": "Windows socket 10053; isolated and complete rerun passed without change."
+  },
+  "browser": {
+    "run_id": "f486b7c83a914885b36f5a3b1e8d9321",
+    "critical_time_s": 853200,
+    "status": "COMPLETED"
+  },
+  "base_commit": "12edb005f4d94ab1428b3792a284886c0e9f8dbf",
+  "dirty_worktree": true
+}

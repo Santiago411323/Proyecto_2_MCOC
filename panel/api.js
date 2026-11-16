@@ -23,7 +23,8 @@ class Backend{
   if(location.protocol==='file:')throw Error('El modo Python requiere el servidor local: ejecuta servidor_therma.py y abre http://127.0.0.1:8767/.');
   const health=await json('/api/health');if(health.engine!=='termico_cartesiano.py')throw Error('Servidor Python incompatible.');if(this.stopped)return;
   const job=await json(this.example?'/api/examples/3d':'/api/simulations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});this.job=job.simulation_id;
-  while(!this.stopped){const s=await json(job.status_url);if(s.status==='FAILED')throw Error(s.message||'Python no pudo ejecutar el cálculo.');
+  if(this.stopped){await json('/api/cancel/'+this.job,{method:'POST'});return;}
+  while(!this.stopped){const s=await json(job.status_url);if(s.status==='FAILED'||s.status==='CANCELLED')throw Error(s.message||'Python no pudo ejecutar el cálculo.');
    if(s.status==='COMPLETED'){
     const meta=await json(s.metadata_url),url=`/api/results/${job.simulation_id}/fields.bin`,response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error('No se pudo leer el campo Python.');const buffer=await response.arrayBuffer();
     if(root.crypto?.subtle){const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer))).map(b=>b.toString(16).padStart(2,'0')).join('');if(hash!==meta.fields.sha256)throw Error('El campo descargado no coincide con su huella SHA-256.');}
@@ -33,7 +34,7 @@ class Backend{
    this.onmessage?.({data:{type:'progress',value:s.progress||0}});await new Promise(resolve=>setTimeout(resolve,250));
   }
  }catch(e){if(!this.stopped)this.onmessage?.({data:{type:'error',message:e instanceof TypeError?'No se pudo contactar al servidor Python. Inicia servidor_therma.py y abre http://127.0.0.1:8767/.':e.message}});}}
- terminate(){this.stopped=true;/* El trabajo Python puede terminar y conservar sus archivos. */}
+ terminate(){this.stopped=true;if(this.job&&!this.done)json('/api/cancel/'+this.job,{method:'POST'}).catch(()=>{});}
 }
 root.ThermaBackend=Backend;root.ThermaContract={adaptar};
 })(window);

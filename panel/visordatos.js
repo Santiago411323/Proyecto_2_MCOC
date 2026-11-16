@@ -17,6 +17,14 @@
   let peakIndex=-1;series.forEach((v,i)=>{if(v!==null&&(peakIndex<0||v>series[peakIndex]))peakIndex=i;});
   return {series,current:series[frame]??null,peak:peakIndex<0?null:series[peakIndex],peakIndex,peakTime:peakIndex<0?null:times[peakIndex],reference,exceeds:series[frame]===null?null:series[frame]>reference,official:'NOT EVALUATED'};
  }
- const api={index,ijk,active,xyz,extrema,limits,color,clipped,visible,nearest,instanceIndices,thermalSpread};
+ function criticalPair(r){
+  const p=r.metadata?.s25_ifc?.critical_pair;if(!p)return null;
+  const frame=r.frameTimes.findIndex(t=>Math.abs(t-p.time_s)<1e-7);
+  if(frame<0)return null; // Nunca sustituir por el snapshot más cercano.
+  const hot=index(...p.hot.ijk,r.n);
+  if(!active(r,hot,frame)||Math.abs(r.fields[frame][hot]-p.hot.temperature_C)>1e-3)throw Error('Campo y par crítico S25 incompatibles.');
+  return {pair:p,frame,hot};
+ }
+ const api={index,ijk,active,xyz,extrema,limits,color,clipped,visible,nearest,instanceIndices,thermalSpread,criticalPair};
  if(typeof module!=='undefined')module.exports=api;else root.ThermaViewData=api;
 })(typeof window==='undefined'?globalThis:window);

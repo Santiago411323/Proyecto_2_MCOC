@@ -287,3 +287,32 @@ git rev-parse HEAD
 
 Repositorio: https://github.com/Santiago411323/Proyecto_2_MCOC . Los instaladores,
 el entorno virtual y los resultados generados se excluyen mediante .gitignore.
+# Defensa final F02: lotes y riesgo
+
+Guía reproducible: [docs/DEFENSA_FINAL_F02.md](docs/DEFENSA_FINAL_F02.md).
+Ejecutar `python ejecutar_lotes_defensa.py --sensibilidad` y luego
+`python exportar_defensa.py --publicar docs/defensa/evidencia`.
+Genera la tabla de seis planes y las 24 combinaciones FV/SS–forecast.
+**S25 de la fundación no está validado: no se certifica probabilidad conjunta
+ni se recomienda un plan óptimo.** Los desconocidos se conservan en la tabla.
+
+Selector de resolución y evaluación geométrica S25: [docs/RESOLUCION_S25_IFC.md](docs/RESOLUCION_S25_IFC.md).
+El panel permite 500/250/125/50/25 mm y pasos anisótropos, con guardas de recursos.
+S25 se desplaza 0,025 m desde los triángulos IFC; la reconstrucción es experimental
+y puede quedar parcial por falta de stencil. No hay refinamiento local AMR ni
+actualización de probabilidades con una métrica no validada.
+
+Auditoría final S25, diagnóstico por área, par crítico y límites de validez: [docs/VALIDACION_FINAL_S25.md](docs/VALIDACION_FINAL_S25.md).
+
+Exploración constructiva, tablas y apertura de planes calculados: [docs/EXPLORACION_CONSTRUCTIVA_S25.md](docs/EXPLORACION_CONSTRUCTIVA_S25.md).
+
+Panel organizado por tareas y guía de navegación: [docs/PANEL_ORDENADO.md](docs/PANEL_ORDENADO.md).
+
+
+Edición de geometría y propiedades desde HTML: [docs/GEOMETRIA_EDITABLE_HTML.md](docs/GEOMETRIA_EDITABLE_HTML.md).
+
+Catálogo de simulaciones, reproducción y primer experimento: [docs/SIMULACIONES_PASO_A_PASO.md](docs/SIMULACIONES_PASO_A_PASO.md).
+
+Los campos volumétricos de las corridas y el catálogo local en `resultados/` se
+conservan fuera de Git. Las configuraciones, métricas y evidencias compactas se
+versionan en `docs/`; los comandos de las guías permiten regenerar los campos.

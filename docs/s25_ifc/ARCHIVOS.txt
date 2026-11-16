@@ -1,0 +1,40 @@
+MODIFICADOS EN ESTA FASE
+.gitattributes
+README.md
+construir_panel.py
+panel/api.js
+panel/app.js
+panel/plantilla.html
+panel_termico.html
+servidor_therma.py
+termico_cartesiano.py
+therma/ejecutar.py
+
+CREADOS EN ESTA FASE
+therma/resolucion.py
+therma/superficies_ifc.py
+therma/reconstruccion_s25.py
+therma/s25_ifc.py
+therma/convergencia.py
+panel/resolucion_modelo.js
+panel/resolucion_ui.js
+estudiar_malla_s25.py
+verificar_s25_ifc.py
+tests/test_s25_ifc_resolucion.py
+docs/RESOLUCION_S25_IFC.md
+docs/s25_ifc/evidencia/cancelacion_real.json
+docs/s25_ifc/evidencia/config_representativo.json
+docs/s25_ifc/evidencia/errores_reconstruccion_y_solver.csv
+docs/s25_ifc/evidencia/error_geometrico_cilindro.csv
+docs/s25_ifc/evidencia/geometria_ifc_estados.csv
+docs/s25_ifc/evidencia/manifiesto.json
+docs/s25_ifc/evidencia/mesh_study.csv
+docs/s25_ifc/evidencia/mesh_study.json
+docs/s25_ifc/evidencia/mesh_study.png
+docs/s25_ifc/evidencia/panel_s25.png
+docs/s25_ifc/evidencia/reproduccion_panel.json
+docs/s25_ifc/evidencia/RESULTADOS.md
+docs/s25_ifc/evidencia/sensibilidad_muestreo_superficie.csv
+docs/s25_ifc/evidencia/validacion_s25_ifc.json
+
+Se conserva el trabajo local previo de lotes; no se alteraron sus tablas de riesgo.

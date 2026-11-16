@@ -1,0 +1,1 @@
+{"S25_physical_validation": "NOT VALIDATED", "artifacts_verified": 192, "completed_runs": 24, "field_maxima_and_simultaneous_delta_match": true, "independent_FV_Tmax_difference_C": 0.0, "same_scenarios_and_weights_all_plans": true, "status": "VERIFIED", "tests": "272 pruebas en regresión completa y 3 pruebas adicionales aprobadas tras agregarlas: 275 verificadas."}

@@ -1,0 +1,5 @@
+﻿source,constant_tail_vs_zero_bound_T_C,conservative_bound_delta_C,scope
+fv_M1_SS,0.21347058210433065,0.4269411642086613,"Cota fuente positiva y esquema estable, sólo cola cero versus constante. No cubre otras colas ni error S25."
+fv_M2_SS,0.0,0.0,"Cota fuente positiva y esquema estable, sólo cola cero versus constante. No cubre otras colas ni error S25."
+fv_M3_SS,0.0,0.0,"Cota fuente positiva y esquema estable, sólo cola cero versus constante. No cubre otras colas ni error S25."
+fv_M4_SS,0.0,0.0,"Cota fuente positiva y esquema estable, sólo cola cero versus constante. No cubre otras colas ni error S25."

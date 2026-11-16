@@ -1,0 +1,19 @@
+﻿plan,rate_m3_h,capacity_feasible,D_h,warning
+Una vertida continua,10.0,True,48.70695176578417,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Propuesto,10.0,False,,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Más rápido,10.0,False,,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Más lento,10.0,True,100.23027439859602,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Intervalo 18 h,10.0,False,,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Intervalo 36 h,10.0,True,76.23027439859602,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Una vertida continua,20.0,True,24.353475882892084,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Propuesto,20.0,True,50.11513719929801,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Más rápido,20.0,True,34.11513719929801,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Más lento,20.0,True,98.115137199298,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Intervalo 18 h,20.0,True,38.11513719929801,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Intervalo 36 h,20.0,True,74.115137199298,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Una vertida continua,40.0,True,12.176737941446042,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Propuesto,40.0,True,49.057568599649,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Más rápido,40.0,True,33.057568599649,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Más lento,40.0,True,97.057568599649,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Intervalo 18 h,40.0,True,37.057568599649,Sólo cronograma; NO se recalculó térmica a tasa distinta.
+Intervalo 36 h,40.0,True,73.057568599649,Sólo cronograma; NO se recalculó térmica a tasa distinta.

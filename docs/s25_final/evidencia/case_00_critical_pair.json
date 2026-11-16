@@ -1,0 +1,585 @@
+{
+  "time_s": 860400.0,
+  "hot": {
+    "xyz_m": [
+      -0.25,
+      -0.25,
+      1.6500000000000001
+    ],
+    "ijk": [
+      17,
+      17,
+      3
+    ],
+    "temperature_C": 52.02279409853407,
+    "pour_id": 2
+  },
+  "cold": {
+    "xyz_m": [
+      8.823749850336469,
+      3.8688428516280475,
+      0.7333333333333334
+    ],
+    "surface_xyz_m": [
+      8.841428967802175,
+      3.8865190731030617,
+      0.7333333333333334
+    ],
+    "temperature_C": 12.637920978073504,
+    "surface_pour_id": 1,
+    "point_pour_id": 1,
+    "guid": "05tuyNv2v7FvuEWPDu$NI8",
+    "triangle_id": 27,
+    "triangle_xyz_m": [
+      [
+        8.524286903406525,
+        4.203713096593476,
+        1.1
+      ],
+      [
+        9.0,
+        3.727922061357855,
+        1.1
+      ],
+      [
+        9.0,
+        3.727922061357855,
+        0.0
+      ]
+    ],
+    "normal": [
+      0.7071646986282626,
+      0.7070488590005634,
+      0.0
+    ]
+  },
+  "geometry": {
+    "nearest_exterior_distance_m": 0.024999999999999512,
+    "nearest_surface_xyz_m": [
+      8.841428967802175,
+      3.8865190731030617,
+      0.7333333333333334
+    ],
+    "nearest_triangle_id": 27,
+    "nearest_surface_pour_id": 1,
+    "normal_offset_m": 0.024999999999999512,
+    "signed_normal_offset_m": 0.024999999999999516,
+    "feature_edge": {
+      "distance_to_feature_edge_m": 0.22427167636038303,
+      "edge_xyz_m": [
+        [
+          9.0,
+          3.72792206,
+          0.0
+        ],
+        [
+          9.0,
+          3.72792206,
+          1.1
+        ]
+      ],
+      "angle_threshold_deg": 1.0
+    }
+  },
+  "reconstruction": {
+    "supported": true,
+    "neighbors": 24,
+    "radius_cells": 2,
+    "degree": 1,
+    "condition": 4.069301812910859,
+    "coordinate_span_m": [
+      1.0,
+      2.0,
+      0.4714285714285714
+    ],
+    "nearest_cell_m": 0.14229759256860816,
+    "weights_l1": 1.6526297817616933,
+    "polynomial_reproduction_error": 5.551115123125783e-16,
+    "point_xyz_m": [
+      8.823749850336469,
+      3.8688428516280475,
+      0.7333333333333334
+    ],
+    "neighbors_ijk": [
+      [
+        33,
+        23,
+        0
+      ],
+      [
+        33,
+        23,
+        1
+      ],
+      [
+        33,
+        24,
+        0
+      ],
+      [
+        33,
+        24,
+        1
+      ],
+      [
+        33,
+        25,
+        0
+      ],
+      [
+        33,
+        25,
+        1
+      ],
+      [
+        33,
+        26,
+        0
+      ],
+      [
+        33,
+        26,
+        1
+      ],
+      [
+        33,
+        27,
+        0
+      ],
+      [
+        33,
+        27,
+        1
+      ],
+      [
+        34,
+        23,
+        0
+      ],
+      [
+        34,
+        23,
+        1
+      ],
+      [
+        34,
+        24,
+        0
+      ],
+      [
+        34,
+        24,
+        1
+      ],
+      [
+        34,
+        25,
+        0
+      ],
+      [
+        34,
+        25,
+        1
+      ],
+      [
+        34,
+        26,
+        0
+      ],
+      [
+        34,
+        26,
+        1
+      ],
+      [
+        35,
+        23,
+        0
+      ],
+      [
+        35,
+        23,
+        1
+      ],
+      [
+        35,
+        24,
+        0
+      ],
+      [
+        35,
+        24,
+        1
+      ],
+      [
+        35,
+        25,
+        0
+      ],
+      [
+        35,
+        25,
+        1
+      ]
+    ],
+    "neighbors_xyz_m": [
+      [
+        7.75,
+        2.75,
+        0.23571428571428574
+      ],
+      [
+        7.75,
+        2.75,
+        0.7071428571428572
+      ],
+      [
+        7.75,
+        3.25,
+        0.23571428571428574
+      ],
+      [
+        7.75,
+        3.25,
+        0.7071428571428572
+      ],
+      [
+        7.75,
+        3.75,
+        0.23571428571428574
+      ],
+      [
+        7.75,
+        3.75,
+        0.7071428571428572
+      ],
+      [
+        7.75,
+        4.25,
+        0.23571428571428574
+      ],
+      [
+        7.75,
+        4.25,
+        0.7071428571428572
+      ],
+      [
+        7.75,
+        4.75,
+        0.23571428571428574
+      ],
+      [
+        7.75,
+        4.75,
+        0.7071428571428572
+      ],
+      [
+        8.25,
+        2.75,
+        0.23571428571428574
+      ],
+      [
+        8.25,
+        2.75,
+        0.7071428571428572
+      ],
+      [
+        8.25,
+        3.25,
+        0.23571428571428574
+      ],
+      [
+        8.25,
+        3.25,
+        0.7071428571428572
+      ],
+      [
+        8.25,
+        3.75,
+        0.23571428571428574
+      ],
+      [
+        8.25,
+        3.75,
+        0.7071428571428572
+      ],
+      [
+        8.25,
+        4.25,
+        0.23571428571428574
+      ],
+      [
+        8.25,
+        4.25,
+        0.7071428571428572
+      ],
+      [
+        8.75,
+        2.75,
+        0.23571428571428574
+      ],
+      [
+        8.75,
+        2.75,
+        0.7071428571428572
+      ],
+      [
+        8.75,
+        3.25,
+        0.23571428571428574
+      ],
+      [
+        8.75,
+        3.25,
+        0.7071428571428572
+      ],
+      [
+        8.75,
+        3.75,
+        0.23571428571428574
+      ],
+      [
+        8.75,
+        3.75,
+        0.7071428571428572
+      ]
+    ],
+    "weights": [
+      -0.05310902160565836,
+      -0.030691755342947994,
+      -0.057686241087854265,
+      -0.025079313508239033,
+      -0.048594080496181746,
+      -0.0057233049417490765,
+      -0.02501835994428589,
+      0.01845022574834999,
+      -0.0036652159723785803,
+      0.02993978381548368,
+      -0.036840925816931394,
+      -0.0018756117889266446,
+      -0.03306488084612387,
+      0.03453869702212971,
+      -0.0049661795295701415,
+      0.11774792932191243,
+      0.03226669465373319,
+      0.14704914298176153,
+      0.00019553411668281744,
+      0.04948951826963408,
+      0.040397969877717814,
+      0.17416942874833855,
+      0.13452915109529495,
+      0.5475408152298076
+    ],
+    "neighbors_temperature_C": [
+      27.828726365229198,
+      27.416902345752977,
+      26.883746074024984,
+      26.484918842181926,
+      25.015622155683275,
+      24.58229336812793,
+      21.817270802701703,
+      21.127149910608964,
+      17.036334615843902,
+      15.644671096809141,
+      24.00268302923491,
+      23.290592916620653,
+      22.967910557135152,
+      22.304752627706446,
+      20.811504521737795,
+      20.11710466640423,
+      16.708869145477628,
+      15.359711616072161,
+      18.34839047923473,
+      16.45447809945728,
+      17.53374853568689,
+      15.816922997164792,
+      15.508658119708674,
+      14.181950918830184
+    ],
+    "fit_rmse_C": 1.2137976712995135,
+    "fit_max_residual_C": 2.852252203010245,
+    "predicted_C": 12.637920978073502
+  },
+  "boundary": {
+    "region": "air",
+    "air_temperature_C": 9.8,
+    "orientations": [
+      {
+        "face": "x+",
+        "type": "R",
+        "h_W_m2K": 10.0,
+        "R_additional_m2K_W": 0.0,
+        "R_formwork_m2K_W": 0.13333333333333333
+      },
+      {
+        "face": "y+",
+        "type": "R",
+        "h_W_m2K": 10.0,
+        "R_additional_m2K_W": 0.0,
+        "R_formwork_m2K_W": 0.13333333333333333
+      }
+    ],
+    "staircase_area_factor": 1.414213557628826,
+    "note": "Parámetros por caras cartesianas, no una frontera conforme IFC."
+  },
+  "numerical_error_bound_C": null,
+  "field_file": "s25_ifc_critical.npz",
+  "temporal_audit": {
+    "activation_distance_h": 191.0,
+    "time_interpolation_used": false,
+    "near_peak": [
+      {
+        "time_s": 856800.0,
+        "Tmax_C": 52.06453828080962,
+        "Tmin_S25_estimate_C": 12.688991886350443,
+        "DeltaT_estimate_C": 39.37554639445918,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 857700.0,
+        "Tmax_C": 52.05414522022125,
+        "Tmin_S25_estimate_C": 12.676135444521453,
+        "DeltaT_estimate_C": 39.378009775699795,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 858600.0,
+        "Tmax_C": 52.04372208010429,
+        "Tmin_S25_estimate_C": 12.663338325175932,
+        "DeltaT_estimate_C": 39.38038375492836,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 859500.0,
+        "Tmax_C": 52.03327160944585,
+        "Tmin_S25_estimate_C": 12.650600259364628,
+        "DeltaT_estimate_C": 39.38267135008122,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 860400.0,
+        "Tmax_C": 52.02279409853407,
+        "Tmin_S25_estimate_C": 12.637920978073504,
+        "DeltaT_estimate_C": 39.38487312046057,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 861300.0,
+        "Tmax_C": 52.01228962806227,
+        "Tmin_S25_estimate_C": 12.631160359729442,
+        "DeltaT_estimate_C": 39.38112926833283,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 862200.0,
+        "Tmax_C": 52.001758193486204,
+        "Tmin_S25_estimate_C": 12.62439605984035,
+        "DeltaT_estimate_C": 39.37736213364585,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 863100.0,
+        "Tmax_C": 51.99119987555083,
+        "Tmin_S25_estimate_C": 12.61762863631109,
+        "DeltaT_estimate_C": 39.37357123923974,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "time_s": 864000.0,
+        "Tmax_C": 51.980614669852436,
+        "Tmin_S25_estimate_C": 12.6108586330881,
+        "DeltaT_estimate_C": 39.369756036764336,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 202,
+        "active_pours": [
+          1,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  "assessment": {
+    "status": "INDETERMINATE",
+    "I_Delta": null,
+    "can_prove_exceedance": false,
+    "can_exclude_exceedance": false,
+    "reason": "No hay testigo con cota validada que exceda, ni cota superior global validada.",
+    "validated_intervals": []
+  }
+}
