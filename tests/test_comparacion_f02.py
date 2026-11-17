@@ -2,7 +2,7 @@ import copy,json,math
 from decimal import Decimal
 from pathlib import Path
 import pytest
-from therma.comparacion_f02 import aggregate,Evidence,ROOT,fixed_histories
+from therma.comparacion_f02 import aggregate,aggregate_estimated,Evidence,ROOT,fixed_histories
 from test_fase1_python import server,request
 
 
@@ -109,3 +109,30 @@ def test_pending_plan_preparation_uses_a_real_schedule_without_running(evidence)
 def test_completed_weights_are_not_confused_with_expected_sum():
     v=aggregate([r('0','.5')],scenarios('.5','.5'))
     assert v['weight_sum']==1 and v['completed_weight_sum']==.5
+
+
+def test_estimated_probabilities_are_separate_and_do_not_validate_s25():
+    records=[r(str(i),'.25',valid=False,Delta_estimate_C=18.,coverage=1.) for i in range(4)]
+    before=copy.deepcopy(records);catalog=scenarios('.25','.25','.25','.25')
+    estimate=aggregate_estimated(records,catalog)
+    assert estimate['is_estimate'] and estimate['P_Delta']==0 and estimate['P_f']==0
+    assert estimate['compliance']=='CUMPLE'
+    assert aggregate(records,catalog)['P_f'] is None and records==before
+    records[0].update(Tmax_C=71.,Delta_estimate_C=21.)
+    records[1].update(Delta_estimate_C=21.)
+    estimate=aggregate_estimated(records,catalog)
+    assert estimate['P_T']==.25 and estimate['P_Delta']==.5 and estimate['P_f']==.5
+
+
+@pytest.mark.parametrize('change',[dict(coverage=.99),dict(horizon_captured=False),dict(status='FAILED'),dict(numerical_checks=False)])
+def test_approximation_does_not_turn_incomplete_results_into_success(change):
+    records=[r('0',valid=False,Delta_estimate_C=18.,coverage=1.)]
+    records[0].update(change)
+    result=aggregate_estimated(records,scenarios('1'))
+    assert result['P_f'] is None and result['compliance']=='INDETERMINADO'
+
+
+def test_estimated_weights_are_checked_before_calculation():
+    record=r('0',valid=False,Delta_estimate_C=18.,coverage=1.)
+    assert not aggregate_estimated([record],scenarios('.9'))['weights_valid']
+    assert aggregate_estimated([record,record],scenarios('1'))['P_f'] is None

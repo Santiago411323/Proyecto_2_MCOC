@@ -67,6 +67,26 @@ def safe_folder(path):
     return p if p.is_relative_to((ROOT/'resultados').resolve()) and p.is_dir() else None
 
 
+def aggregate_estimated(records,expected):
+    """Riesgo del modelo aproximado, separado de la evaluación S25 validada."""
+    checked=aggregate(records,expected)
+    if not checked['weights_valid']:
+        return dict(checked,is_estimate=True)
+    by={r['scenario_id']:r for r in records};events=[]
+    for s in expected:
+        r=by.get(s['id'],{})
+        ok=r.get('status')=='COMPLETED' and r.get('numerical_checks') is True and r.get('horizon_captured') is True
+        t=number(r.get('Tmax_C'));d=number(r.get('Delta_estimate_C'))
+        covered=number(r.get('coverage'))==1.
+        events.append(dict(scenario_id=s['id'],weight=s['weight'],status='COMPLETED' if ok else 'UNKNOWN',
+                           I_T=t>70 if ok and t is not None else None,
+                           I_Delta=d>20 if ok and covered and d is not None else None))
+    result=resumen_riesgo(events)
+    result.update(is_estimate=True,weights_valid=True,weight_sum=checked['weight_sum'],
+                  missing=checked['missing'],warnings=['S25 aproximado: no constituye evaluación formal ni probabilidad de obra calibrada.'])
+    return result
+
+
 @lru_cache(maxsize=4)
 def ifc_bounds(expected_hash,mtime):
     import numpy as np
@@ -147,6 +167,8 @@ class Evidence:
         item['I_T']=tmax>70 if item['status']=='COMPLETED' and item['numerical_checks'] and item['horizon_captured'] and tmax is not None else None
         item['I_Delta']=item['DeltaTmax_validated_C']>20 if item['s25_validated'] and item['DeltaTmax_validated_C'] is not None and item['numerical_checks'] and item['horizon_captured'] else None
         item['I_F']=True if item['I_T'] is True or item['I_Delta'] is True else False if item['I_T'] is False and item['I_Delta'] is False else None
+        item['I_Delta_estimated']=delta>20 if item['status']=='COMPLETED' and item['numerical_checks'] and item['horizon_captured'] and item['coverage']==1 and delta is not None else None
+        item['I_F_estimated']=True if item['I_T'] is True or item['I_Delta_estimated'] is True else False if item['I_T'] is False and item['I_Delta_estimated'] is False else None
         p['runs'].append(uid);self.runs[uid]=item
         if config and 'parameters' not in p:
             p['thermal_starts']={str(v['id']):v['start_h'] for v in config.get('construction',{}).get('pours',[])}
@@ -269,6 +291,7 @@ class Evidence:
             for p in c['plans'].values():
                 rr=[self.runs[k] for k in p['runs']]
                 p['risk']=aggregate(rr,c['expected']);p['evaluated']=len(rr);p['expected']=len(c['expected'])
+                p['estimated_risk']=aggregate_estimated(rr,c['expected'])
                 p['Tmax_C']=max((r['Tmax_C'] for r in rr if r['Tmax_C'] is not None),default=None)
                 p['Delta_estimate_C']=max((r['Delta_estimate_C'] for r in rr if r['Delta_estimate_C'] is not None),default=None)
                 p['configuration_id']=digest([r.get('configuration_hash') or digest(r.get('_config')) for r in rr])[:16]
