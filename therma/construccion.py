@@ -8,6 +8,7 @@ import numpy as np
 from .activacion import ConstruccionTermica
 from .moldaje import resistencia_extra
 from .hidratacion import AdiabaticaExponencial
+from .resolucion import MAX_CELL_STEPS
 from .resultados import guardar,a_xfast
 
 
@@ -141,7 +142,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
         state=measure();steps+=1
         if abs(m.t-targets[target_index])<1e-8:
             snapshot(state);target_index+=1
-        if steps>200000 or steps*np.prod(n)>3e8:raise ValueError('Construcción demasiado costosa; reducir malla, horizonte o resolución temporal.')
+        if steps>200000 or steps*np.prod(n)>MAX_CELL_STEPS:raise ValueError('Construcción demasiado costosa; reducir malla, horizonte o resolución temporal.')
         if steps%50==0:progress(m.t/duration)
     t,T,mask,state=critical
     hit=next((j for j,v in enumerate(times) if abs(v-t)<1e-7),None)

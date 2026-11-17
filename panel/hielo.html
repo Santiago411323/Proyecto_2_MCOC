@@ -1,0 +1,20 @@
+<details id="iceForm" class="panel workflow-details">
+ <summary>Preenfriamiento con hielo · simular una vertida continua</summary>
+ <div class="drawer-content">
+ <p>Compara la misma fundación con agua líquida y con parte de esa agua reemplazada por hielo. Este ensayo usa el plan continuo F02 congelado, independiente de los ajustes generales de abajo.</p>
+ <div class="field-grid">
+ <label>Quiero calcular<select id="iceMode"><option value="target">Cuánto hielo necesito para una temperatura</option><option value="dose">Qué temperatura obtengo con una dosis</option></select></label>
+ <label><span id="iceValueLabel">Colocación objetivo [°C]</span><input id="iceValue" type="number" step="any" value="8"></label>
+ <label>Mezcla sin hielo [°C]<input id="iceRef" type="number" step="any" value="18"></label>
+ <label>Agua reemplazable [kg/m³]<input id="iceWaterMass" type="number" step="any" value="160"></label>
+ <label>Agua líquida antes de mezclar [°C]<input id="iceWater" type="number" step="any" value="20"></label>
+ <label>Hielo antes de mezclar [°C]<input id="iceTemp" type="number" step="any" max="0" value="0"></label>
+ </div>
+ <h4>Balance de mezcla · vista previa</h4><p id="icePreview" aria-live="polite">Abre el ensayo para calcular la dosis.</p>
+ <details><summary>Modelo y condiciones del ensayo</summary><p>Por cada kilogramo de hielo se retira un kilogramo de agua. El balance supone fusión completa, propiedades constantes y colocación sin ganancia de calor durante el transporte. Las entradas iniciales son hipótesis editables. El agua reemplazable debe comprobarse con la dosificación real.</p>
+ <p>ρ cₚ (T sin hielo − T con hielo) = m hielo × [334 000 + 4180 T agua − 2100 T hielo], con energías en J y masa de hielo en kg/m³. Hormigón del catálogo: 2476 kg/m³ y 1023 J/(kg·K).</p>
+ <p>Una operación sin esperas a 20 m³/h. Python activa cada pieza IFC al comenzar su colocación. Misma fuente FV/Tikhonov M4_SS por edad, clima del 19 de noviembre con extensión hipotética, suelo y moldaje del plan continuo. Malla 36 × 36 × 7, 42 días. La fuente prescrita mantiene su cinética al cambiar la temperatura inicial.</p></details>
+ <button id="iceRun" type="button">Simular sin hielo y con hielo en Python</button> <button id="iceCancel" type="button" class="secondary" hidden>Cancelar ensayo</button>
+ <p id="iceStatus" role="status"></p>
+ </div>
+</details>

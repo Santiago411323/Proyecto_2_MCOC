@@ -1,0 +1,1071 @@
+{
+  "plan": {
+    "D_h": 24.353475882892084,
+    "basal_R_added": 1.0,
+    "basal_hypothesis": "Capa aislante adicional hipotética bajo la fundación. Requiere validación estructural/geotécnica; NO cambio de propiedad medida del suelo.",
+    "constraints": "Un equipo, capacidad constante, orden inferior-superior, sin solapamiento; sin restricción resistente validada.",
+    "construction_pours": 3,
+    "continuous_operation": false,
+    "family": "exploration",
+    "group_ids": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "id": "hielo_t8_eps100_base1",
+    "insulation": {
+      "conductivity_W_mK": 0.038,
+      "scope": "Caras al aire; suelo original sin aislación. Permanente durante el horizonte.",
+      "status": "Hipótesis de diseño: verificar disponibilidad, ejecución y retiro antes de recomendar obra.",
+      "thickness_m": 0.1
+    },
+    "minimum_wait_h": 0.0,
+    "name": "Con hielo · Tcol 8 °C, EPS 100 mm, R basal adicional 1,0",
+    "operations": [
+      {
+        "end_h": 14.762657681592392,
+        "id": 1,
+        "start_h": 0.0,
+        "volume_m3": 295.25315363184785
+      },
+      {
+        "end_h": 22.238338683594073,
+        "id": 2,
+        "start_h": 14.762657681592392,
+        "volume_m3": 149.51362004003363
+      },
+      {
+        "end_h": 24.353475882892084,
+        "id": 3,
+        "start_h": 22.238338683594073,
+        "volume_m3": 42.302743985960234
+      }
+    ],
+    "physical_overrides": {
+      "faces": [
+        {
+          "R": 2.6315789473684212,
+          "flux": 0.0,
+          "h": 10.0,
+          "temp": 20.0,
+          "type": "R"
+        },
+        {
+          "R": 2.6315789473684212,
+          "flux": 0.0,
+          "h": 10.0,
+          "temp": 20.0,
+          "type": "R"
+        },
+        {
+          "R": 2.6315789473684212,
+          "flux": 0.0,
+          "h": 10.0,
+          "temp": 20.0,
+          "type": "R"
+        },
+        {
+          "R": 2.6315789473684212,
+          "flux": 0.0,
+          "h": 10.0,
+          "temp": 20.0,
+          "type": "R"
+        },
+        {
+          "R": 0.0,
+          "flux": 0.0,
+          "h": 10.0,
+          "temp": 20.0,
+          "type": "R"
+        },
+        {
+          "R": 2.6315789473684212,
+          "flux": 0.0,
+          "h": 10.0,
+          "temp": 20.0,
+          "type": "R"
+        }
+      ]
+    },
+    "placement_C": 8.0,
+    "rate_m3_h": 20.0,
+    "thermal_approximation": "Each of 3 IFC pieces activated at start of physical placement. Continuous groups are not continuous-fill thermal simulation.",
+    "wait_after_group_h": 0
+  },
+  "original_plan_id": "t8_eps100_base1",
+  "catalog_sha256": "909179356ddf8f255ea748c3ddec2123d80f48ff0bac363ce80a71338d4475c3",
+  "inputs": {
+    "mode": "target",
+    "value": 8.0,
+    "reference_C": 18.0,
+    "water_C": 20.0,
+    "ice_C": 0.0,
+    "water_kg_m3": 160.0
+  },
+  "mix": {
+    "dose_kg_m3": 60.65488505747126,
+    "total_t": 29.54314560853436,
+    "liquid_kg_m3": 99.34511494252874,
+    "placement_C": 8.0,
+    "reduction_C": 10.0,
+    "volume_m3": 487.06951765784174,
+    "replaced_pct": 37.90930316091954,
+    "enthalpy_J_kg": 417600.0
+  },
+  "runs": [
+    {
+      "status": "COMPLETED",
+      "cache_key": "55cbb4b1d1dd943600862dd67d8a90480b01b231febebd2717a20b17737568a8",
+      "configuration_hash": "d0aa96d7c69c17490388c921b4be6d3642908ffe8abd9d5f635db4090a5b5cdf",
+      "engine_fingerprint": "de5e88ac664a2bd67e465ec50d9f12fd5d26a38e2ba987e4b13d23956d9fb1f3",
+      "reused": false,
+      "simulation_id": "55cbb4b1d1dd943600862dd67d8a9048",
+      "Tmax_C": 42.337990644981545,
+      "Tmax_time_h": 210.5,
+      "Delta_estimate_C": 16.157343243139177,
+      "Delta_time_h": 839.0,
+      "S25_validation": "NOT VALIDATED",
+      "I_T": null,
+      "I_Delta": null,
+      "P_T": null,
+      "P_Delta": null,
+      "P_f": null,
+      "compliance": "INDETERMINADO",
+      "observed_T_exceeds": false,
+      "observed_Delta_estimate_exceeds": false,
+      "probability_note": "No probabilidades con S25 no validado; recuentos térmicos sólo descriptivos. Fuentes y pesos provisionales.",
+      "coverage_air_min_fraction": 1.0,
+      "coverage_by_stage": [
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 384,
+            "computed_points": 384,
+            "area_m2": 89.79747475355163,
+            "computed_area_m2": 89.79747475355163,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ]
+      ],
+      "missing_points_max": 0,
+      "complete_sampling": true,
+      "horizon_captured": true,
+      "extension_required": false,
+      "numerical_checks": true,
+      "energy_residual_relative": 8.117050863701853e-14,
+      "runtime_s": 25.96221680007875,
+      "wall_time_s": 28.064408800099045,
+      "dt_s": 900.0,
+      "dt_limit_s": 50660.82081986482,
+      "shape": [
+        36,
+        36,
+        7
+      ],
+      "spacing_m": [
+        0.5,
+        0.5,
+        0.4714285714285715
+      ],
+      "volume_m3": 486.0428571428572,
+      "code_sha": "2df3ca12372e522e9d5a9dc4667dde7c14f324f1",
+      "peak_S25": {
+        "time_s": 3020400.0,
+        "Tmax_C": 36.372220451319095,
+        "Tmin_S25_estimate_C": 20.214877208179917,
+        "DeltaT_estimate_C": 16.157343243139177,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 520,
+        "active_pours": [
+          1,
+          2,
+          3
+        ],
+        "sample_index": 520,
+        "surface_xyz_m": [
+          3.886571032197826,
+          8.841428967802173,
+          0.3666666666666667
+        ],
+        "S25_xyz_m": [
+          3.8688933626681625,
+          8.823751298272509,
+          0.3666666666666667
+        ],
+        "outward_normal": [
+          0.7071067811865489,
+          0.7071067811865461,
+          0.0
+        ],
+        "triangle_id": 70,
+        "hot_index": [
+          17,
+          17,
+          4
+        ],
+        "hot_xyz_m": [
+          -0.25,
+          -0.25,
+          2.1214285714285714
+        ],
+        "hot_pour_id": 2,
+        "air_temperature_C": 11.4,
+        "region": "air",
+        "surface_pour_id": 1,
+        "point_pour_id": 1
+      },
+      "boundary_model": "Unchanged Cartesian staircase. IFC S25 sampling does not correct boundary heat flux.",
+      "assumption": "Physical placement durations separate; thermal activation at start of each IFC piece.",
+      "artifacts": {
+        "metadata.json": "4b026f164b0ee5f6650dafdca38efbad883d899202168a9e64ca75e76767e4e9",
+        "config.json": "c97e345663dac4e9e1c7b4c0f627049688d225d78f0e36e5a6cea8e71e62fcb3",
+        "campos.npz": "65d6218a75aaf9358c5552b124e2d90b837a21d2f0ec33193d1132c918f4a128",
+        "fields.bin": "33ec8699c74009ec318b3a26f6ddacdbde00d4aa0c18022a150ff965e5c11ca7",
+        "active.bin": "354ba126168e1138fa05ef85228be2dfdfe26b32e6075cad700b5f5b33953a40",
+        "s25_ifc.json": "cbdb88541d2ac63afae68902b6a98d236bb01cbea330f2ac23c2ca589fd62335",
+        "s25_ifc_history.csv": "3045c91f973713bc580c189b48d0eb6e0cbdd61491a782248103372292adf200",
+        "s25_ifc_critical.npz": "9e9824f6893703f3a63cddd671b0287f50d9a4de2f9f497d1ff1287bb3a0941d"
+      },
+      "horizon_audit": {
+        "captured": true,
+        "end_h": 1008.0,
+        "window_h": 72.0,
+        "tolerance_C": 0.05,
+        "checks": {
+          "Tmax_C": {
+            "captured": true,
+            "peak_h": 210.5,
+            "tail_rise_C": -0.36271343217376284,
+            "peak_tail_margin_C": 6.957486421556865
+          },
+          "DeltaT_estimate_C": {
+            "captured": true,
+            "peak_h": 839.0,
+            "tail_rise_C": -0.05628897293004087,
+            "peak_tail_margin_C": 0.043592533717880855
+          }
+        },
+        "scope": "Control de truncamiento; S25 estimado y cola climática hipotética."
+      },
+      "scenario_id": "fv_M1_SS__forecast16nov_cola48h",
+      "source_id": "fv_M1_SS",
+      "climate_id": "forecast16nov_cola48h",
+      "weight": "0.25"
+    },
+    {
+      "status": "COMPLETED",
+      "cache_key": "9a38fa0a13831df59aceb0c50fdd69be7dd2b8e6e603a709a4cf1dcd81c95582",
+      "configuration_hash": "b4a4d66a33959ff7f8e5432ee7a1e5e5fb4b6b767e5c78060e222f4fa715db53",
+      "engine_fingerprint": "de5e88ac664a2bd67e465ec50d9f12fd5d26a38e2ba987e4b13d23956d9fb1f3",
+      "reused": false,
+      "simulation_id": "9a38fa0a13831df59aceb0c50fdd69be",
+      "Tmax_C": 45.511580137161864,
+      "Tmax_time_h": 170.0,
+      "Delta_estimate_C": 17.166957428732655,
+      "Delta_time_h": 791.0,
+      "S25_validation": "NOT VALIDATED",
+      "I_T": null,
+      "I_Delta": null,
+      "P_T": null,
+      "P_Delta": null,
+      "P_f": null,
+      "compliance": "INDETERMINADO",
+      "observed_T_exceeds": false,
+      "observed_Delta_estimate_exceeds": false,
+      "probability_note": "No probabilidades con S25 no validado; recuentos térmicos sólo descriptivos. Fuentes y pesos provisionales.",
+      "coverage_air_min_fraction": 1.0,
+      "coverage_by_stage": [
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 384,
+            "computed_points": 384,
+            "area_m2": 89.79747475355163,
+            "computed_area_m2": 89.79747475355163,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ]
+      ],
+      "missing_points_max": 0,
+      "complete_sampling": true,
+      "horizon_captured": true,
+      "extension_required": false,
+      "numerical_checks": true,
+      "energy_residual_relative": 1.4741608010499941e-15,
+      "runtime_s": 14.355855899862945,
+      "wall_time_s": 15.455102100037038,
+      "dt_s": 900.0,
+      "dt_limit_s": 50660.82081986482,
+      "shape": [
+        36,
+        36,
+        7
+      ],
+      "spacing_m": [
+        0.5,
+        0.5,
+        0.4714285714285715
+      ],
+      "volume_m3": 486.0428571428572,
+      "code_sha": "2df3ca12372e522e9d5a9dc4667dde7c14f324f1",
+      "peak_S25": {
+        "time_s": 2847600.0,
+        "Tmax_C": 38.04720423506183,
+        "Tmin_S25_estimate_C": 20.880246806329172,
+        "DeltaT_estimate_C": 17.166957428732655,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 520,
+        "active_pours": [
+          1,
+          2,
+          3
+        ],
+        "sample_index": 520,
+        "surface_xyz_m": [
+          3.886571032197826,
+          8.841428967802173,
+          0.3666666666666667
+        ],
+        "S25_xyz_m": [
+          3.8688933626681625,
+          8.823751298272509,
+          0.3666666666666667
+        ],
+        "outward_normal": [
+          0.7071067811865489,
+          0.7071067811865461,
+          0.0
+        ],
+        "triangle_id": 70,
+        "hot_index": [
+          17,
+          17,
+          4
+        ],
+        "hot_xyz_m": [
+          -0.25,
+          -0.25,
+          2.1214285714285714
+        ],
+        "hot_pour_id": 2,
+        "air_temperature_C": 11.4,
+        "region": "air",
+        "surface_pour_id": 1,
+        "point_pour_id": 1
+      },
+      "boundary_model": "Unchanged Cartesian staircase. IFC S25 sampling does not correct boundary heat flux.",
+      "assumption": "Physical placement durations separate; thermal activation at start of each IFC piece.",
+      "artifacts": {
+        "metadata.json": "5c31b9e1fca7adf336aeaee792bbbd4d27dc5bcf6abc418a88b1a9f7bcc415c0",
+        "config.json": "34a5f1880427a53931e30cbea25436696e13450c99731e7690c371300604dae2",
+        "campos.npz": "814aec48e40d6c54f67b584430833961afcea0fa60a972262292f70911757cb8",
+        "fields.bin": "d72615ef5aa27a1134aa163a8d25668a8d2c73381ee8e602b4061c5b4c9c9232",
+        "active.bin": "354ba126168e1138fa05ef85228be2dfdfe26b32e6075cad700b5f5b33953a40",
+        "s25_ifc.json": "c8383a1f832f05cd95d5e39ebe38cb1e158a4a8b98ebe53ba713ac4f5f00c7ff",
+        "s25_ifc_history.csv": "ef1f961be1239ca9b118757f26f69bf7c10783f51eb065a34a3b53c6b2d9df38",
+        "s25_ifc_critical.npz": "b2fcc2d9010e87f0075adda089f7533387d7046df0a6948eebc1fa417ef7ee80"
+      },
+      "horizon_audit": {
+        "captured": true,
+        "end_h": 1008.0,
+        "window_h": 72.0,
+        "tolerance_C": 0.05,
+        "checks": {
+          "Tmax_C": {
+            "captured": true,
+            "peak_h": 170.0,
+            "tail_rise_C": -0.4649604542714201,
+            "peak_tail_margin_C": 9.380114528697945
+          },
+          "DeltaT_estimate_C": {
+            "captured": true,
+            "peak_h": 791.0,
+            "tail_rise_C": -0.11491431794507179,
+            "peak_tail_margin_C": 0.19466831417099328
+          }
+        },
+        "scope": "Control de truncamiento; S25 estimado y cola climática hipotética."
+      },
+      "scenario_id": "fv_M2_SS__forecast16nov_cola48h",
+      "source_id": "fv_M2_SS",
+      "climate_id": "forecast16nov_cola48h",
+      "weight": "0.25"
+    },
+    {
+      "status": "COMPLETED",
+      "cache_key": "f506ca90ddd471117ae2156c889ac942d967157018ca83883cc1b6cbce196d77",
+      "configuration_hash": "e46f26153af187935596f05b948095570b66c7dc05469cd0762209ec80e33177",
+      "engine_fingerprint": "de5e88ac664a2bd67e465ec50d9f12fd5d26a38e2ba987e4b13d23956d9fb1f3",
+      "reused": false,
+      "simulation_id": "f506ca90ddd471117ae2156c889ac942",
+      "Tmax_C": 44.70148349595306,
+      "Tmax_time_h": 206.76923076923077,
+      "Delta_estimate_C": 16.869361662883573,
+      "Delta_time_h": 791.0,
+      "S25_validation": "NOT VALIDATED",
+      "I_T": null,
+      "I_Delta": null,
+      "P_T": null,
+      "P_Delta": null,
+      "P_f": null,
+      "compliance": "INDETERMINADO",
+      "observed_T_exceeds": false,
+      "observed_Delta_estimate_exceeds": false,
+      "probability_note": "No probabilidades con S25 no validado; recuentos térmicos sólo descriptivos. Fuentes y pesos provisionales.",
+      "coverage_air_min_fraction": 1.0,
+      "coverage_by_stage": [
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 384,
+            "computed_points": 384,
+            "area_m2": 89.79747475355163,
+            "computed_area_m2": 89.79747475355163,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ]
+      ],
+      "missing_points_max": 0,
+      "complete_sampling": true,
+      "horizon_captured": true,
+      "extension_required": false,
+      "numerical_checks": true,
+      "energy_residual_relative": 2.157326015739913e-15,
+      "runtime_s": 16.878632499836385,
+      "wall_time_s": 17.862410900183022,
+      "dt_s": 900.0,
+      "dt_limit_s": 50660.82081986482,
+      "shape": [
+        36,
+        36,
+        7
+      ],
+      "spacing_m": [
+        0.5,
+        0.5,
+        0.4714285714285715
+      ],
+      "volume_m3": 486.0428571428572,
+      "code_sha": "2df3ca12372e522e9d5a9dc4667dde7c14f324f1",
+      "peak_S25": {
+        "time_s": 2847600.0,
+        "Tmax_C": 37.56385590764614,
+        "Tmin_S25_estimate_C": 20.69449424476257,
+        "DeltaT_estimate_C": 16.869361662883573,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 1912,
+        "active_pours": [
+          1,
+          2,
+          3
+        ],
+        "sample_index": 1912,
+        "surface_xyz_m": [
+          -3.8865710321978253,
+          -8.841428967802175,
+          0.3666666666666667
+        ],
+        "S25_xyz_m": [
+          -3.8688933626681616,
+          -8.82375129827251,
+          0.3666666666666667
+        ],
+        "outward_normal": [
+          -0.7071067811865472,
+          -0.7071067811865478,
+          0.0
+        ],
+        "triangle_id": 262,
+        "hot_index": [
+          17,
+          17,
+          4
+        ],
+        "hot_xyz_m": [
+          -0.25,
+          -0.25,
+          2.1214285714285714
+        ],
+        "hot_pour_id": 2,
+        "air_temperature_C": 11.4,
+        "region": "air",
+        "surface_pour_id": 1,
+        "point_pour_id": 1
+      },
+      "boundary_model": "Unchanged Cartesian staircase. IFC S25 sampling does not correct boundary heat flux.",
+      "assumption": "Physical placement durations separate; thermal activation at start of each IFC piece.",
+      "artifacts": {
+        "metadata.json": "fdcdaa8e3ffcaca5c619b1b900ffdb44a4689c0f89e474afe6d77d065e0b0998",
+        "config.json": "166ed86d8cd5c4581172561f9e363f775c3ea304b4f40e2ac29db754a9e2c617",
+        "campos.npz": "a432de7d5c375fef8a285ce39704e1eeb89d02e94bd00bd5dfd30d582e142dfa",
+        "fields.bin": "03e2d6de4b6b65340af4c928397a7f7a0d44f0c2ef3aa9724d81993d7a390014",
+        "active.bin": "3dceb139512c9733784dfd52e346581245063826b1acb83c2e136f7047d4c4bf",
+        "s25_ifc.json": "c7c494adc903a7a521c4d5d8ab640ffd48080127331592c29461fe284782850e",
+        "s25_ifc_history.csv": "911eb7bfe8b836dd2a8e6baa34f9a825116852c0f83eb1c7ff80cd3b2f6fb3c3",
+        "s25_ifc_critical.npz": "33e066802b8d712add71401b30545367bb0c7020fe6127d512601973c9fb7c35"
+      },
+      "horizon_audit": {
+        "captured": true,
+        "end_h": 1008.0,
+        "window_h": 72.0,
+        "tolerance_C": 0.05,
+        "checks": {
+          "Tmax_C": {
+            "captured": true,
+            "peak_h": 206.76923076923077,
+            "tail_rise_C": -0.45692918507963753,
+            "peak_tail_margin_C": 9.020193918736368
+          },
+          "DeltaT_estimate_C": {
+            "captured": true,
+            "peak_h": 791.0,
+            "tail_rise_C": -0.1127523745004595,
+            "peak_tail_margin_C": 0.190273742062665
+          }
+        },
+        "scope": "Control de truncamiento; S25 estimado y cola climática hipotética."
+      },
+      "scenario_id": "fv_M3_SS__forecast16nov_cola48h",
+      "source_id": "fv_M3_SS",
+      "climate_id": "forecast16nov_cola48h",
+      "weight": "0.25"
+    },
+    {
+      "status": "COMPLETED",
+      "cache_key": "f32cc9aca25da824cf408b104238b82a47ac8218c2942a0e54997b259dd69e2e",
+      "configuration_hash": "2cd820a21cfe530c860076513e446b97606dd939c1293b5ee9b859c00c2579a6",
+      "engine_fingerprint": "de5e88ac664a2bd67e465ec50d9f12fd5d26a38e2ba987e4b13d23956d9fb1f3",
+      "reused": false,
+      "simulation_id": "f32cc9aca25da824cf408b104238b82a",
+      "Tmax_C": 46.9766628980367,
+      "Tmax_time_h": 213.25,
+      "Delta_estimate_C": 18.002881432733442,
+      "Delta_time_h": 791.0,
+      "S25_validation": "NOT VALIDATED",
+      "I_T": null,
+      "I_Delta": null,
+      "P_T": null,
+      "P_Delta": null,
+      "P_f": null,
+      "compliance": "INDETERMINADO",
+      "observed_T_exceeds": false,
+      "observed_Delta_estimate_exceeds": false,
+      "probability_note": "No probabilidades con S25 no validado; recuentos térmicos sólo descriptivos. Fuentes y pesos provisionales.",
+      "coverage_air_min_fraction": 1.0,
+      "coverage_by_stage": [
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 192,
+            "computed_points": 192,
+            "area_m2": 65.61152873170846,
+            "computed_area_m2": 65.61152873170846,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ],
+        [
+          {
+            "region": "air",
+            "surface_type": "horizontal",
+            "points": 864,
+            "computed_points": 864,
+            "area_m2": 38.45703998723657,
+            "computed_area_m2": 38.45703998723657,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "inclined",
+            "points": 2208,
+            "computed_points": 2208,
+            "area_m2": 234.29914411116317,
+            "computed_area_m2": 234.29914411116317,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "air",
+            "surface_type": "lateral",
+            "points": 384,
+            "computed_points": 384,
+            "area_m2": 89.79747475355163,
+            "computed_area_m2": 89.79747475355163,
+            "computed_area_fraction": 1.0
+          },
+          {
+            "region": "soil",
+            "surface_type": "horizontal",
+            "points": 2592,
+            "computed_points": 2592,
+            "area_m2": 268.41195784713443,
+            "computed_area_m2": 268.41195784713443,
+            "computed_area_fraction": 1.0
+          }
+        ]
+      ],
+      "missing_points_max": 0,
+      "complete_sampling": true,
+      "horizon_captured": true,
+      "extension_required": false,
+      "numerical_checks": true,
+      "energy_residual_relative": 2.3404592724611296e-15,
+      "runtime_s": 15.99181200005114,
+      "wall_time_s": 16.893444300163537,
+      "dt_s": 900.0,
+      "dt_limit_s": 50660.82081986482,
+      "shape": [
+        36,
+        36,
+        7
+      ],
+      "spacing_m": [
+        0.5,
+        0.5,
+        0.4714285714285715
+      ],
+      "volume_m3": 486.0428571428572,
+      "code_sha": "2df3ca12372e522e9d5a9dc4667dde7c14f324f1",
+      "peak_S25": {
+        "time_s": 2847600.0,
+        "Tmax_C": 39.43269290484144,
+        "Tmin_S25_estimate_C": 21.429811472107996,
+        "DeltaT_estimate_C": 18.002881432733442,
+        "sample_count": 6048,
+        "valid_sample_count": 6048,
+        "unsupported_points": 0,
+        "complete_sampling": true,
+        "cold_sample_index": 520,
+        "active_pours": [
+          1,
+          2,
+          3
+        ],
+        "sample_index": 520,
+        "surface_xyz_m": [
+          3.886571032197826,
+          8.841428967802173,
+          0.3666666666666667
+        ],
+        "S25_xyz_m": [
+          3.8688933626681625,
+          8.823751298272509,
+          0.3666666666666667
+        ],
+        "outward_normal": [
+          0.7071067811865489,
+          0.7071067811865461,
+          0.0
+        ],
+        "triangle_id": 70,
+        "hot_index": [
+          17,
+          17,
+          4
+        ],
+        "hot_xyz_m": [
+          -0.25,
+          -0.25,
+          2.1214285714285714
+        ],
+        "hot_pour_id": 2,
+        "air_temperature_C": 11.4,
+        "region": "air",
+        "surface_pour_id": 1,
+        "point_pour_id": 1
+      },
+      "boundary_model": "Unchanged Cartesian staircase. IFC S25 sampling does not correct boundary heat flux.",
+      "assumption": "Physical placement durations separate; thermal activation at start of each IFC piece.",
+      "artifacts": {
+        "metadata.json": "921b6e53aea01143262ea01478fa98682cb860fdfe6cccb129e4cb8c8d36da3a",
+        "config.json": "69a6ab9fd53d5c40d5fe2b3c2c9cb71af1b8a00eea9aa49b9a98e65ee33af3f2",
+        "campos.npz": "d4116ceb60ada9d4af75adc26a58b9a72dfa777a6d13c8e709af38c73278e164",
+        "fields.bin": "75cdbad16d6cab6bca49acf40fc73e9c6ef4a1731ca5bfcc9a8834c9b4c0fef2",
+        "active.bin": "354ba126168e1138fa05ef85228be2dfdfe26b32e6075cad700b5f5b33953a40",
+        "s25_ifc.json": "0433a7faba82a703edbcf283c415056556baa90c4e9d8dc64f268387e2e69bbf",
+        "s25_ifc_history.csv": "3eb61ca64d85fa05fe61b1b2bc37046619857c2ed11c66c7d42a72a8196966a1",
+        "s25_ifc_critical.npz": "38eb79dc6feac724d6f91ec1cf0ea24b96762276bfa381b72bdf5538fddb933f"
+      },
+      "horizon_audit": {
+        "captured": true,
+        "end_h": 1008.0,
+        "window_h": 72.0,
+        "tolerance_C": 0.05,
+        "checks": {
+          "Tmax_C": {
+            "captured": true,
+            "peak_h": 213.25,
+            "tail_rise_C": -0.4877712792597251,
+            "peak_tail_margin_C": 9.553623632724879
+          },
+          "DeltaT_estimate_C": {
+            "captured": true,
+            "peak_h": 791.0,
+            "tail_rise_C": -0.11991770172673455,
+            "peak_tail_margin_C": 0.2022082913900647
+          }
+        },
+        "scope": "Control de truncamiento; S25 estimado y cola climática hipotética."
+      },
+      "scenario_id": "fv_M4_SS__forecast16nov_cola48h",
+      "source_id": "fv_M4_SS",
+      "climate_id": "forecast16nov_cola48h",
+      "weight": "0.25"
+    }
+  ]
+}

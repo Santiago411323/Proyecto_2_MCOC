@@ -1,9 +1,43 @@
 """Genera THERMA; el visor WebGL carga dependencias locales desde el servidor."""
 from pathlib import Path
 import json
+import hashlib
+import numpy as np
 from panel.exportar_ifc import datos_ifc
 
 BASE = Path(__file__).resolve().parent
+
+
+def graficos_fuentes(path):
+    """Un par de ejes comunes; respeta huecos y fin de cada registro."""
+    datos = np.loadtxt(path)
+    if datos.ndim != 2 or datos.shape[1] != 9:
+        raise ValueError('Se esperaba tiempo y ocho columnas FV/Tikhonov.')
+    horas = datos[:, 0]
+    xmax = np.ceil(horas.max()/50)*50
+    ymax = np.ceil(np.nanmax(datos[:, 1:])/100)*100
+    figuras = []
+    for grupo, primera in [('SS', 1), ('22A', 5)]:
+        svg = [f'<svg viewBox="0 0 480 218" role="img" aria-label="Generación de calor de las cuatro probetas {grupo}"><title>Campaña {grupo} · Q en W/m³</title>']
+        for valor in np.arange(0, ymax+1, 100):
+            y = 177-147*valor/ymax
+            svg.append(f'<path d="M45 {y} H461" stroke="#324457"/><text x="39" y="{y+4}" text-anchor="end">{valor:.0f}</text>')
+        for t in np.arange(0, xmax+1, 50):
+            svg.append(f'<text x="{45+416*t/xmax}" y="194" text-anchor="middle">{t:.0f}</text>')
+        svg.append('<text x="7" y="15">Q [W/m³]</text><text x="164" y="213">Edad desde la ventana retenida [h]</text>')
+        for i,color in enumerate(['#5bdcc8','#ffb473','#aab5ff','#f879a1']):
+            commands = []
+            move = True
+            for t,q in zip(horas, datos[:, primera+i]):
+                if not np.isfinite(q):
+                    move = True
+                    continue
+                commands.append(f'{"M" if move else "L"}{45+416*t/xmax:.2f},{177-147*q/ymax:.2f}')
+                move = False
+            svg.append(f'<path fill="none" stroke="{color}" stroke-width="1.8" d="{" ".join(commands)}"><title>M{i+1}_{grupo}</title></path>')
+            svg.append(f'<text x="{158+72*i}" y="15" style="fill:{color}">M{i+1}_{grupo}</text>')
+        figuras.append(f'<figure><figcaption>Campaña {grupo}</figcaption>'+''.join(svg)+'</svg></figure>')
+    return ''.join(figuras)
 
 
 def main():
@@ -16,9 +50,29 @@ def main():
     html = html.replace('/*__SIMULATIONS__*/', (origen/'simulaciones.js').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVSTYLE__*/', (origen/'navegacion.css').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVUI__*/', (origen/'navegacion.html').read_text(encoding='utf-8'))
+    dashboard=(origen/'panel_corrida.html').read_text(encoding='utf-8')
+    html=html.replace('/*__RUN_DASH__*/',dashboard)
+    weather={}
+    for path in (BASE/'data/weather').glob('*/forecast.json'):
+        raw=path.read_bytes()
+        data=json.loads(raw)
+        hourly=data.get('hourly',{})
+        if data.get('hourly_units',{}).get('time')=='unixtime':
+            weather[hashlib.sha256(raw).hexdigest()]={k:hourly[k] for k in ('time','wind_speed_10m','shortwave_radiation') if k in hourly}
+    study=BASE/'docs/hielo_f02/plan_8_estudiada.json'
+    if not study.exists():study=BASE/'docs/hielo_f02/plan_8_250.json'
+    if not study.exists():study=BASE/'docs/hielo_f02/plan_8.json'
+    demo=next((r['simulation_id'] for r in json.loads(study.read_bytes())['runs'] if r['source_id']=='fv_M4_SS'),None) if study.exists() else None
+    html=html.replace('/*__RUN_DATA__*/',json.dumps(dict(demo=demo,weather=weather),allow_nan=False))
+    html=html.replace('/*__RUN_SCRIPT__*/',(origen/'panel_corrida.js').read_text(encoding='utf-8'))
+    html=html.replace('/*__COMPARE_CURVES__*/',(origen/'comparar_curvas.js').read_text(encoding='utf-8'))
+    html = html.replace('/*__ICE_SCRIPT__*/', (origen/'hielo.js').read_text(encoding='utf-8'))
+    html = html.replace('/*__ICE_FORM__*/', (origen/'hielo.html').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVSCRIPT__*/', (origen/'navegacion.js').read_text(encoding='utf-8'))
     for marker,file in [('F02UI','comparacion_f02.html'),('F02STYLE','comparacion_f02.css'),('F02SCRIPT','comparacion_f02.js')]:
         html=html.replace('/*__'+marker+'__*/',(origen/file).read_text(encoding='utf-8'))
+    html=html.replace('/*__F02_SUMMARY__*/',(origen/'resumen_planes.js').read_text(encoding='utf-8'))
+    html=html.replace('/*__F02_SOURCES__*/',graficos_fuentes(BASE/'data/hydration/source_terms.txt'))
     html = html.replace('/*__IFC_DATA__*/', json.dumps(datos_ifc(BASE/'modelo_e02.ifc'), ensure_ascii=False).replace('</', '<\\/'))
     destino = BASE/'panel_termico.html'
     destino.write_text(html, encoding='utf-8')

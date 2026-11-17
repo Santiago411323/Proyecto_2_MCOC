@@ -1,0 +1,13 @@
+<section id="runDashboard" class="panel run-dashboard" hidden>
+ <h2>Qué ocurre dentro de la fundación</h2><p id="dashIdentity" class="hint"></p>
+ <div class="run-summary" id="dashCards"></div>
+ <nav class="f02-nav" aria-label="Análisis de la corrida"><button data-analysis="section" aria-pressed="true">Corte y vertidas</button><button data-analysis="temperature">Temperaturas y altura</button><button data-analysis="generation">Hidratación</button><button data-analysis="climate">Clima y suelo</button></nav>
+ <div id="dashSection">
+  <div class="simulation-actions"><label>Plano del corte<select id="dashPlane"><option>XZ</option><option>YZ</option><option>XY</option></select></label><label>Posición del plano<input id="dashSlice" type="range" min="0" step="1"></label><button id="dashHot" type="button" class="secondary">Cortar por el máximo actual</button><label class="check"><input id="dashSoil" type="checkbox" checked> Mostrar contacto con suelo</label></div>
+  <p id="dashSliceNote"></p><canvas id="dashMap" aria-label="Temperatura de las celdas activas en el corte"></canvas><p class="hint" id="dashPick" aria-live="polite"></p>
+  <div class="dash-scale"><span>0 °C</span><i></i><span>80 °C</span></div>
+  <h3>Distribución de las vertidas</h3><div class="table-scroll"><table class="plan-table"><thead><tr><th>Vertida</th><th>Intervalo Z de la malla [m]</th><th>Celdas geométricas</th><th>Volumen voxelizado [m³]</th><th>Inicio [h]</th><th>Estado actual</th></tr></thead><tbody id="dashPours"></tbody></table></div>
+ </div>
+ <div id="dashCharts" class="s25-chart-grid" hidden></div>
+</section>
+<script id="dashData" type="application/json">/*__RUN_DATA__*/</script>

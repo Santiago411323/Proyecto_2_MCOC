@@ -7,12 +7,20 @@
 </nav>
 <div id="projectBar" class="project-bar"><div><strong id="activePlanName">Fundación IFC · Grupo 9</strong><span id="activePlanNote">Geometría provisional · S25 no validado</span></div><div id="executionDock"></div></div>
 <section id="configurePage" class="workflow-page" hidden>
+ /*__ICE_FORM__*/
  <div class="page-heading"><div><p class="eyebrow">02 / PREPARAR EL CÁLCULO</p><h1>Configurar un plan</h1><p>Define la colocación y las protecciones. Abre los detalles técnicos sólo cuando los necesites.</p></div><button type="button" class="secondary" data-go="results">Ver resultado actual →</button></div>
  <div id="configActions" class="config-actions"></div><div class="config-layout"><div id="configFormSlot"></div><aside class="config-guide panel"><div class="eyebrow">TU RECORRIDO</div><h3>Una decisión a la vez.</h3><ol><li>Revisa horarios y temperaturas de las vertidas.</li><li>Define moldaje, aislación y entorno.</li><li>Comprueba la malla y el horizonte.</li><li>Ejecuta Python y abre Resultados.</li></ol><p class="hint">Cambiar una entrada deja el resultado anterior desactualizado. La visualización no recalcula temperaturas.</p><button type="button" class="quiet" data-go="laboratory">Abrir ejercicios de verificación</button></aside></div>
  <div id="configEquationSlot"></div>
 </section>
 <section id="resultsPage" class="workflow-page" hidden>
  <div class="page-heading"><div><p class="eyebrow">03 / EXPLORAR EL CAMPO CALCULADO</p><h1>Simulaciones y resultados</h1><p>Recorre el tiempo, abre un corte y consulta las temperaturas del mismo instante.</p></div><button id="presentationToggle" type="button" class="secondary" aria-pressed="false">Vista de presentación</button></div>
+ <section id="iceResults" class="panel simulation-desk" hidden>
+  <div class="panel-head"><h3>Una vertida · efecto del hielo</h3><a id="iceDownload" download="comparacion_hielo.json">Descargar datos</a></div>
+  <label>Comparación guardada<select id="iceArchive"></select></label>
+  <p id="iceFinding"></p><div class="table-scroll"><table class="plan-table"><thead><tr><th>Caso</th><th>Hielo [kg/m³]</th><th>Total [t]</th><th>Agua líquida [kg/m³]</th><th>Colocación [°C]</th><th>Tmax [°C]</th><th>ΔT S25 est. [°C]</th><th>Campo 3D</th></tr></thead><tbody id="iceRows"></tbody></table></div>
+  <div class="s25-chart-grid"><figure><figcaption>Temperatura máxima activa [°C]</figcaption><svg id="iceTPlot" role="img" aria-label="Temperatura máxima frente a días"></svg></figure><figure><figcaption>Diferencial S25 estimado [°C]</figcaption><svg id="iceDPlot" role="img" aria-label="Diferencial térmico frente a días"></svg></figure></div>
+  <p class="hint"><b style="color:#f9af66">━ Sin hielo</b>　<b style="color:#4cdbd1">━ Con hielo</b>　┄ Límite docente. Una fuente y una historia climática. S25 estimado a 25 mm bajo el IFC.</p>
+ </section>
  <section id="simulationDesk" class="panel simulation-desk">
  <div class="eyebrow">¿POR DÓNDE EMPIEZO?</div><h3>Una simulación responde: ¿qué temperaturas produce este plan?</h3>
  <details id="simulationGuide" open><summary>Cómo funciona una simulación · guía en tres pasos</summary><p class="hint">Python parte de la geometría y las condiciones elegidas, calcula cómo cambia la temperatura y guarda los resultados. La animación permite recorrer ese cálculo; no vuelve a resolverlo.</p>
@@ -31,6 +39,7 @@
  <p id="resultRevisionNote" class="revision-note" hidden>Las entradas cambiaron. Estos valores pertenecen a la corrida anterior; ejecuta Python para actualizarlos.</p>
  <div class="run-summary"><div><span>Máxima de toda la corrida</span><strong id="runGlobalMax">—</strong><small id="runGlobalTime">Pendiente de cálculo</small></div><div><span>ΔT S25 máximo · estimado</span><strong id="runS25Max">—</strong><small id="runS25Time">No validado</small></div><div><span>Evaluación conjunta del proyecto</span><strong class="uncertain">Indeterminada</strong><small>S25 sin cota de error validada</small></div></div>
  <div id="resultViewerSlot"></div>
+ /*__RUN_DASH__*/
  <section id="s25Results" class="panel s25-results"><div class="panel-head"><div><div class="eyebrow">PROFUNDIDAD: 25 mm DESDE EL IFC</div><h3>Interior y S25, en el mismo instante</h3></div><span class="tag amber">ESTIMADO · NO VALIDADO</span></div><p id="s25Overview" class="hint">Activa la evaluación S25 en la configuración para obtener estas curvas.</p><div id="s25ResultValues"></div><div class="s25-chart-grid"><div><p class="chart-caption">Tmax activa y mínima S25 [°C] · referencia 70 °C</p><canvas id="s25Temperatures" aria-label="Temperaturas máximas activas y S25 simultáneas"></canvas></div><div id="s25DeltaSlot"><p class="chart-caption">Diferencial S25 estimado [°C] · referencia 20 °C</p></div></div><p class="hint">El máximo de temperatura y el máximo diferencial pueden ocurrir en horas diferentes. Los centros de voxeles no se presentan como sensores a 25 mm.</p></section>
  <details id="sensorDrawer" class="panel workflow-details"><summary>Sensores virtuales e investigación de puntos</summary><div id="sensorSlot" class="drawer-content"></div></details>
  <details id="resultTechnical" class="panel workflow-details"><summary>Datos técnicos, energía y exportaciones</summary><div id="resultTechnicalSlot" class="drawer-content"></div></details>
@@ -38,6 +47,7 @@
 <section id="comparePage" class="workflow-page" hidden>
  <div class="page-heading"><div><p class="eyebrow">04 / COMPARAR DECISIONES</p><h1>Comparar planes</h1><p>Resultados calculados por Python. Abre un plan para investigar su campo 3D.</p></div></div>
  /*__F02UI__*/
+ <button type="button" id="iceCompareLink" class="secondary" hidden>Ver comparación con y sin hielo →</button>
  <section class="panel plan-table-panel"><div class="plan-table-heading"><label>Resolución de los resultados<select id="planMesh"><option value="250">250 mm · candidatos contrastados</option><option value="500">500 mm · exploración inicial</option></select></label><span class="tag amber">Probabilidad conjunta: indeterminada</span></div><p id="planTableNote" class="hint" role="status">Cargando resultados disponibles…</p><div class="table-scroll"><table class="plan-table"><thead><tr><th>Plan</th><th>D [h]</th><th>Tmax [°C]</th><th>ΔT S25 estimado [°C]</th><th>Evaluación</th><th>Resultado</th></tr></thead><tbody id="planTableBody"></tbody></table></div><p class="hint">Máximos descriptivos entre las cuatro fuentes SS, con un único clima fijo. Inicio exploratorio: 13 de noviembre; no corresponde todavía al inicio F02 del día 19. Una cobertura completa de muestras no valida S25.</p></section>
  <details id="scenarioDrawer" class="panel workflow-details"><summary>Guardar escenarios y comparar A / B</summary><div id="scenarioSlot" class="drawer-content"></div></details>
 </section>

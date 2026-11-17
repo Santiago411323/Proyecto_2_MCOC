@@ -129,7 +129,7 @@ def op_config(cat,plan,source_id,shape=None,days=None,dt=None):
 class Evidence:
     def __init__(self,local_output=None):
         self.cohorts={};self.runs={};self.local_output=Path(local_output or ROOT/'resultados/servidor_therma')
-        self.exploration();self.defense();self.improvements();self.cooling();self.closure();self.local()
+        self.exploration();self.defense();self.improvements();self.cooling();self.closure();self.ice_plan();self.local()
         self._summarize()
 
     def cohort(self,key,title,cat=None,**extra):
@@ -267,6 +267,41 @@ class Evidence:
             folder=safe_folder(r.get('snapshot_folder'));cfg=read(folder/'config.json') if folder else None
             if cfg is None:cfg=op_config(cat,plans[r['plan_id']],r['source_id'],r.get('shape'),r['days'],number(r.get('dt_s')))
             self.add(c,plans[r['plan_id']],r,cfg,folder)
+
+    def ice_plan(self):
+        cat=read(ROOT/'docs/cierre_f02/evidencia/catalogo_congelado.json')
+        if not cat:return
+        for resolution,target in ((500,12),(500,8),(250,12),(250,8),('estudiada',12),('estudiada',8)):
+            suffix='_estudiada' if resolution=='estudiada' else '_250' if resolution==250 else ''
+            report=read(ROOT/f'docs/hielo_f02/plan_{target}{suffix}.json')
+            if not report:continue
+            plan=report['plan']
+            label='malla estudiada 90 × 90 × 48' if resolution=='estudiada' else f'{resolution} mm'
+            c=self.cohort('hielo-eps100-42'+suffix,f'Planes con hielo · {label} · EPS 100 mm y resistencia basal · 42 días',cat,days=42)
+            c['mesh_study']=read(ROOT/'docs/hielo_f02/estudio_mallas.json')
+            c['scope']+=(f" Colocación a {target} °C: %.2f kg de hielo/m³, %.2f t en total."
+                         % (report['mix']['dose_kg_m3'],report['mix']['total_t']))
+            for r in report['runs']:
+                folder=ROOT/'resultados/hielo_f02/cache'/r['cache_key']
+                cfg=read(folder/'config.json') or op_config(cat,plan,r['source_id'],r['shape'],42,r.get('dt_requested_s',r.get('dt_s',900)))
+                self.add(c,plan,r,cfg,folder)
+            c['plans'][plan['id']]['parameters']['preenfriamiento']=dict(inputs=report['inputs'],balance=report['mix'])
+            if resolution in (250,'estudiada'):
+                coarse=read(ROOT/f'docs/hielo_f02/plan_{target}.json',{})
+                comparison=[]
+                for r in report['runs']:
+                    base=next((v for v in coarse.get('runs',[]) if v['source_id']==r['source_id']),None)
+                    if not base:continue
+                    folder=ROOT/'resultados/hielo_f02/cache'/r['cache_key']
+                    meta=read(folder/'metadata.json',{})
+                    comparison.append(dict(source=r['source_id'],cells_total=math.prod(r['shape']),
+                        cells_active=meta.get('metrics',{}).get('N',round(r['volume_m3']/math.prod(r['spacing_m']))),spacing_m=r['spacing_m'],volume_m3=r['volume_m3'],
+                        volume_error_pct=100*(r['volume_m3']/report['mix']['volume_m3']-1),
+                        Tmax_change_C=r['Tmax_C']-base['Tmax_C'],
+                        Delta_change_C=r['Delta_estimate_C']-base['Delta_estimate_C'],
+                        missing_S25=r['missing_points_max'],coverage=r['coverage_air_min_fraction'],
+                        relative_energy_residual=r['energy_residual_relative']))
+                c['plans'][plan['id']]['parameters']['mesh_comparison']=comparison
 
     def local(self):
         # Corridas propias se conservan como casos individuales sin inventar D ni pesos.
@@ -412,6 +447,7 @@ def fixed_histories(meta,folder):
 def signature(local_output):
     files=list((ROOT/'docs/exploracion/evidencia').glob('*.csv'))+list((ROOT/'docs/exploracion/evidencia').glob('*catalogo*.json'))+list((ROOT/'docs/defensa/evidencia').glob('tabla_corridas.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.json'))+list((ROOT/'docs/defensa/evidencia').glob('catalogo*.json'))+list((ROOT/'docs/tuberias_f02').glob('*.json'))+list(Path(local_output).glob('*/metadata.json'))
     files+=list((ROOT/'resultados/cierre_f02').glob('*.json'))
+    files+=list((ROOT/'docs/hielo_f02').glob('*.json'))
     files+=list((ROOT/'docs/cierre_f02/evidencia').glob('*.json'))+list((ROOT/'docs/cierre_f02/evidencia').glob('*.csv'))
     return tuple((str(f),f.stat().st_mtime_ns) for f in files)
 

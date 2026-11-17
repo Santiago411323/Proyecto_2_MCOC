@@ -43,6 +43,42 @@ def test_missing_failed_truncated_and_invalid_weights_are_unknown():
 def evidence():return Evidence(ROOT/'resultados/empty_comparison_tests')
 
 
+@pytest.mark.parametrize('target,original_id,dose',[(12,'t12_eps100_base1.0',36.39293),(8,'t8_eps100_base1',60.65489)])
+def test_hielo_reproduce_plan_de_origen(evidence,target,original_id,dose):
+    c=evidence.cohorts['hielo-eps100-42']
+    p=c['plans'][f'hielo_t{target}_eps100_base1']
+    original=next(group['plans'][original_id] for group in evidence.cohorts.values()
+                  if group['id'].startswith('cierre-') and original_id in group['plans'])
+    by_source={evidence.runs[uid]['source_id']:evidence.runs[uid] for uid in original['runs']}
+    assert p['operations']==original['operations'] and len(p['runs'])==4
+    assert p['parameters']['preenfriamiento']['balance']['dose_kg_m3']==pytest.approx(dose,abs=.0001)
+    for uid in p['runs']:
+        r=evidence.runs[uid];base=by_source[r['source_id']]
+        assert r['simulation_id']!=base['simulation_id']
+        assert r['Tmax_C']==pytest.approx(base['Tmax_C'])
+        assert r['Delta_estimate_C']==pytest.approx(base['Delta_estimate_C'])
+    assert p['estimated_risk']['P_f']==0 and p['risk']['P_f'] is None
+
+
+def test_malla_fina_conserva_geometria_y_reporta_cobertura_incompleta(evidence):
+    fine=evidence.cohorts['hielo-eps100-42_250']
+    coarse=evidence.cohorts['hielo-eps100-42']
+    assert len(fine['plans'])==2
+    for key,p in fine['plans'].items():
+        assert p['operations']==coarse['plans'][key]['operations']
+        assert len(p['runs'])==4
+        assert p['estimated_risk']['P_f'] is None
+        for row in p['parameters']['mesh_comparison']:
+            assert row['cells_total']==72*72*14
+            assert row['cells_active']==32912
+            assert row['volume_error_pct']==pytest.approx(-.452755,abs=.00001)
+            assert row['missing_S25']==88
+        for uid in p['runs']:
+            run=evidence.runs[uid]
+            assert run['shape']==[72,72,14] and run['numerical_checks']
+            assert run['horizon_captured'] and run['coverage']<1
+
+
 def test_all_published_studies_imported_without_running_solver(evidence):
     assert sum(len(c['plans'][p]['runs']) for c in evidence.cohorts.values() if 'exploracion_' in c['title'] for p in c['plans'])==104
     assert any('tuberías' in c['title'] for c in evidence.cohorts.values())

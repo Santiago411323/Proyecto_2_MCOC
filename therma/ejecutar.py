@@ -9,6 +9,7 @@ from calibrar_qmax import integral_pulso, temperatura_centro
 from panel.exportar_ifc import datos_ifc
 from .resultados import guardar
 from .moldaje import validar_moldaje,resistencia_extra
+from .resolucion import MAX_CELLS, MAX_CELL_STEPS, MAX_MEMORY_BYTES
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -53,12 +54,11 @@ def validar(config):
             raw=p['n']
             if not isinstance(raw,list) or len(raw)!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v!=int(v) or not 2<=v<=160 for v in raw):raise ValueError('Malla personalizada: tres cantidades de celdas enteras entre 2 y 160.')
             shape=tuple(map(int,raw))
-            from .resolucion import MAX_CELLS
-            if math.prod(shape)>MAX_CELLS:raise ValueError('Máximo 80.000 celdas; aumenta el tamaño del voxel.')
+            if math.prod(shape)>MAX_CELLS:raise ValueError('Máximo 400.000 celdas; aumenta el tamaño del voxel.')
             if p['dtMode']=='manual':
                 if p['dt']<=0:raise ValueError('Paso temporal positivo.')
-                if math.prod(shape)*math.ceil(p['days']*86400/p['dt'])>3e8:
-                    raise ValueError('Costo excesivo antes de voxelizar: más de 300 millones de celda-pasos.')
+                if math.prod(shape)*math.ceil(p['days']*86400/p['dt'])>MAX_CELL_STEPS:
+                    raise ValueError('Costo excesivo antes de voxelizar: más de 1.500 millones de celda-pasos.')
         d=datos_fundacion(p,shape);m=d['mallas'][0 if shape else p['meshIndex']]
         p.update(dim=3,L=np.subtract(d['max'],d['min']).tolist(),n=list(m['n']),mask=m['ids'],origin=d['min'])
     else:
@@ -67,7 +67,9 @@ def validar(config):
     for key in ('L','n','origin'):
         if not isinstance(p[key],list) or len(p[key])!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in p[key]):raise ValueError('Se requieren tres números en '+key)
     if any(v<=0 for v in p['L']) or any(int(n)!=n or not 2<=n<=160 for n in p['n']):raise ValueError('Longitudes positivas y celdas enteras entre 2 y 160.')
-    if np.prod(p['n'][:p['dim']])>80000:raise ValueError('Máximo 80.000 celdas en esta fase.')
+    if np.prod(p['n'][:p['dim']])>MAX_CELLS:raise ValueError('Máximo 400.000 celdas en esta fase.')
+    if int(np.prod(p['n'][:p['dim']]))*(750+30*p['frames'])>MAX_MEMORY_BYTES:
+        raise ValueError('Memoria estimada supera 1 GiB.')
     p.setdefault('faces',[dict(type='D',temp=20.,flux=0.,h=10.,R=0.) for _ in range(6)])
     if not isinstance(p['faces'],list) or len(p['faces'])!=6:raise ValueError('Se requieren seis condiciones de cara.')
     for b in p['faces']:
@@ -111,7 +113,7 @@ def preparar(p,homogeneo=False):
     if p['dtMode']=='auto' and p['source']=='pulse':dt=min(dt,p['period']/200)
     if not math.isfinite(dt) or dt<=0 or dt>m.dt_max*(1+1e-12):raise ValueError(f'Δt inestable: usar Δt ≤ {m.dt_max:g} s.')
     steps=math.ceil(p['days']*86400/dt)+2
-    if steps>200000 or steps*np.prod(shape)*(3 if p['calibrate'] else 1)>3e8:raise ValueError('Cálculo demasiado grande; reducir malla o duración.')
+    if steps>200000 or steps*np.prod(shape)*(3 if p['calibrate'] else 1)>MAX_CELL_STEPS:raise ValueError('Cálculo demasiado grande; reducir malla o duración.')
     return m,dt,mask
 
 

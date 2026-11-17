@@ -58,7 +58,7 @@ class Servidor(ThreadingHTTPServer):
         self.jobs={};self.cancel_events={};self.lock=Lock();self.pool=ThreadPoolExecutor(max_workers=1)
     def server_close(self):
         self.pool.shutdown(wait=False,cancel_futures=True);super().server_close()
-    def enviar(self,config=None,ejemplo=False,study=None):
+    def enviar(self,config=None,ejemplo=False,study=None,ice=None):
         with self.lock:
             if sum(j['status']=='RUNNING' for j in self.jobs.values())>=4:raise ValueError('Hay cuatro trabajos pendientes; espera a que terminen.')
             ident=uuid.uuid4().hex
@@ -73,7 +73,10 @@ class Servidor(ThreadingHTTPServer):
                 if cancelled.is_set():raise CancelledError('Cálculo cancelado por el usuario.')
             try:
                 if cancelled.is_set():raise CancelledError('Trabajo cancelado antes de iniciar.')
-                if study is not None:
+                if ice is not None:
+                    from therma.hielo import run_pair
+                    run_pair(ice,carpeta,progress,observe)
+                elif study is not None:
                     from therma.convergencia import ejecutar_estudio
                     ejecutar_estudio(config,study,carpeta,progress,observe)
                 elif ejemplo:importar_3d(ROOT/'resultados'/'animacion_3d'/'campos.npz',ident,carpeta)
@@ -82,6 +85,7 @@ class Servidor(ThreadingHTTPServer):
                 with self.lock:
                     self.jobs[ident].update(status='COMPLETED',progress=1.,metadata_url=f'/api/results/{ident}/metadata.json')
                     if study is not None:self.jobs[ident]['study_url']=f'/api/results/{ident}/mesh_study.json'
+                    if ice is not None:self.jobs[ident].update(metadata_url=None,study_url=f'/api/results/{ident}/ice_study.json')
             except CancelledError as e:
                 with self.lock:self.jobs[ident].update(status='CANCELLED',message=str(e))
             except Exception as e:
@@ -128,12 +132,18 @@ class Handler(BaseHTTPRequestHandler):
             ident=path.split('/')[-1]
             result=self.server.cancelar(ident)
             return self.respuesta(202 if result else 404,result or {'message':'Simulación inexistente.'})
-        if path not in ('/api/simulations','/api/examples/3d','/api/mesh-studies','/api/foundation-geometry'):return self.respuesta(404,{'message':'Ruta no encontrada.'})
+        if path not in ('/api/simulations','/api/examples/3d','/api/mesh-studies','/api/foundation-geometry','/api/ice-preview','/api/ice-studies'):return self.respuesta(404,{'message':'Ruta no encontrada.'})
         try:
             size=int(self.headers.get('Content-Length','0'))
             if not 0<size<=1000000:raise ValueError('JSON vacío o demasiado grande (máximo 1 MB).')
             if self.headers.get('Content-Type','').split(';')[0]!='application/json':raise ValueError('Enviar application/json.')
             raw=json.loads(self.rfile.read(size))
+            if path in ('/api/ice-preview','/api/ice-studies'):
+                from therma.hielo import preview
+                mix=preview(raw)
+                if path.endswith('preview'):return self.respuesta(200,mix)
+                ident=self.server.enviar(ice=raw)
+                return self.respuesta(202,dict(simulation_id=ident,status_url=f'/api/jobs/{ident}'))
             if path=='/api/foundation-geometry':
                 from therma.geometria_editable import datos
                 return self.respuesta(200,datos(raw,shape=(12,12,6)))
@@ -150,6 +160,9 @@ class Handler(BaseHTTPRequestHandler):
         if not self.seguro():return self.respuesta(403,{'message':'Origen o Host no autorizado.'})
         path=urlparse(self.path).path
         parts=path.strip('/').split('/')
+        if path=='/api/ice-studies':
+            files=sorted(self.server.output.glob('*/ice_study.json'),key=lambda p:p.stat().st_mtime,reverse=True)
+            return self.respuesta(200,dict(studies=[p.parent.name for p in files]))
         if len(parts)==4 and parts[:2]==['api','foundation-models'] and parts[3]=='modelo.ifc':
             key=parts[2]
             if len(key)!=64 or any(c not in '0123456789abcdef' for c in key):return self.respuesta(404,{'message':'Modelo desconocido.'})
@@ -199,7 +212,7 @@ class Handler(BaseHTTPRequestHandler):
         parts=path.strip('/').split('/')
         if len(parts)==4 and parts[:2]==['api','results']:
             ident,name=parts[2:]
-            if len(ident)!=32 or any(c not in '0123456789abcdef' for c in ident) or name not in ('metadata.json','fields.bin','active.bin','campos.npz','config.json','s25_ifc.json','s25_ifc_history.csv','mesh_study.json','mesh_study.csv','mesh_study.png'):return self.respuesta(404,{'message':'Resultado desconocido.'})
+            if len(ident)!=32 or any(c not in '0123456789abcdef' for c in ident) or name not in ('metadata.json','fields.bin','active.bin','campos.npz','config.json','s25_ifc.json','s25_ifc_history.csv','mesh_study.json','mesh_study.csv','mesh_study.png','ice_study.json'):return self.respuesta(404,{'message':'Resultado desconocido.'})
             file=self.server.output/ident/name
             if not file.is_file():file=resultado_publicado(ident,name)
             if file is None:
