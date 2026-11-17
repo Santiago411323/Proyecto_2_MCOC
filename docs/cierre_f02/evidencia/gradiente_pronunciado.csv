@@ -1,0 +1,5 @@
+﻿n,spacing_m,S25_exact_C,S25_reconstructed_C,absolute_error_C,true_delta_C,estimated_delta_C,scope
+4,0.25,46.024993890652325,69.96581603053457,23.940822139882243,23.975006109347675,0.03418396946543112,"Perfil erf exacto de difusión en semiespacio, profundidad 25 mm y ancho térmico 50 mm; NO campo de fundación."
+8,0.125,46.024993890652325,64.23678851076056,18.211794620108236,23.975006109347675,5.763211489239438,"Perfil erf exacto de difusión en semiespacio, profundidad 25 mm y ancho térmico 50 mm; NO campo de fundación."
+16,0.0625,46.024993890652325,48.32623812482468,2.3012442341723514,23.975006109347675,21.673761875175323,"Perfil erf exacto de difusión en semiespacio, profundidad 25 mm y ancho térmico 50 mm; NO campo de fundación."
+32,0.03125,46.024993890652325,45.83621135048979,0.18878254016253493,23.975006109347675,24.16378864951021,"Perfil erf exacto de difusión en semiespacio, profundidad 25 mm y ancho térmico 50 mm; NO campo de fundación."

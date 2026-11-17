@@ -1,0 +1,4 @@
+﻿shape,time_s,steps,initial_stationary_residual_K_s,max_cell_error_C,max_S25_error_C,unknown_points,energy_residual_J,scope
+"[36, 36, 7]",1.0,87,6.486951620653485,0.30958440637424545,0.1991516179109425,0,-1.3145040611561853e-13,"MMS lineal estacionaria en IFC real, Robin espacial prescrito; NO cota del caso climático."
+"[48, 48, 9]",1.0,146,10.368389807923347,0.21084835880499853,0.13280335543002764,24,6.394884621840902e-13,"MMS lineal estacionaria en IFC real, Robin espacial prescrito; NO cota del caso climático."
+"[72, 72, 14]",1.0,338,32.73071673165655,0.25084983246484427,0.1632794096617829,88,-2.948752353404416e-13,"MMS lineal estacionaria en IFC real, Robin espacial prescrito; NO cota del caso climático."

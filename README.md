@@ -322,3 +322,5 @@ Catálogo de simulaciones, reproducción y primer experimento: [docs/SIMULACIONE
 Los campos volumétricos de las corridas y el catálogo local en `resultados/` se
 conservan fuera de Git. Las configuraciones, métricas y evidencias compactas se
 versionan en `docs/`; los comandos de las guías permiten regenerar los campos.
+
+Comparación F02 integrada, gráficos y evidencia: [docs/comparacion_f02/README.md](docs/comparacion_f02/README.md).

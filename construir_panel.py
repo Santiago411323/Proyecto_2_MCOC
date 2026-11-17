@@ -17,6 +17,8 @@ def main():
     html = html.replace('/*__NAVSTYLE__*/', (origen/'navegacion.css').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVUI__*/', (origen/'navegacion.html').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVSCRIPT__*/', (origen/'navegacion.js').read_text(encoding='utf-8'))
+    for marker,file in [('F02UI','comparacion_f02.html'),('F02STYLE','comparacion_f02.css'),('F02SCRIPT','comparacion_f02.js')]:
+        html=html.replace('/*__'+marker+'__*/',(origen/file).read_text(encoding='utf-8'))
     html = html.replace('/*__IFC_DATA__*/', json.dumps(datos_ifc(BASE/'modelo_e02.ifc'), ensure_ascii=False).replace('</', '<\\/'))
     destino = BASE/'panel_termico.html'
     destino.write_text(html, encoding='utf-8')

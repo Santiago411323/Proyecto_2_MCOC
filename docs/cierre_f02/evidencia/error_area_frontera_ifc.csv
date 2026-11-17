@@ -1,0 +1,10 @@
+﻿shape,stage,IFC_area_m2,staircase_area_m2,area_error_percent,IFC_air_m2,staircase_air_m2,scope
+"[36, 36, 7]",[1],602.4354444259773,605.8857142857144,0.5727202626705674,334.02348657884284,336.88571428571436,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[36, 36, 7]","[1, 2]",606.7796706772426,675.6571428571428,11.351315066805757,338.3677128301082,406.65714285714284,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[36, 36, 7]","[1, 2, 3]",630.9656166990858,702.0571428571429,11.26709986670502,362.55365885195135,433.05714285714294,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[48, 48, 9]",[1],602.4354444259773,609.075,1.1021190129921976,334.02348657884284,344.13750000000005,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[48, 48, 9]","[1, 2]",606.7796706772426,665.175,9.62381110388566,338.3677128301082,400.23749999999995,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[48, 48, 9]","[1, 2, 3]",630.9656166990858,694.875,10.128821858036874,362.55365885195135,429.9375,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[72, 72, 14]",[1],602.4354444259773,617.3571428571429,2.476895834936066,334.02348657884284,351.1071428571429,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[72, 72, 14]","[1, 2]",606.7796706772426,664.5,9.512568088896955,338.3677128301082,398.25,"Diferencia geométrica de áreas, NO cota del error térmico."
+"[72, 72, 14]","[1, 2, 3]",630.9656166990858,697.5,10.544850866674915,362.55365885195135,431.25,"Diferencia geométrica de áreas, NO cota del error térmico."

@@ -112,7 +112,17 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status);self.send_header('Content-Type',mime);self.send_header('Content-Length',str(len(data)))
         self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff');self.end_headers();self.wfile.write(data)
     def do_POST(self):
-        if not self.seguro():return self.respuesta(403,{'message':'Origen o Host no autorizado.'})
+        if not self.seguro():
+            # Vaciar un cuerpo pequeño antes de cerrar evita que Windows envíe
+            # un RST y oculte al cliente la respuesta 403. Nunca se interpreta.
+            try:
+                size=int(self.headers.get('Content-Length','0'))
+                if 0<size<=1000000:
+                    previous=self.connection.gettimeout();self.connection.settimeout(1.)
+                    try:self.rfile.read(size)
+                    finally:self.connection.settimeout(previous)
+            except (ValueError,OSError):pass
+            return self.respuesta(403,{'message':'Origen o Host no autorizado.'})
         path=urlparse(self.path).path
         if path.startswith('/api/cancel/'):
             ident=path.split('/')[-1]
@@ -148,6 +158,22 @@ class Handler(BaseHTTPRequestHandler):
             return self.bytes(200,file.read_bytes(),'application/x-step')
         if path=='/api/simulation-catalog':
             return self.respuesta(200,dict(simulations=catalogo_simulaciones(self.server.output)))
+        if path=='/api/comparison-f02' or path.startswith('/api/comparison-f02/'):
+            from therma.comparacion_f02 import load
+            try:
+                evidence=load(self.server.output)
+                if path=='/api/comparison-f02':return self.respuesta(200,evidence.public())
+                if '/prepare/' in path:
+                    pieces=path.split('/')
+                    if len(pieces)!=6:return self.respuesta(404,{'message':'Ruta de preparación inválida.'})
+                    return self.respuesta(200,evidence.prepare(pieces[4],pieces[5]))
+                uid=path.rsplit('/',1)[-1]
+                if len(uid)!=24 or any(c not in '0123456789abcdef' for c in uid):return self.respuesta(404,{'message':'Corrida desconocida.'})
+                return self.respuesta(200,evidence.detail(uid))
+            except (ValueError,KeyError,OSError) as e:return self.respuesta(422,{'message':str(e)})
+        if path=='/api/comparison-assets/tuberias':
+            file=ROOT/'docs/tuberias_f02/comparacion.png'
+            return self.bytes(200,file.read_bytes(),'image/png') if file.is_file() else self.respuesta(404,{'message':'Figura no disponible.'})
         if path=='/api/plan-results':
             folder=ROOT/'docs/exploracion/evidencia'
             def rows(name):
@@ -176,6 +202,9 @@ class Handler(BaseHTTPRequestHandler):
             if len(ident)!=32 or any(c not in '0123456789abcdef' for c in ident) or name not in ('metadata.json','fields.bin','active.bin','campos.npz','config.json','s25_ifc.json','s25_ifc_history.csv','mesh_study.json','mesh_study.csv','mesh_study.png'):return self.respuesta(404,{'message':'Resultado desconocido.'})
             file=self.server.output/ident/name
             if not file.is_file():file=resultado_publicado(ident,name)
+            if file is None:
+                from therma.comparacion_f02 import load
+                file=load(self.server.output).artifact(ident,name)
             if file is None:return self.respuesta(404,{'message':'Resultado desconocido.'})
             if not file.is_file():return self.respuesta(404,{'message':'Resultado aún no disponible.'})
             return self.bytes(200,file.read_bytes(),'application/json' if name.endswith('.json') else 'image/png' if name.endswith('.png') else 'application/octet-stream')

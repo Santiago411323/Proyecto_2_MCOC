@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "cohorts": 37,
+    "plan_groups": 186,
+    "scenario_rows": 300,
+    "unique_identified_executions": 261,
+    "rows_without_execution_id": 9
+  },
+  "published_cohorts": 20,
+  "published_plan_groups": 73,
+  "published_scenario_rows": 187,
+  "S25": "ESTIMATED_NOT_VALIDATED",
+  "joint_compliance": "INDETERMINATE",
+  "new_thermal_simulations": 0,
+  "tests_full": 363,
+  "tests_targeted_after_geometry_recovery": 15,
+  "sources": {
+    "therma\\comparacion_f02.py": "b0e78497196ebc5b05a18bd0f0429b9700e5205b272159149b74bd4f8a779ae0",
+    "panel\\comparacion_f02.js": "81fe6066e658c8a5977b42e0eececcabbded999a7f54829d357d9678c643bcb6",
+    "panel\\comparacion_f02.html": "eab98b14ba7ba7d040b7bb140083f9928c33296007bd7ec7c452acff5a1858b5",
+    "servidor_therma.py": "7cf944b0dcc699fa49efe5419ad2f02b37076ac1d455c426adcf28793e27237e"
+  },
+  "base_commit": "a20109be791f41209075f49f5fe4e8ee7cd26280",
+  "working_tree_dirty": true
+}
