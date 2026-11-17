@@ -10,7 +10,7 @@ from termico_cartesiano import TermicoCartesiano
 
 
 class ConstruccionTermica:
-    def __init__(self, vertida_ids, longitudes, vertidas, k=2., rho=2400., cp=900., bordes=None, suelo=None, cooling=None):
+    def __init__(self, vertida_ids, longitudes, vertidas, k=2., rho=2400., cp=900., bordes=None, suelo=None):
         raw=np.asarray(vertida_ids)
         if raw.ndim not in (1,2,3) or not np.isfinite(raw).all() or np.any(raw<0) or np.any(raw!=np.floor(raw)):
             raise ValueError('IDs geométricos enteros, no negativos y de 1D a 3D.')
@@ -30,7 +30,6 @@ class ConstruccionTermica:
         self.T=np.zeros(self.forma);self.activo=np.zeros(self.forma,dtype=bool);self.t=0.
         self.suelo=suelo;self.G_suelo=np.zeros(self.forma);self.P_suelo=np.zeros(self.forma);
         self.energia_suelo_J=0.;self.energia_aire_J=0.
-        self.cooling=cooling;self.energia_enfriamiento_J=0.;self.energia_agua_J=0.
         self.modelo=None;self.eventos=[];self.reconstrucciones=0
         self.energia_colocacion_J=0.;self.energia_fuente_J=0.;self.energia_borde_J=0.
         self.activar()
@@ -74,12 +73,7 @@ class ConstruccionTermica:
         return nuevos
 
     @property
-    def dt_max(self):
-        if self.modelo is None:return math.inf
-        if self.cooling is None or not self.cooling.enabled(self.t):return self.modelo.dt_max
-        conductance=self.modelo.suma_G+self.cooling.G
-        cells=self.activo&(conductance>0)
-        return float(np.min(self.capacidad[cells]/conductance[cells])) if cells.any() else math.inf
+    def dt_max(self):return self.modelo.dt_max if self.modelo else math.inf
 
     @property
     def siguiente_evento_s(self):
@@ -89,7 +83,7 @@ class ConstruccionTermica:
 
     def energia(self):return self.modelo.energia(self.T) if self.modelo else 0.
 
-    def residual(self):return self.energia()-self.energia_colocacion_J-self.energia_fuente_J-self.energia_borde_J+self.energia_enfriamiento_J
+    def residual(self):return self.energia()-self.energia_colocacion_J-self.energia_fuente_J-self.energia_borde_J
 
     def areas_expuestas(self):
         result={}
@@ -105,7 +99,6 @@ class ConstruccionTermica:
     def paso(self,dt,fuente_W_m3=0.):
         if not math.isfinite(dt) or dt<=0 or dt>self.dt_max*(1+1e-12):raise ValueError('Paso inestable o inválido para la etapa activa.')
         if self.t+dt>self.siguiente_evento_s+1e-9:raise ValueError('El paso cruza una colocación; detenerlo en el evento.')
-        if self.cooling is not None and self.t+dt>self.cooling.next_event(self.t)+1e-9:raise ValueError('El paso cruza un encendido/apagado de tuberías.')
         q=self._campo(fuente_W_m3)
         if self.modelo is not None:
             boundary=float(np.sum((self.modelo.P_borde_constante-self.modelo.G_borde*self.T)*self.activo))
@@ -113,11 +106,6 @@ class ConstruccionTermica:
             self.energia_suelo_J+=dt*soil;self.energia_aire_J+=dt*(boundary-soil)
             self.energia_borde_J+=dt*boundary
             self.energia_fuente_J+=dt*float(np.sum(q*self.volumen*self.activo))
-            sink=0.
-            if self.cooling is not None:
-                sink,diagnostic=self.cooling.exchange(self.T,self.activo,self.t)
-                self.energia_enfriamiento_J+=dt*diagnostic['power_out_W']
-                self.energia_agua_J+=dt*diagnostic['water_power_W']
-            self.T=self.modelo.paso(self.T,dt,fuente_W_m3=q-sink/self.volumen)
+            self.T=self.modelo.paso(self.T,dt,fuente_W_m3=q)
         self.t+=dt;self.activar()
         return self.T.copy()

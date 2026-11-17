@@ -31,7 +31,7 @@ def validar(config):
     defaults=dict(geometry='block',meshIndex=0,dim=1,L=[1.,1.,1.],n=[20,16,8],k=2.,rho=2400.,cp=900.,
         initial=20.,initialType='uniform',amplitude=30.,source='none',period=172800.,qmax=0.,calibrate=False,
         target=70.,days=1.,dtMode='auto',dt=300.,factor=.7,frames=65,origin=[0.,0.,0.])
-    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather','s25','foundation_parameters','cooling'}
+    allowed=set(defaults)|{'faces','mask','construction','environment','formwork','weather','s25','foundation_parameters'}
     if set(p)-allowed:raise ValueError('Parámetros desconocidos: '+', '.join(sorted(set(p)-allowed)))
     p={**defaults,**p}
     if p['geometry'] not in ('block','foundation') or isinstance(p['dim'],bool) or p['dim'] not in (1,2,3):raise ValueError('Geometría o dimensión inválida.')
@@ -54,7 +54,7 @@ def validar(config):
             raw=p['n']
             if not isinstance(raw,list) or len(raw)!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v!=int(v) or not 2<=v<=160 for v in raw):raise ValueError('Malla personalizada: tres cantidades de celdas enteras entre 2 y 160.')
             shape=tuple(map(int,raw))
-            if math.prod(shape)>MAX_CELLS:raise ValueError('Máximo 400.000 celdas; aumenta el tamaño del voxel.')
+            if math.prod(shape)>MAX_CELLS:raise ValueError('Máximo 600.000 celdas; aumenta el tamaño del voxel.')
             if p['dtMode']=='manual':
                 if p['dt']<=0:raise ValueError('Paso temporal positivo.')
                 if math.prod(shape)*math.ceil(p['days']*86400/p['dt'])>MAX_CELL_STEPS:
@@ -67,7 +67,7 @@ def validar(config):
     for key in ('L','n','origin'):
         if not isinstance(p[key],list) or len(p[key])!=3 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in p[key]):raise ValueError('Se requieren tres números en '+key)
     if any(v<=0 for v in p['L']) or any(int(n)!=n or not 2<=n<=160 for n in p['n']):raise ValueError('Longitudes positivas y celdas enteras entre 2 y 160.')
-    if np.prod(p['n'][:p['dim']])>MAX_CELLS:raise ValueError('Máximo 400.000 celdas en esta fase.')
+    if np.prod(p['n'][:p['dim']])>MAX_CELLS:raise ValueError('Máximo 600.000 celdas en esta fase.')
     if int(np.prod(p['n'][:p['dim']]))*(750+30*p['frames'])>MAX_MEMORY_BYTES:
         raise ValueError('Memoria estimada supera 1 GiB.')
     p.setdefault('faces',[dict(type='D',temp=20.,flux=0.,h=10.,R=0.) for _ in range(6)])
@@ -78,8 +78,6 @@ def validar(config):
             if isinstance(b.get(k),bool) or not isinstance(b.get(k),(float,int)) or not math.isfinite(b[k]):raise ValueError('Valor de borde inválido: '+k)
         if min(b['h'],b['R'])<0:raise ValueError('h y R no pueden ser negativos.')
     validar_moldaje(p)
-    from .enfriamiento import validar_enfriamiento
-    validar_enfriamiento(p)
     from .s25_ifc import validar_s25
     validar_s25(p)
     if p.get("construction") is not None:

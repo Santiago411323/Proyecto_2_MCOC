@@ -81,7 +81,7 @@ def test_malla_fina_conserva_geometria_y_reporta_cobertura_incompleta(evidence):
 
 def test_all_published_studies_imported_without_running_solver(evidence):
     assert sum(len(c['plans'][p]['runs']) for c in evidence.cohorts.values() if 'exploracion_' in c['title'] for p in c['plans'])==104
-    assert any('tuberías' in c['title'] for c in evidence.cohorts.values())
+    assert not any('tuberías' in c['title'] for c in evidence.cohorts.values())
     assert any(c['id']=='mejoras-fuentes_finas-42' for c in evidence.cohorts.values())
     assert any(c['id']=='malla-dt450_21d' for c in evidence.cohorts.values())
     assert all(p['risk']['P_f'] is None for c in evidence.cohorts.values() for p in c['plans'].values())
@@ -95,19 +95,10 @@ def test_source_physics_and_horizon_never_merge(evidence):
     assert a['days']==42 and b['days']==14
     assert all(p['risk']['P_T'] is None for p in b['plans'].values())
     assert all(len(p['runs'])==4 for p in a['plans'].values())
-    for p in evidence.cohorts['tuberias-42']['plans'].values():assert len(p['runs'])==1
     # Una configuración física distinta bajo igual nombre se separa; no se mezcla su peso.
     e=Evidence.__new__(Evidence);e.runs={};e.cohorts={};c=e.cohort('test','test');plan=dict(id='p',name='p')
     e.add(c,plan,dict(scenario_id='0'),dict(k=2));e.add(c,plan,dict(scenario_id='1'),dict(k=3))
     assert len(c['plans'])==2
-
-
-def test_recent_summary_without_volume_is_explicit_and_reproducible(evidence):
-    p=next(iter(evidence.cohorts['tuberias-42']['plans'].values()));d=evidence.detail(p['runs'][0])
-    assert d['config_available'] and not d['fields_available']
-    assert d['history'] and d['history'][0]['Tmax_C']==8
-    assert all(h['Tmin_S25_C'] is None for h in d['history'])
-    assert d['archive_figure']=='tuberias'
 
 
 def test_real_fields_fixed_sensor_and_critical_weights_match(evidence):

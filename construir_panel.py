@@ -45,7 +45,6 @@ def main():
     html = (origen/'plantilla.html').read_text(encoding='utf-8')
     for marcador, archivo in [('STYLE', 'estilos.css'), ('SOLVER', 'solver.js'), ('API', 'api.js'), ('APP', 'app.js'), ('FOUNDATION', 'fundacion.js'), ('VIEWDATA', 'visordatos.js'), ('VIEWUI', 'visor.html'), ('VIEWSTYLE', 'visor.css'), ('INTELLIGENCE', 'inteligencia.js'), ('RESEARCHUI', 'investigacion.html'), ('RESEARCHSTYLE', 'investigacion.css'), ('CONSTRUCTIONUI', 'construccion.html'), ('CONSTRUCTIONSCRIPT', 'construccion.js'), ('ENVIRONMENTUI', 'entorno.html'), ('ENVIRONMENTSCRIPT', 'entorno.js'), ('EQUATIONUI', 'ecuaciones.html'), ('EQUATIONSTYLE', 'ecuaciones.css'), ('EQUATIONMODEL', 'ecuaciones_modelo.js'), ('EQUATIONSCRIPT', 'ecuaciones.js'), ('FORMWORKUI', 'moldaje.html'), ('FORMWORKMATH', 'moldaje_modelo.js'), ('FORMWORKSCRIPT', 'moldaje_ui.js'), ('COREEXTERIOR', 'nucleo_exterior.js'), ('WEATHERSCRIPT', 'clima_ui.js'), ('RESOLUTIONMODEL', 'resolucion_modelo.js'), ('RESOLUTIONUI', 'resolucion_ui.js')]:
         html = html.replace(f'/*__{marcador}__*/', (origen/archivo).read_text(encoding='utf-8'))
-    html = html.replace('/*__COOLING__*/', (origen/'enfriamiento.js').read_text(encoding='utf-8'))
     html = html.replace('/*__FOUNDATIONEDITOR__*/', (origen/'geometria_ui.js').read_text(encoding='utf-8'))
     html = html.replace('/*__SIMULATIONS__*/', (origen/'simulaciones.js').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVSTYLE__*/', (origen/'navegacion.css').read_text(encoding='utf-8'))
@@ -63,6 +62,16 @@ def main():
     if not study.exists():study=BASE/'docs/hielo_f02/plan_8_250.json'
     if not study.exists():study=BASE/'docs/hielo_f02/plan_8.json'
     demo=next((r['simulation_id'] for r in json.loads(study.read_bytes())['runs'] if r['source_id']=='fv_M4_SS'),None) if study.exists() else None
+    # Preferir un campo realmente disponible en este equipo al ejemplo remoto.
+    local=BASE/'docs/hielo_f02/convergencia/T8_96x96x54_dt1200_fv_M4_SS.json'
+    if local.exists():
+        record=json.loads(local.read_bytes());folder=Path(record.get('snapshot_folder',''))
+        if folder.is_dir() and folder.resolve().is_relative_to((BASE/'resultados').resolve()) and (folder/'fields.bin').is_file():
+            metadata=json.loads((folder/'metadata.json').read_bytes());demo=metadata['simulation_id']
+            registry=BASE/'resultados/planes_publicados.json'
+            published=json.loads(registry.read_bytes()) if registry.exists() else {}
+            published[demo]=dict(folder=str(folder.relative_to(BASE)),artifacts=record['artifacts'])
+            registry.write_text(json.dumps(published,ensure_ascii=False),encoding='utf-8')
     html=html.replace('/*__RUN_DATA__*/',json.dumps(dict(demo=demo,weather=weather),allow_nan=False))
     html=html.replace('/*__RUN_SCRIPT__*/',(origen/'panel_corrida.js').read_text(encoding='utf-8'))
     html=html.replace('/*__COMPARE_CURVES__*/',(origen/'comparar_curvas.js').read_text(encoding='utf-8'))
@@ -74,6 +83,8 @@ def main():
     html=html.replace('/*__F02_SUMMARY__*/',(origen/'resumen_planes.js').read_text(encoding='utf-8'))
     html=html.replace('/*__F02_SOURCES__*/',graficos_fuentes(BASE/'data/hydration/source_terms.txt'))
     html = html.replace('/*__IFC_DATA__*/', json.dumps(datos_ifc(BASE/'modelo_e02.ifc'), ensure_ascii=False).replace('</', '<\\/'))
+    html=html.replace('/*__DESIGNSTYLE__*/',(origen/'diseno.css').read_text(encoding='utf-8'))
+    html=html.replace('/*__DESIGNSCRIPT__*/',(origen/'diseno.js').read_text(encoding='utf-8'))
     destino = BASE/'panel_termico.html'
     destino.write_text(html, encoding='utf-8')
     print(destino)

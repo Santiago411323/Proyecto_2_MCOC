@@ -129,7 +129,7 @@ def op_config(cat,plan,source_id,shape=None,days=None,dt=None):
 class Evidence:
     def __init__(self,local_output=None):
         self.cohorts={};self.runs={};self.local_output=Path(local_output or ROOT/'resultados/servidor_therma')
-        self.exploration();self.defense();self.improvements();self.cooling();self.closure();self.ice_plan();self.local()
+        self.exploration();self.defense();self.improvements();self.closure();self.ice_plan();self.local()
         self._summarize()
 
     def cohort(self,key,title,cat=None,**extra):
@@ -172,7 +172,7 @@ class Evidence:
         p['runs'].append(uid);self.runs[uid]=item
         if config and 'parameters' not in p:
             p['thermal_starts']={str(v['id']):v['start_h'] for v in config.get('construction',{}).get('pours',[])}
-            p['parameters']=dict(physical_pours=plan.get('construction_pours',1 if plan.get('continuous_operation') else len(plan.get('operations',[]))),IFC_pieces=len(config.get('construction',{}).get('pours',[])),shape=item['shape'],days=item['days'],placement=[v['placement_C'] for v in config.get('construction',{}).get('pours',[])],formwork=config.get('formwork'),cooling=config.get('cooling'),soil=config.get('environment'),faces=config.get('faces'),source_hash=curve.get('raw_sha256'),geometry=config.get('foundation_parameters') or 'IFC de referencia',start_utc=config.get('weather',{}).get('start_utc'))
+            p['parameters']=dict(physical_pours=plan.get('construction_pours',1 if plan.get('continuous_operation') else len(plan.get('operations',[]))),IFC_pieces=len(config.get('construction',{}).get('pours',[])),shape=item['shape'],days=item['days'],placement=[v['placement_C'] for v in config.get('construction',{}).get('pours',[])],formwork=config.get('formwork'),soil=config.get('environment'),faces=config.get('faces'),source_hash=curve.get('raw_sha256'),geometry=config.get('foundation_parameters') or 'IFC de referencia',start_utc=config.get('weather',{}).get('start_utc'))
 
     def exploration(self):
         base=ROOT/'docs/exploracion/evidencia';data=rows(base/'corridas.csv')
@@ -239,15 +239,6 @@ class Evidence:
             c=self.cohort('clima-'+str(shift),'Sensibilidad climática · desplazamiento '+str(shift)+' °C',days=42,engine=engine);c['expected']=[]
             self.add(c,candidate,dict(scenario_id='M4_shift_'+str(shift),source_id='fv_M4_SS',climate_id='shift_'+str(shift),status='COMPLETED',Tmax_C=row['Tmax_C'],Delta_estimate_C=row['Delta_estimate_C'],shape=[48,48,30],horizon_captured=truth(row['horizon_captured']),S25_validation='NOT VALIDATED'),cfg,None,metrics_only=True)
 
-    def cooling(self):
-        base=ROOT/'docs/tuberias_f02';cat=self.latest_cat
-        original=next((p for p in cat.get('plans',[]) if p['id']=='t8_eps100_base1'),{})
-        c=self.cohort('tuberias-42','19 noviembre · tuberías / sin tuberías · 42 días',cat,days=42,engine='a20109b · modelo tuberías (fingerprint no publicado en esta tabla)');c['expected']=[dict(cat['scenarios'][-1],weight='1')] if cat else []
-        for r in read(base/'resultados.json',[]):
-            case=r['caso'];cfg=read(base/(case+'_config.json'));plan=dict(original,id=case,name='Candidato '+('con tuberías' if case=='con_tuberias' else 'sin tuberías'))
-            raw=dict(status='COMPLETED',simulation_id=r['simulation_id'],scenario_id=c['expected'][0]['id'],source_id='fv_M4_SS',climate_id=cat['climates'][0]['id'],weight='1',Tmax_C=r['Tmax_C'],Delta_estimate_C=r['Delta_S25_estimado_C'],Tmax_time_h=r['t_Tmax_h'],Delta_time_h=r['t_Delta_h'],numerical_checks=False,horizon_captured=False,S25_validation='NOT VALIDATED',coverage_air_min_fraction=1. if r['S25_completo'] else None,shape=cfg['n'],dt_s=cfg['dt'])
-            folder=self.local_output/r['simulation_id'];self.add(c,plan,raw,cfg,folder,doc_history=f'docs/tuberias_f02/{case}_historia.csv')
-
     def closure(self):
         base=ROOT/'resultados/cierre_f02';cat=read(base/'catalogo_congelado.json')
         published=ROOT/'docs/cierre_f02/evidencia'
@@ -310,6 +301,7 @@ class Evidence:
             if file.parent.name in known:continue
             m=read(file,{})
             if not isinstance(m,dict) or m.get('config',{}).get('geometry')!='foundation':continue
+            if m.get('config',{}).get('cooling'):continue
             p=m['config'];source=p.get('construction',{}).get('curve',{}).get('column','didáctica');ident=m.get('simulation_id')
             if not ident:continue
             retired=p.get('construction',{}).get('curve',{}).get('raw_sha256')==RETIRADA_PINN_SHA256
@@ -404,7 +396,7 @@ class Evidence:
             max_xyz=xyz or r.get('max_xyz'),fields_available=available,config_available=config is not None and not r.get('retired'),
             field_horizon_days=m.get('config',{}).get('days'),metadata=m if available else None,
             curve_warning='Historias de sensores fijos sólo cuando existen. Tmin S25 es una envolvente móvil; no un sensor fijo. Centros exteriores no equivalen a 25 mm.',
-            config=config,archive_figure='tuberias' if r['cohort_id']=='tuberias-42' else None)
+            config=config,archive_figure=None)
 
 
 def read_value(v):
@@ -445,7 +437,7 @@ def fixed_histories(meta,folder):
 
 
 def signature(local_output):
-    files=list((ROOT/'docs/exploracion/evidencia').glob('*.csv'))+list((ROOT/'docs/exploracion/evidencia').glob('*catalogo*.json'))+list((ROOT/'docs/defensa/evidencia').glob('tabla_corridas.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.json'))+list((ROOT/'docs/defensa/evidencia').glob('catalogo*.json'))+list((ROOT/'docs/tuberias_f02').glob('*.json'))+list(Path(local_output).glob('*/metadata.json'))
+    files=list((ROOT/'docs/exploracion/evidencia').glob('*.csv'))+list((ROOT/'docs/exploracion/evidencia').glob('*catalogo*.json'))+list((ROOT/'docs/defensa/evidencia').glob('tabla_corridas.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.json'))+list((ROOT/'docs/defensa/evidencia').glob('catalogo*.json'))+list(Path(local_output).glob('*/metadata.json'))
     files+=list((ROOT/'resultados/cierre_f02').glob('*.json'))
     files+=list((ROOT/'docs/hielo_f02').glob('*.json'))
     files+=list((ROOT/'docs/cierre_f02/evidencia').glob('*.json'))+list((ROOT/'docs/cierre_f02/evidencia').glob('*.csv'))

@@ -1,0 +1,1 @@
+[{"change_Delta_C": 0.0007417142748593619, "change_Tmax_C": 0.000964929077362342, "dt_coarse_s": 1200, "dt_fine_s": 900, "horizon_captured": true, "shape": [100, 100, 60], "stable": true, "temperature_C": 8}]

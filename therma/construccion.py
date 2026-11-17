@@ -57,11 +57,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
     if p.get('environment'):
         from .suelo import validar_entorno
         ground=validar_entorno(p)
-    cooling=None
-    if p.get('cooling'):
-        from .enfriamiento import CircuitoTuberias
-        cooling=CircuitoTuberias(ids,p['L'],p['origin'],p['cooling'])
-    m=ConstruccionTermica(ids,p['L'],pours,p['k'],p['rho'],p['cp'],borders,suelo=ground,cooling=cooling)
+    m=ConstruccionTermica(ids,p['L'],pours,p['k'],p['rho'],p['cp'],borders,suelo=ground)
     if config['model']=='tabulated_source':
         from .fuente_tabulada import FuenteTabulada
         models={ident:FuenteTabulada(config['curve'],p['rho'],p['cp']) for ident in by_id}
@@ -91,15 +87,12 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
         state=pour_states();vals=m.T[m.activo];count=len(vals)
         location=None if not count else list(map(int,np.unravel_index(np.argmax(np.where(m.activo,m.T,-np.inf)),n)))
         q=sum(s['source_W_m3']*np.count_nonzero(ids==s['id']) for s in state['pours'] if s['active'])/count if count else 0.
-        E=m.energia();net=m.energia_colocacion_J+m.energia_fuente_J+m.energia_borde_J-m.energia_enfriamiento_J
+        E=m.energia();net=m.energia_colocacion_J+m.energia_fuente_J+m.energia_borde_J
         h=dict(t=m.t,center=float(m.T[center]) if m.activo[center] else None,min=float(vals.min()) if count else None,
             max=float(vals.max()) if count else None,hottest_xyz=location,active_cells=count,active_volume_m3=count*m.volumen,
             energy=E,net=net,residual=m.residual(),placed_J=m.energia_colocacion_J,source_J=m.energia_fuente_J,
             boundary_J=m.energia_borde_J,q=q,layers=[float(m.T[(ids==v['id'])&m.activo].mean()) if np.any((ids==v['id'])&m.activo) else None for v in pours])
         if weather:h['air_temperature_C']=weather.temperatura(m.t)
-        if cooling:
-            _,diagnostic=cooling.exchange(m.T,m.activo,m.t)
-            h.update(cooling=diagnostic,cooling_out_J=m.energia_enfriamiento_J,water_received_J=m.energia_agua_J)
         if math.isfinite(removal):h['formwork_present']=m.t<removal
         if ground:
             soil_power=float(np.sum((m.P_suelo-m.G_suelo*m.T)*m.activo))
@@ -128,7 +121,7 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
             dt=min(p['factor']*limit,min(active_steps,default=3600.),3600.)
         end=min(m.t+dt,targets[target_index],m.siguiente_evento_s,duration,
                 weather.siguiente(m.t) if weather else math.inf,
-                removal if m.t<removal else math.inf,cooling.next_event(m.t) if cooling else math.inf);h=end-m.t
+                removal if m.t<removal else math.inf);h=end-m.t
         if h<=0:raise ValueError('El integrador no puede avanzar; revisar cronograma.')
         q=np.zeros(n)
         for ident,model in models.items():
@@ -230,14 +223,5 @@ def ejecutar_construccion(p,identificador,carpeta,ifc,progress=lambda v:None,obs
         meta['validity']['hydration']='PROVIDED_Q_AGE_CURVE_WITH_DECLARED_TAIL'
         meta['warnings'][1]='Fuente Q tabulada del archivo entregado; edad cero alineada al inicio de ventana retenida; cola constante explícita. Sin cinética dependiente de temperatura.'
         meta['provenance']['mode']='Construcción con fuente Q tabulada entregada'
-    if cooling:
-        meta['cooling']=cooling.metadata()
-        meta['cooling'].update(extracted_energy_J=m.energia_enfriamiento_J,water_received_energy_J=m.energia_agua_J,
-            water_balance_error_J=m.energia_agua_J-m.energia_enfriamiento_J,
-            peak_extraction_W=max(h['cooling']['power_out_W'] for h in hist))
-        meta['metrics']['final_cooling_out_J']=m.energia_enfriamiento_J
-        meta['construction']['energy_reference']='E_activa = E_colocacion + E_hidratacion + E_borde - E_tuberias; agua recibe E_tuberias.'
-        meta['validity']['cooling']='CONSERVATIVE_SUBVOXEL_HYPOTHESIS_NOT_CALIBRATED'
-        meta['warnings'].append(meta['cooling']['limitations'])
     (folder/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,allow_nan=False),encoding='utf-8')
     return meta

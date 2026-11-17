@@ -16,7 +16,7 @@
 - 104 filas exploratorias originales, tres lotes con mallas y decisiones distintas.
 - 24 filas del lote inicial de defensa, separado por su versión y discretización/métrica anterior.
 - 24 corridas publicadas de mejoras del 19 de noviembre, con métricas documentadas de 42 días y vistas parciales de 14 días; esas vistas NO se cuentan como corridas nuevas.
-- Siete controles de malla y paso temporal, dos sensibilidades climáticas y dos variantes con/sin tuberías.
+- Siete controles de malla y paso temporal, dos sensibilidades climáticas.
 - Corridas locales de fundación con sus propias configuraciones. D y pesos quedan sin evaluar si no se declaró el cronograma físico o el conjunto de incertidumbre.
 - Los grupos de planes son combinaciones plan/conjunto, no planes físicos todos distintos. El manifiesto informa por separado los identificadores de ejecución conocidos y los resúmenes sin identificador.
 
@@ -32,7 +32,6 @@ S25 sigue ESTIMADO / NO VALIDADO; P_Delta y P_f oficiales permanecen indetermina
 - El centro del dominio es un centro de celda fijo usado como sensor interior representativo, no el máximo global.
 - La historia S25 fija reutiliza, cuando existe, el stencil/los pesos MLS exportados para el punto del par crítico. Se muestra únicamente en la misma etapa constructiva de ese par y con todos sus vecinos activos. Reutiliza los valores binarios originales float32; no resuelve otra PDE ni valida la reconstrucción.
 - Los sensores exteriores de archivos CSV se etiquetan como centros de voxel, NO S25. Si no se archivó una serie S25, no se reemplaza por la mínima temperatura de voxel.
-- Los estudios de tuberías incluyen una figura Python original con ambas variantes, además de las series CSV realmente archivadas. No se digitalizan temperaturas de esa imagen.
 - Las vistas parciales de 14 días no abren un campo de 42 días como si fuera de 14. Para ese campo se selecciona explícitamente el conjunto de 42 días.
 - Los archivos 3D de los estudios recientes se calcularon en otro equipo y no están en este computador. Se ofrecen las configuraciones para reproducirlos, sin mostrar campos de otras simulaciones.
 - La antigua PINN queda únicamente como antecedente, separada y sin preparación de nuevos cálculos.

@@ -14,16 +14,6 @@ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(40,1,.01,2000);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.09;controls.screenSpacePanning=true;
 scene.add(new THREE.HemisphereLight(0xc9e5ff,0x293248,2.4));const light=new THREE.DirectionalLight(0xffffff,2);light.position.set(10,-20,35);scene.add(light);
 const group=new THREE.Group();scene.add(group);const axes=new THREE.AxesHelper(3);scene.add(axes);
-const pipeGroup=new THREE.Group();scene.add(pipeGroup);let pipeResult=null;
-function coolingPipes(r,f){
- if(r!==pipeResult){for(const line of [...pipeGroup.children]){pipeGroup.remove(line);line.geometry.dispose();line.material.dispose();}pipeResult=r;
-  for(const c of r?.metadata?.cooling?.circuits||[]){const geometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...c.start_xyz_m),new THREE.Vector3(...c.end_xyz_m)]);const line=new THREE.Line(geometry,new THREE.LineBasicMaterial({color:0x29e4ff,depthTest:false,transparent:true,opacity:.85}));line.renderOrder=15;line.userData.pour=c.pour_id;pipeGroup.add(line);}
- }
- pipeGroup.visible=!!$('showCoolingPipes')?.checked;const time=r?.frameTimes[f]||0;
- for(const line of pipeGroup.children){const pour=r.config.construction.pours.find(p=>p.id===line.userData.pour);line.visible=!!pour&&time>=pour.start_h*3600;}
-}
-window.addEventListener('therma:frame',e=>coolingPipes(e.detail.result,e.detail.frame));
-$('showCoolingPipes')?.addEventListener('change',()=>{pipeGroup.visible=$('showCoolingPipes').checked;});
 const marker=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,depthTest:false}));marker.renderOrder=9;marker.visible=false;scene.add(marker);
 let pair=null,pairHistory=null;const pairMeshes=[0xfdac69,0x5ce0d3].map(color=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),new THREE.MeshBasicMaterial({color,depthTest:false}));m.renderOrder=10;m.visible=false;scene.add(m);return m;});
 const criticalGroup=new THREE.Group();scene.add(criticalGroup);criticalGroup.visible=false;

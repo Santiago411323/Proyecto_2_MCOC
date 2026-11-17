@@ -18,7 +18,7 @@ def cube(ident=1,offset=(0,0,0),transform=None):
     return dict(VertidaID=ident,vertices=v,triangulos=v[faces],guid='g'+str(ident))
 
 
-@pytest.mark.parametrize('step,allowed',[(.5,True),(.25,True),(.125,False),(.05,False),(.025,False)])
+@pytest.mark.parametrize('step,allowed',[(.5,True),(.25,True),(.125,True),(.05,False),(.025,False)])
 def test_preflight_blocks_before_allocation(step,allowed):
     r=estimar([18,18,3.3],[step]*3,487.)
     assert r['allowed']==allowed
@@ -204,7 +204,7 @@ def test_mesh_study_skips_excessive_resolutions_without_solver(tmp_path,monkeypa
     from therma.ejecutar import validar
     def forbidden(*args,**kwargs):raise AssertionError('No generar grilla grande')
     monkeypatch.setattr(module,'ejecutar',forbidden)
-    result=module.ejecutar_estudio(validar(config()),[.125,.05,.025],tmp_path)
+    result=module.ejecutar_estudio(validar(config()),[.1,.05,.025],tmp_path)
     assert all(row['status']=='SKIPPED_RESOURCE' for row in result['rows'])
     assert all('Tmax_C' not in row for row in result['rows'])
     assert (tmp_path/'mesh_study.png').is_file()

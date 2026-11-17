@@ -1,10 +1,10 @@
 """Preflight sin voxelización ni reserva de campos. Estimaciones, no benchmarks."""
 import math
 
-MAX_CELLS = 400_000
+MAX_CELLS = 600_000
 MAX_AXIS = 160
-MAX_MEMORY_BYTES = 1024*1024**2
-MAX_CELL_STEPS = 1_500_000_000
+MAX_MEMORY_BYTES = 1536*1024**2
+MAX_CELL_STEPS = 3_000_000_000
 
 
 def estimar(longitudes, pasos, volumen_ifc, k=2.,rho=2400.,cp=900.,frames=65,days=14.,dt=900.):
@@ -21,8 +21,8 @@ def estimar(longitudes, pasos, volumen_ifc, k=2.,rho=2400.,cp=900.,frames=65,day
     reasons=[]
     if count>MAX_CELLS:reasons.append(f'Máximo {MAX_CELLS:,} celdas.')
     if max(shape)>MAX_AXIS:reasons.append(f'Máximo {MAX_AXIS} celdas por eje.')
-    if memory>MAX_MEMORY_BYTES:reasons.append('Estimación de memoria supera 1 GiB.')
-    if count*steps>MAX_CELL_STEPS:reasons.append('Estimación conservadora supera 1.500 millones de celda-pasos.')
+    if memory>MAX_MEMORY_BYTES:reasons.append('Estimación de memoria supera 1,5 GiB.')
+    if count*steps>MAX_CELL_STEPS:reasons.append('Estimación conservadora supera 3.000 millones de celda-pasos.')
     return dict(shape=shape,spacing_m=actual,total_cells=count,occupied_cells_estimate=min(count,round(volumen_ifc/math.prod(actual))),
                 memory_bytes_estimate=memory,dt_sufficient_s=safe,estimated_cell_steps=count*steps,
                 relative_cost=(count*steps)/(36*36*12*math.ceil(days*86400/900)),

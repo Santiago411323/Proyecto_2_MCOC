@@ -1,5 +1,5 @@
 (function(){'use strict';
-const $=id=>document.getElementById(id),data=JSON.parse($('foundation-data').textContent),palette=['#6a9eaa','#d1ad71','#b47470'];
+const $=id=>document.getElementById(id),data=JSON.parse($('foundation-data').textContent),palette=['#63aeb4','#d5b37d','#9bcbb9'];
 const state={visible:data.capas.map(()=>true),view:'orbit',zoom:1},fmt=(v,d=2)=>v.toLocaleString('es-CL',{maximumFractionDigits:d,minimumFractionDigits:d});
 const dims=data.max.map((v,i)=>v-data.min[i]);
 const layers=$('foundationLayers');
@@ -13,7 +13,7 @@ draw();}
 refreshData(data);
 function sync(){layers.querySelectorAll('input').forEach((e,i)=>e.checked=state.visible[i]);}
 function draw(){
- if($('foundationPage').hidden)return;const canvas=$('foundationCanvas'),rect=canvas.getBoundingClientRect(),w=Math.max(280,rect.width),h=Math.max(300,rect.height),dpr=devicePixelRatio||1;canvas.width=w*dpr;canvas.height=h*dpr;const g=canvas.getContext('2d');g.scale(dpr,dpr);g.fillStyle='#fafbf7';g.fillRect(0,0,w,h);
+ if($('foundationPage').hidden)return;const canvas=$('foundationCanvas'),rect=canvas.getBoundingClientRect(),w=Math.max(280,rect.width),h=Math.max(300,rect.height),dpr=devicePixelRatio||1;canvas.width=w*dpr;canvas.height=h*dpr;const g=canvas.getContext('2d');g.scale(dpr,dpr);g.fillStyle='#10212c';g.fillRect(0,0,w,h);
  const explosion=Number($('explodeFoundation').value),yaw=Number($('foundationYaw').value)*Math.PI/180,pitch=Number($('foundationPitch').value)*Math.PI/180;
  $('explodeValue').textContent=fmt(explosion)+' m entre capas';$('foundationVisible').textContent=`${state.visible.filter(Boolean).length} / ${data.capas.length} capas visibles`;
  $('foundationViewTitle').textContent=explosion?'Capas separadas para inspección':'Fundación ensamblada';
@@ -24,7 +24,7 @@ function draw(){
  const scale=Math.min((w-130)/Math.max(rx,1),(h-110)/Math.max(ry,1))*state.zoom;
  function project(p,off=0){const t=transform(p,off);return [w/2+t[0]*scale,h/2+t[1]*scale,t[2]];}
  const line=(p,q,color='#b6c8b8')=>{g.strokeStyle=color;g.lineWidth=1;g.beginPath();g.moveTo(...project(p));g.lineTo(...project(q));g.stroke();};
- if(state.view!=='profile'){for(let a=-10;a<=10;a+=2){line([a,-10,0],[a,10,0],'#e3e9df');line([-10,a,0],[10,a,0],'#e3e9df');}}
+ if(state.view!=='profile'){for(let a=-10;a<=10;a+=2){line([a,-10,0],[a,10,0],'#25424e');line([-10,a,0],[10,a,0],'#25424e');}}
  const triangles=[];
  data.capas.forEach((c,i)=>{if(!state.visible[i])return;for(const t of c.triangulos){
   // No dibujar tapas interiores coincidentes de dos vertidas ensambladas.
@@ -32,7 +32,7 @@ function draw(){
   const p=t.map(v=>project(v,i*explosion)),u=t[1].map((v,a)=>v-t[0][a]),v=t[2].map((v,a)=>v-t[0][a]),n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],norm=Math.hypot(...n)||1,light=.67+.3*Math.abs((n[0]*.25+n[1]*-.4+n[2]*.88)/norm);triangles.push({p,depth:p.reduce((s,p)=>s+p[2],0)/3,color:palette[i%3],light});}});
  triangles.sort((a,b)=>a.depth-b.depth);
  for(const t of triangles){const rgb=t.color.match(/\w\w/g).map(v=>parseInt(v,16));g.fillStyle=`rgb(${rgb.map(v=>Math.round(v*t.light)).join(',')})`;g.strokeStyle=g.fillStyle;g.lineWidth=.45;g.beginPath();t.p.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fill();g.stroke();}
- g.font='12px Segoe UI';g.fillStyle='#53665b';g.textAlign='center';g.fillText(`${fmt(dims[0])} × ${fmt(dims[1])} m · H ${fmt(dims[2])} m`,w/2,h-20);
+ g.font='12px Segoe UI';g.fillStyle='#a3bfca';g.textAlign='center';g.fillText(`${fmt(dims[0])} × ${fmt(dims[1])} m · H ${fmt(dims[2])} m`,w/2,h-20);
  const label=(p,text,color)=>{const xy=project(p);g.fillStyle=color;g.textAlign='left';g.fillText(text,xy[0]+6,xy[1]-4);};
  const origin=[-10,-10,0];line(origin,[-6,-10,0],'#a27660');line(origin,[-10,-6,0],'#6a9581');line(origin,[-10,-10,3],'#758bad');label([-6,-10,0],'x','#a27660');label([-10,-6,0],'y','#6a9581');label([-10,-10,3],'z','#758bad');
  $('foundationViewNote').textContent=state.view==='plan'?'Planta del IFC: contorno octogonal y parte superior circular. Las capas superiores pueden ocultar las inferiores.':state.view==='profile'?'Perfil del IFC: tres niveles de 1,10 m; la segunda capa transiciona hacia el cilindro superior.':'Mallas trianguladas tomadas directamente del IFC, a escala física. Separar capas es sólo una ayuda visual.';

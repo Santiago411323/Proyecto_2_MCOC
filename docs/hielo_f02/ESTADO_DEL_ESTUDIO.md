@@ -1,5 +1,19 @@
 ## Estado del estudio de hielo y mallas
 
+### Continuación del 17 de noviembre de 2026
+
+Se agregaron 96×96×54 y 100×100×60, refinando los tres ejes, para M4_SS
+en los planes de 8 y 12 °C. Los dos últimos cambios de Tmax y ΔT son menores
+de 0,10 °C en ambos planes. El control 1200/900 s en la malla más fina para
+8 °C cambia ambos indicadores menos de 0,001 °C.
+La recomendación de trabajo para estos casos es 96×96×54, contrastada con
+100×100×60. No es validación absoluta de S25 .
+Ver [informe y configuraciones](refinamiento_xyz/INFORME.md).
+Las corridas publicadas de las cuatro fuentes en 90×90×48 se conservan;
+el refinamiento adicional sólo evaluó M4_SS.
+Los límites de esta continuación son 600.000 celdas, 1,5 GiB estimado y
+3.000 millones de celda-pasos. El detalle siguiente documenta el estudio anterior.
+
 Se conservan los planes de colocación a 8 y 12 °C con EPS de 100 mm
 y resistencia basal adicional de 1,0 m²·K/W.
 Cada plan tiene cuatro corridas SS terminadas en las mallas de 500 y 250 mm.

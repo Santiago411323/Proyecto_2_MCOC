@@ -5,7 +5,8 @@
 /*__EQUATIONSTYLE__*/
 /*__RESEARCHSTYLE__*/
 /*__NAVSTYLE__*/
-/*__F02STYLE__*/</style></head>
+/*__F02STYLE__*/
+/*__DESIGNSTYLE__*/</style></head>
 <body>
 <header class="topbar"><a class="brand" href="#"><span class="brandmark">T<span>°</span></span><span>THERMA<span class="brand-sub">MASS CONCRETE DIGITAL TWIN</span></span></a><div class="top-context"><span class="dot"></span>G09 · PUNTA ARENAS / FARO DEL SUR <span class="tag">EXPERIMENTOS</span></div><button class="quiet" id="helpBtn">Cómo funciona ↗</button></header>
 <nav class="mode-tabs" aria-label="Área del proyecto"><button id="modeFoundation" class="active">Fundación IFC · 3 capas</button><button id="modeLab">Laboratorio térmico 1D / 2D / 3D</button></nav>
@@ -47,8 +48,8 @@
 </details><section class="panel physics-panel" id="physics"><div><div class="eyebrow">LA FÍSICA DETRÁS</div><h3>ρ cₚ ∂T/∂t = ∇ · (k ∇T) + q(t)</h3><p>Balance de energía explícito por celdas. Propiedades constantes. Bordes por cara.</p></div><div class="physics-copy"><p><b>Dirichlet</b> fija la temperatura de la superficie. <b>Neumann</b> prescribe el flujo saliente; cero significa aislamiento. <b>Robin</b> intercambia calor con el ambiente y permite añadir aislación.</p><p>El dominio Fundación usa la máscara voxelizada del IFC. El ensayo simultáneo coloca todas las capas desde t=0; la secuencia constructiva activa cada vertida según su horario. Las superficies escalonadas intercambian calor según su orientación x±, y±, z±. El aire puede conectarse a un forecast horario en construcción. No se incluyen suelo explícito, viento en h, radiación ni hidratación calibrada; los parámetros materiales son de ensayo. La calibración busca el máximo central dentro del intervalo elegido.</p></div></section>
 <footer>THERMA / G9 <span>Cálculo local · forecasts archivados · descarga meteorológica por CLI</span><button class="quiet" id="fieldExport">Exportar campo actual CSV ↓</button></footer>
 </main></div>
-<script id="solver-source" type="text/plain">/*__SOLVER__*/</script><script id="foundation-data" type="application/json">/*__IFC_DATA__*/</script><script>/*__VIEWDATA__*/</script><script>/*__INTELLIGENCE__*/</script><script>/*__API__*/</script><script>/*__CONSTRUCTIONSCRIPT__*/</script><script>/*__ENVIRONMENTSCRIPT__*/</script><script>/*__FORMWORKMATH__*/</script><script>/*__FORMWORKSCRIPT__*/</script><script>/*__COREEXTERIOR__*/</script><script>/*__WEATHERSCRIPT__*/</script><script>/*__RESOLUTIONMODEL__*/</script><script>/*__RESOLUTIONUI__*/</script><script>/*__FOUNDATIONEDITOR__*/</script><script>/*__COOLING__*/</script><script>/*__APP__*/</script><script>/*__FOUNDATION__*/</script>
+<script id="solver-source" type="text/plain">/*__SOLVER__*/</script><script id="foundation-data" type="application/json">/*__IFC_DATA__*/</script><script>/*__VIEWDATA__*/</script><script>/*__INTELLIGENCE__*/</script><script>/*__API__*/</script><script>/*__CONSTRUCTIONSCRIPT__*/</script><script>/*__ENVIRONMENTSCRIPT__*/</script><script>/*__FORMWORKMATH__*/</script><script>/*__FORMWORKSCRIPT__*/</script><script>/*__COREEXTERIOR__*/</script><script>/*__WEATHERSCRIPT__*/</script><script>/*__RESOLUTIONMODEL__*/</script><script>/*__RESOLUTIONUI__*/</script><script>/*__FOUNDATIONEDITOR__*/</script><script>/*__APP__*/</script><script>/*__FOUNDATION__*/</script>
 <script type="importmap">{"imports":{"three":"/panel/vendor/three/three.module.js"}}</script>
 <script>/*__EQUATIONMODEL__*/</script><script>/*__EQUATIONSCRIPT__*/</script><script type="module" src="/panel/visor3d.js"></script>
 <script>/*__NAVSCRIPT__*/</script><script>/*__SIMULATIONS__*/</script><script>/*__F02SCRIPT__*/</script><script>/*__ICE_SCRIPT__*/</script><script>/*__RUN_SCRIPT__*/</script><script>/*__COMPARE_CURVES__*/</script>
-</body></html>
+<script>/*__DESIGNSCRIPT__*/</script></body></html>

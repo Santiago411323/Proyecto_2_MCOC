@@ -25,6 +25,7 @@ def catalogo_simulaciones(folder):
             if not isinstance(m,dict):continue
             if m.get('status')!='COMPLETED' or m.get('simulation_id')!=ident or not (file.parent/'fields.bin').is_file():continue
             p=m['config'];g=m['geometry']
+            if p.get('cooling'):continue
             if not isinstance(p,dict) or not isinstance(g,dict):continue
             from therma.fuentes_vigentes import comprobar_fuente
             comprobar_fuente((p.get('construction') or {}).get('curve') or {})
@@ -184,9 +185,6 @@ class Handler(BaseHTTPRequestHandler):
                 if len(uid)!=24 or any(c not in '0123456789abcdef' for c in uid):return self.respuesta(404,{'message':'Corrida desconocida.'})
                 return self.respuesta(200,evidence.detail(uid))
             except (ValueError,KeyError,OSError) as e:return self.respuesta(422,{'message':str(e)})
-        if path=='/api/comparison-assets/tuberias':
-            file=ROOT/'docs/tuberias_f02/comparacion.png'
-            return self.bytes(200,file.read_bytes(),'image/png') if file.is_file() else self.respuesta(404,{'message':'Figura no disponible.'})
         if path=='/api/plan-results':
             folder=ROOT/'docs/exploracion/evidencia'
             def rows(name):
