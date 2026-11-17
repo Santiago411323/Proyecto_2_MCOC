@@ -28,6 +28,13 @@ def test_html_incluye_ifc_actual_y_separa_resultados_termicos():
     assert '/*__IFC_DATA__*/' not in html
 
 
+def test_panel_incluye_proteccion_delta20():
+    html = (BASE/'panel_termico.html').read_text(encoding='utf-8')
+    assert 'id="formworkDelta20"' in html
+    assert "formworkDelta20').onclick" in html
+    assert 'Protección térmica didáctica para ΔT≤20 °C' in html
+
+
 def test_mallas_preservan_tres_capas_y_volumen_aproximado():
     datos = datos_ifc(BASE/'modelo_e02.ifc')
     v = sum(c['volumen_m3'] for c in datos['capas'])

@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--dias', type=float, default=3.)
     parser.add_argument('--salida', type=Path, default=ROOT / 'resultados' / 'e11')
     parser.add_argument('--abrir', action='store_true', help='Abrir visor interactivo al terminar')
+    parser.add_argument('--proteccion-delta20', action='store_true',
+        help='Aplicar la protección térmica didáctica del panel: e=0.20 m, k=0.15, caras x±/y±/z+.')
     args = parser.parse_args()
     weather = configuracion_snapshot(args.snapshot, args.inicio)
     ForzanteAire(weather, args.dias * 86400)
@@ -36,8 +38,12 @@ def main():
             pours=[dict(id=i+1, start_h=24.*i, placement_C=18., theta_inf_C=40., tau_h=24.) for i in range(3)]),
         environment=dict(soil=dict(model='effective_basal_reservoir', temperature_C=8., depth_m=1.,
             conductivity_W_mK=1.5, contact_R_m2K_W=.05, parameter_source='E11: suelo hipotético.')),
-        formwork=dict(model='fixed_resistance', thickness_m=.02, conductivity_W_mK=.15,
-            faces=[True, True, True, True, False, False], parameter_source='E11: tablero hipotético de 20 mm.'))
+        formwork=dict(model='fixed_resistance',
+            thickness_m=.20 if args.proteccion_delta20 else .02,
+            conductivity_W_mK=.15,
+            faces=[True, True, True, True, False, True] if args.proteccion_delta20 else [True, True, True, True, False, False],
+            parameter_source=('E11: protección térmica didáctica para ΔT≤20 °C; e=0.20 m, k=0.15 W/(m·K), caras x±, y± y z+; no es un moldaje real.'
+                if args.proteccion_delta20 else 'E11: tablero hipotético de 20 mm.')))
     print('Ejecutando 3D con aire horario, h constante y tres vertidas...', flush=True)
     meta = ejecutar(config, 'e11_forecast_3d', run)
     manifest = exportar(run)
@@ -78,7 +84,10 @@ def main():
         limits=['Forecast: no observaciones medidas.', 'Geometría IFC provisional e hidratación no calibrada.',
                 'h constante: viento archivado, sin efecto físico; sin radiación solar/onda larga.',
                 'Suelo como reservorio fijo a 8 °C; no almacenamiento de suelo.',
-                'Puntos en centros de voxel: no temperatura exacta de superficie ni S25.'])
+                'Puntos en centros de voxel: no temperatura exacta de superficie ni S25.',
+                *(['Corrección ΔT≤20: protección térmica didáctica e=0.20 m, k=0.15 W/(m·K), caras x±/y±/z+; no es un moldaje real.'
+                   ' El ΔT sigue aumentando lentamente al final del horizonte de 14 días; no extrapolar sin volver a simular.']
+                  if args.proteccion_delta20 else [])])
     (run / 'resumen.json').write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding='utf-8')
     (args.salida / 'ultima_corrida.json').write_text(json.dumps(dict(folder=run.name)), encoding='utf-8')
     print(json.dumps(summary, indent=2, ensure_ascii=False))

@@ -76,6 +76,12 @@ exponencial didáctica (elevación adiabática 40 °C, τ=24 h), k=2, ρ=2400, c
 No está calibrada a una mezcla ni incluye dependencia de temperatura de reacción.
 La simulación no requiere servidor del panel ni conexión después de archivar el forecast.
 
+Para el caso de 14 días, si el ΔT núcleo–exterior supera 20 °C, el panel ofrece
+**03B → “Aplicar protección ΔT ≤ 20 °C”**. Fija e=0.20 m, k=0.15 W/(m·K) y activa
+x±, y± y z+; z− sigue siendo suelo. En la corrida de referencia el ΔTmax baja de
+30.38 °C a 15.27 °C. Es una protección térmica didáctica, no un moldaje real.
+El CLI equivalente añade `--proteccion-delta20` al comando anterior.
+
 **6. Abrir resultados 3D.** Para abrir la última corrida local:
 
 ```powershell
