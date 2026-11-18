@@ -10,29 +10,127 @@ function facts(r){const p=r.config,c=p.construction,fmt=v=>Number.isFinite(v)?Nu
  ['Inicio climático',p.weather?.start_utc||'Sin fecha climática declarada; tiempo relativo de simulación']
  ];}
 function status(raw,hasResult,detail=""){if(raw.includes("RUNNING")&&detail.includes("Cargando plan"))return ["Cargando resultado","Se están leyendo campos guardados. No se está ejecutando de nuevo el solver."];if(raw.includes('RUNNING'))return ['Calculando en Python','Python está calculando una nueva corrida. La geometría y las temperaturas previas, si existen, todavía corresponden al cálculo anterior.'];if(raw.includes('STALE'))return ['Resultados anteriores','Cambiaste las entradas. Estos resultados conservan los datos originales que ves arriba. Pulsa Ejecutar Python para obtener temperaturas con tus cambios.'];if(raw.includes('FAILED'))return ['Cálculo fallido','Revisa el mensaje de error. Una ejecución fallida no genera un resultado válido nuevo.'];return hasResult?['Resultado calculado','Reproducir sólo recorre campos ya calculados. Cambiar datos y ejecutar Python crea otra corrida con su propio identificador.']:['Sin resultados','Empieza abriendo una simulación guardada. Ejecuta Python cuando quieras probar tus propios datos.'];}
-if(typeof module!=='undefined'&&module.exports)module.exports={facts,status};
+function assessment(row){
+ if(row.retired)return ['historical','Fuente retirada'];
+ if(row.geometry==='block')return ['unknown','Ejercicio de verificación'];
+ const t=row.Tmax_C, validated=row.s25_validated===true&&Number.isFinite(row.DeltaTmax_validated_C);
+ const d=validated?row.DeltaTmax_validated_C:row.Delta_estimate_C;
+ if(Number.isFinite(t)&&t>70)return ['over','Tmax supera 70 °C'];
+ if(Number.isFinite(d)&&d>20)return ['over',validated?'ΔT supera 20 °C':'ΔT estimado supera 20 °C'];
+ if(!Number.isFinite(t)||!Number.isFinite(d))return ['unknown','Evaluación incompleta'];
+ if(row.complete_sampling!==true||row.openHorizon)return ['unknown','Bajo umbrales · evidencia parcial'];
+ return ['under',validated?'Bajo ambos límites · S25 validado':'Bajo ambos límites · estimado'];
+}
+if(typeof module!=='undefined'&&module.exports)module.exports={facts,status,assessment};
 if(typeof document==='undefined')return;
-const $=id=>document.getElementById(id);let lastResult=null,loading=false,priorStatus='',catalogNames=new Map(),groups=[];
-async function catalog(){if(loading)return;loading=true;$('simulationCatalogNote').textContent='Leyendo corridas guardadas; no se ejecuta ninguna simulación.';const selected=$('simulationCatalog').value;try{
- const replies=await Promise.allSettled(['/api/simulation-catalog','/api/plan-results'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('Catálogo no disponible; comprueba el servidor actualizado.');return r.json();}));
- const local=replies[0].status==='fulfilled'?replies[0].value.simulations:[],published=replies[1].status==='fulfilled'?replies[1].value:{plans:[],runs:[]};
- catalogNames=new Map();groups=[];let total=0;const seen=new Set();
- function group(name,entries,key){const values=[];for(const [id,label] of entries){if(seen.has(id)||!/^[0-9a-f]{32}$/.test(id))continue;seen.add(id);values.push([id,label]);catalogNames.set(id,label);total++;}groups.push({name,values,key});}
- group('Mis corridas Python guardadas en este computador',(local||[]).map(r=>[r.simulation_id,(r.geometry==='foundation'?'Fundación'+(r.custom_geometry?' modificada':''):'Ejercicio '+r.dim+'D')+' · '+r.days+' días · '+r.simulation_id.slice(0,8)]),'local');
- for(const mm of [250,500]){const plans=(published.plans||[]).filter(p=>Number(p.mesh_xy_mm)===mm);group('Planes exploratorios · '+mm+' mm',(published.runs||[]).flatMap(r=>{const plan=plans.find(p=>p.plan_id===r.plan_id&&p.lote===r.lote);return plan?[[r.simulation_id,r.plan_name+' · '+r.source_id.replace('fv_','')+' · '+mm+' mm']]:[]}),String(mm));}
- renderCatalog(selected);
- if(replies.some(r=>r.status==='rejected'))$('simulationCatalogNote').textContent+=' Parte del catálogo no pudo cargarse; reinicia el servidor actualizado.';
- }catch(e){$('simulationCatalogNote').textContent=e.message;}finally{loading=false;update();}}
-function renderCatalog(selected=$('simulationCatalog').value){const collection=$('simulationCollection').value,list=$('simulationCatalog');list.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='Elige una simulación…';list.append(blank);let count=0;for(const group of groups){if(collection!=='all'&&group.key!==collection)continue;const optgroup=document.createElement('optgroup');optgroup.label=group.name;for(const [id,label] of group.values){if(collection!=='all'&&collection!=='local'&&!label.includes('M4_SS'))continue;const option=document.createElement('option');option.value=id;option.textContent=label;optgroup.append(option);count++;}if(optgroup.children.length)list.append(optgroup);}if(Array.from(list.options).some(o=>o.value===selected))list.value=selected;if(!list.value){const suggested=Array.from(list.options).find(o=>o.textContent.startsWith('Propuesto ·'))||list.options[1];if(suggested)list.value=suggested.value;}$('simulationCatalogNote').textContent=count+' corridas en esta colección. Abrir carga sus datos originales, sin recalcular. Guarda tus ajustes antes de cambiar. Los escenarios A/B se conservan en Comparar planes.';update();}
-$('simulationCollection').onchange=()=>renderCatalog('');
-function update(){const r=window.therma?.getResult(),raw=$('executionState').textContent,[label,explanation]=status(raw,!!r,$('executionOrigin').textContent),running=raw.includes('RUNNING');$('simulationStatus').textContent=label;$('simulationExplain').textContent=explanation;$('simulationPlay').disabled=!r;$('simulationPeak').disabled=!r;$('simulationRun').disabled=running;$('openSimulation').disabled=running||!$('simulationCatalog').value;$('simulationCancel').hidden=!running;
+const $=id=>document.getElementById(id);
+const element=(tag,value,cls)=>{const node=document.createElement(tag);if(value!=null)node.textContent=value;if(cls)node.className=cls;return node;};
+const format=value=>Number.isFinite(value)?value.toLocaleString('es-CL',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+const localDate=value=>value?value.slice(0,10).split('-').reverse().join('/'):'';
+const normalize=value=>value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const identified=id=>/^[0-9a-f]{32}$/.test(id||'');
+const pageSize=12;
+let lastResult=null,loading=false,priorStatus='',catalogNames=new Map(),rows=[],catalogIssue='',listPage=0,passPage=0;
+async function catalog(){
+ if(loading)return;
+ loading=true;
+ $('simulationCatalogNote').textContent='Leyendo corridas guardadas…';
+ try{
+  const replies=await Promise.allSettled(['/api/simulation-catalog','/api/comparison-f02'].map(async url=>{
+   const response=await fetch(url,{cache:'no-store'});
+   if(!response.ok)throw Error('Catálogo no disponible.');
+   return response.json();
+  }));
+  const local=replies[0].value?.simulations||[];
+  const cohorts=replies[1].value?.cohorts||[];
+  const runs=new Map();
+  for(const item of local){
+   const title=item.title||((item.geometry==='foundation'?'Fundación IFC':'Ejercicio '+item.dim+'D')+' · '+item.simulation_id.slice(0,8));
+   runs.set(item.simulation_id,{...item,title,collection:'local',can_open:true});
+  }
+  for(const cohort of cohorts)for(const plan of cohort.plans)for(const run of plan.runs){
+   if(!['COMPLETED','RETIRED'].includes(run.status))continue;
+   const key=run.simulation_id||run.uid;
+   if(runs.has(key))continue;
+   const parameters=plan.parameters||{};
+   runs.set(key,{...run,title:plan.name,collection:cohort.id.startsWith('malla-comun-')?'common':'published',
+    study:cohort.title,weather_start:parameters.start_utc,placement_C:parameters.placement,
+    ice_t:parameters.preenfriamiento?.balance?.total_t,
+    complete_sampling:run.coverage===1,openHorizon:run.horizon_captured===false,
+    retired:run.retired===true||run.status==='RETIRED'});
+  }
+  rows=[...runs.values()].map(row=>({...row,result:assessment(row)}));
+  catalogNames=new Map(rows.filter(row=>row.simulation_id).map(row=>[row.simulation_id,row.title]));
+  catalogIssue=replies.some(r=>r.status==='rejected')?'Parte del catálogo no está disponible.':'';
+  renderLibraries();
+ }catch(error){
+  $('simulationCatalogNote').textContent='No se pudo cargar el catálogo. '+error.message;
+  $('simulationPassNote').textContent=$('simulationCatalogNote').textContent;
+ }finally{loading=false;update();}
+}
+function pagedTable(filtered,page,tableId,pagesId,changePage){
+ const tableSlot=$(tableId),pages=$(pagesId);
+ pages.replaceChildren();
+ if(!filtered.length){tableSlot.replaceChildren(element('p','No hay corridas para mostrar.','hint'));return;}
+ page=Math.min(page,Math.ceil(filtered.length/pageSize)-1);
+ const start=page*pageSize, end=Math.min(start+pageSize,filtered.length);
+ const table=element('table',null,'plan-table run-library-table');
+ const head=table.createTHead().insertRow();
+ for(const label of ['Simulación','Colocación [°C]','Tmax [°C]','ΔT S25 [°C]','Evaluación','Resultado']){
+  const th=element('th',label);th.scope='col';head.append(th);
+ }
+ const body=table.createTBody();
+ for(const row of filtered.slice(start,end)){
+  const tr=body.insertRow();
+  const climate=localDate(row.weather_start), retrieved=localDate(row.weather_retrieved);
+  const study=row.collection==='local'?'Local':row.collection==='common'?'F02 · malla común':'Estudio publicado';
+  const facts=[study,row.source_id?.replace(/^fv_/,''),row.shape?.join(' × '),row.days!=null&&row.days+' días',
+   climate&&'inicio '+climate,retrieved&&'clima '+retrieved,Number.isFinite(row.ice_t)&&format(row.ice_t)+' t de hielo',
+   identified(row.simulation_id)&&row.simulation_id.slice(0,8)].filter(Boolean);
+  tr.insertCell().append(element('strong',row.title),element('small',facts.join(' · ')));
+  const placement=Array.isArray(row.placement_C)?[...new Set(row.placement_C)].map(format).join(' / '):'';
+  tr.insertCell().textContent=placement||'—';
+  tr.insertCell().textContent=format(row.Tmax_C);
+  tr.insertCell().textContent=format(row.s25_validated&&Number.isFinite(row.DeltaTmax_validated_C)?row.DeltaTmax_validated_C:row.Delta_estimate_C);
+  const badge=element('span',row.result[1],'run-assessment');badge.dataset.result=row.result[0];
+  tr.insertCell().append(badge);
+  const destination=tr.insertCell();
+  if(row.can_open&&identified(row.simulation_id)){
+   const link=element('a','Abrir corrida','run-open');
+   link.href='?result='+row.simulation_id+'#simulationDesk';
+   link.setAttribute('aria-label','Abrir corrida · '+row.title);
+   destination.append(link);
+  }else destination.append(element('small','Campo no disponible'));
+ }
+ tableSlot.replaceChildren(table);
+ const back=element('button','Anterior','quiet'),next=element('button','Siguiente','quiet');
+ back.type=next.type='button';back.disabled=page===0;next.disabled=end===filtered.length;
+ back.onclick=()=>changePage(page-1);next.onclick=()=>changePage(page+1);
+ pages.append(back,element('span',`${start+1}–${end} de ${filtered.length}`),next);
+}
+function renderLibraries(){
+ const category=$('simulationCollection').value,search=normalize($('simulationSearch').value.trim());
+ const counts={1:'una un',2:'dos',3:'tres',4:'cuatro',5:'cinco',6:'seis'};
+ const filtered=rows.filter(r=>(category==='all'||r.collection===category)&&
+  search.split(/\s+/).every(term=>normalize([r.title,counts[r.pours],r.study,r.source_id,r.simulation_id,r.shape?.join(' '),r.result[1]].filter(Boolean).join(' ')).includes(term)));
+ const passing=rows.filter(r=>r.result[0]==='under');
+ $('simulationCatalogNote').textContent=filtered.length+(filtered.length===1?' corrida encontrada. ':' corridas encontradas. ')+catalogIssue;
+ $('simulationPassNote').textContent=passing.length+(passing.length===1?' corrida bajo ambos umbrales. ':' corridas bajo ambos umbrales. ')+'«Estimado» indica S25 pendiente de validación física. Cada fila corresponde a un escenario, con su propia malla y clima. '+catalogIssue;
+ pagedTable(filtered,listPage,'simulationLibraryTable','simulationLibraryPages',page=>{listPage=page;renderLibraries();});
+ pagedTable(passing,passPage,'simulationPassTable','simulationPassPages',page=>{passPage=page;renderLibraries();});
+}
+for(const [id,event] of [['simulationCollection','change'],['simulationSearch','input']]){
+ $(id).addEventListener(event,()=>{listPage=0;renderLibraries();});
+}
+function update(){const r=window.therma?.getResult(),raw=$('executionState').textContent,[label,explanation]=status(raw,!!r,$('executionOrigin').textContent),running=raw.includes('RUNNING');$('resultsPage').classList.toggle('has-loaded-run',!!r);$('resultsPage').classList.toggle('working-on-run',running||raw.includes('FAILED'));$('simulationStatus').textContent=label;$('simulationExplain').textContent=explanation;$('simulationPlay').disabled=!r;$('simulationPeak').disabled=!r;$('simulationRun').disabled=running;$('simulationCancel').hidden=!running;
  $('simulationPlay').textContent=window.therma?.state.playing?'Pausar reproducción':'Reproducir resultados';
  if(r){$('simulationTitle').textContent=(catalogNames.get(r.simulationId)||'Corrida '+(r.simulationId||'de verificación'));
  $('simulationDescription').textContent='Datos del resultado guardado · '+(r.engine||'motor no declarado')+' · instante mostrado: '+(r.frameTimes[window.therma.state.frame]/3600).toLocaleString('es-CL',{maximumFractionDigits:2})+' h. '+(r.config.geometry==='foundation'?'Geometría provisional; S25 estimado, sin cumplimiento validado.':'Ejercicio de verificación: no representa la fundación.');
- if(lastResult!==r){lastResult=r;$('simulationGuide').open=false;$('simulationInputs').replaceChildren();for(const [name,value] of facts(r)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=name;dd.textContent=value;$('simulationInputs').append(dt,dd);}}}
+ if(lastResult!==r){lastResult=r;$('simulationGuide').open=false;$('simulationInputs').replaceChildren();for(const [name,value] of facts(r)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=name;dd.textContent=value;$('simulationInputs').append(dt,dd);}
+  if(location.hash==='#simulationDesk'&&new URLSearchParams(location.search).get('result')===r.simulationId)requestAnimationFrame(()=>$('simulationDesk').scrollIntoView());
+ }}
  if(raw!==priorStatus){if(raw.includes('COMPLETED'))catalog();priorStatus=raw;}}
-$('simulationCatalog').onchange=update;$('refreshSimulations').onclick=catalog;
-$('openSimulation').onclick=()=>{const id=$('simulationCatalog').value;if(/^[0-9a-f]{32}$/.test(id))location.assign('?result='+id);};
+$('refreshSimulations').onclick=catalog;
 $('simulationPlay').onclick=()=>{$('play').click();update();document.querySelector('.timeline-shell').scrollIntoView({block:'center',behavior:'smooth'});};
 $('simulationPeak').onclick=()=>{const r=window.therma.getResult();if(!r)return;const peak=window.ThermaIntelligence.globalMaximum(r);if(peak.frame<0)return;window.therma.setFrame(peak.frame);if(r.n.length===3){$('locateHot').click();$('viewerSection').scrollIntoView({block:'start',behavior:'smooth'});}else document.querySelector('.timeline-shell').scrollIntoView({block:'center',behavior:'smooth'});update();};
 $('simulationRun').onclick=()=>{$('engineMode').value='python';$('engineMode').dispatchEvent(new Event('change'));$('run').click();};$('simulationCancel').onclick=()=>$('cancel').click();

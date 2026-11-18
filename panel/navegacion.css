@@ -15,3 +15,24 @@ body.organized{--page-width:1440px;background:#0a1220;color:#e1ebf6}
 .simulation-desk{padding:22px;margin-bottom:24px}.simulation-desk h3{font-size:20px;margin:10px 0;font-weight:500}.simulation-desk .hint{line-height:1.8}.simulation-path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:20px 0}.simulation-path>div{border-left:2px solid #4a9e90;padding-left:12px}.simulation-path b{font-size:13px;color:#a0e7d6}.simulation-path p{font-size:12px;line-height:1.7;color:#a5bcd1;margin:8px 0}.simulation-loader{display:flex;flex-wrap:wrap;gap:10px;align-items:end;padding:16px;background:#14283b;border-radius:9px}.simulation-loader label{flex:1;min-width:200px;font-size:12px}.simulation-loader select{width:100%;margin-top:8px}.simulation-current{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:24px}.simulation-current strong{display:block;margin-top:8px;font-size:14px;overflow-wrap:anywhere}.simulation-current .tag{white-space:nowrap}.simulation-inputs{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px 20px;font-size:12px;line-height:1.7;margin:20px 0}.simulation-inputs dt{color:#80b2c3}.simulation-inputs dd{margin:0;overflow-wrap:anywhere}.simulation-actions{display:flex;gap:10px;flex-wrap:wrap}.simulation-desk details{border-top:1px solid #2c4158;padding-top:16px;margin-top:16px}.simulation-desk summary{cursor:pointer;color:#9fdfd0;font-size:12px}.simulation-lesson p{font-size:12px;line-height:1.9;color:#a8c1d4}.simulation-lesson b{color:#deebf4}.organized.presentation .simulation-desk{display:none}@media(max-width:760px){.simulation-path{grid-template-columns:1fr;gap:8px}.simulation-inputs{grid-template-columns:1fr;gap:4px}.simulation-inputs dd{margin-bottom:10px}.simulation-current{align-items:flex-start}.simulation-desk{padding:16px}}
 .sim-entry,.run-dashboard{padding:20px;margin:12px 0}.sim-entry{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.sim-entry h2,.run-dashboard h2{margin:0 0 5px}.sim-entry p{margin:0;color:#abc2d1}.sim-entry small:empty{display:none}
 .run-dashboard [hidden]{display:none!important}.run-dashboard .simulation-actions{align-items:end;flex-wrap:wrap}.run-dashboard #dashMap{width:100%;height:260px;background:#0b1727;border-radius:8px;display:block}.run-dashboard #dashCharts>section{min-width:0;padding:14px;background:#0b1727;border-radius:8px}.run-dashboard #dashCharts>p{grid-column:1/-1;color:#abc2d1;font-size:13px}.run-dashboard #dashCharts canvas{width:100%;height:auto;display:block}.run-dashboard #dashCharts section p{font-size:12px}.dash-chart-shell{position:relative}.dash-chart-shell i{position:absolute;top:10%;bottom:20%;width:1px;background:#c2d6e2;pointer-events:none}.dash-scale{display:flex;gap:8px;align-items:center;font-size:12px}.dash-scale i{width:150px;height:7px;background:linear-gradient(to right,#0f38a6,#00c4e8,#faf03d,#ff7014,#d40824)}
+.run-library{margin-bottom:22px;padding:clamp(14px,2.2vw,26px)}
+.run-library-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.run-library-heading h2{font-size:clamp(20px,2.4vw,28px);margin:0 0 6px}
+.run-library-heading p{color:var(--muted,#a8bdd0);font-size:13px;margin:0}
+.run-library-filters{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.run-library-filters label{flex:1 1 180px;display:grid;gap:5px}
+.run-library-filters input,.run-library-filters select{box-sizing:border-box;width:100%;min-height:38px}
+.run-library-table{min-width:740px}
+.run-library-table td:first-child{width:36%}
+.run-library-table th,.run-library-table td{vertical-align:middle}
+.run-library-table td strong,.run-library-table td small{display:block}
+.run-library-table td small{font-size:11px;line-height:1.45;color:#a5bcd1;margin-top:4px}
+.run-library-pages{display:flex;justify-content:flex-end;align-items:center;gap:10px;font-size:12px;margin-top:12px}
+.run-library-pages:empty{display:none}
+.run-assessment{display:inline-block;border-radius:5px;padding:5px 7px;color:#d1dae4;background:#203445;line-height:1.35}
+.run-assessment[data-result="under"]{color:#b4f0d8;background:#173f38}
+.run-assessment[data-result="over"]{color:#ffc9ab;background:#492f2c}
+.run-open{display:inline-block;color:#a1ecdf;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.organized.presentation .run-library{display:none}
+#resultsPage:not(.has-loaded-run)>:is(.run-summary,#resultViewerSlot,#runDashboard,#s25Results,#sensorDrawer,#resultTechnical,#legacyPlots),
+#resultsPage:not(.has-loaded-run):not(.working-on-run)>#simulationDesk{display:none}

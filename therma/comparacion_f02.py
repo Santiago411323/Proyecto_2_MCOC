@@ -129,7 +129,7 @@ def op_config(cat,plan,source_id,shape=None,days=None,dt=None):
 class Evidence:
     def __init__(self,local_output=None):
         self.cohorts={};self.runs={};self.local_output=Path(local_output or ROOT/'resultados/servidor_therma')
-        self.exploration();self.defense();self.improvements();self.closure();self.ice_plan();self.local()
+        self.exploration();self.defense();self.improvements();self.closure();self.ice_plan();self.common_mesh();self.local()
         self._summarize()
 
     def cohort(self,key,title,cat=None,**extra):
@@ -294,6 +294,29 @@ class Evidence:
                         relative_energy_residual=r['energy_residual_relative']))
                 c['plans'][plan['id']]['parameters']['mesh_comparison']=comparison
 
+    def common_mesh(self):
+        from .lotes import canonical
+        cat=read(ROOT/'docs/cierre_f02/evidencia/catalogo_congelado.json')
+        if not cat:return
+        plans={p['id']:p for p in cat['plans']}
+        cases=[(pid, f'docs/malla_comun/corridas/{pid}', 'malla_comun')
+               for pid in ('continua','propuesto','rapido','lento')]
+        cases.extend((pid, f'docs/hielo_f02/convergencia/T{temp}', 'hielo_f02')
+                     for pid,temp in (('t8_eps100_base1',8),('t12_eps100_base1.0',12)))
+        for pid,prefix,cache in cases:
+            for scenario in cat['scenarios']:
+                source=scenario['source_id']
+                raw=read(ROOT/f'{prefix}_96x96x54_dt1200_{source}.json')
+                if not raw or raw.get('status')!='COMPLETED' or raw.get('shape')!=[96,96,54]:continue
+                config=op_config(cat,plans[pid],source,[96,96,54],42,1200)
+                if not config or raw.get('configuration_hash')!=hashlib.sha256(canonical(config)).hexdigest():continue
+                engine=raw.get('engine_fingerprint')
+                cohort=self.cohort('malla-comun-'+digest(engine)[:12],'Comparación F02 · malla común 96 × 96 × 54 · 42 días',
+                                   cat,days=42,engine=engine)
+                folder=ROOT/'resultados'/cache/'cache'/raw['cache_key']
+                row=dict(raw,source_id=source,scenario_id=scenario['id'],climate_id=scenario['climate_id'],weight=scenario['weight'])
+                self.add(cohort,plans[pid],row,config,folder)
+
     def local(self):
         # Corridas propias se conservan como casos individuales sin inventar D ni pesos.
         known={r.get('simulation_id') for r in self.runs.values()}
@@ -325,9 +348,14 @@ class Evidence:
 
     def public(self):
         clean=lambda r:{k:v for k,v in r.items() if not k.startswith('_')}
+        def public_run(run):
+            folder=run.get('_folder')
+            can_open=bool(run.get('simulation_id') and folder
+                          and all((folder/name).is_file() for name in ('metadata.json','fields.bin')))
+            return dict(clean(run), can_open=can_open)
         cohorts=[]
         for c in self.cohorts.values():
-            plans=[dict({k:v for k,v in p.items() if not k.startswith('_')},runs=[clean(self.runs[k]) for k in p['runs']]) for p in c['plans'].values()]
+            plans=[dict({k:v for k,v in p.items() if not k.startswith('_')},runs=[public_run(self.runs[k]) for k in p['runs']]) for p in c['plans'].values()]
             cohorts.append(dict({k:v for k,v in c.items() if not k.startswith('_')},plans=plans,pending_configurations=self.pending(c['id'])))
         counts=dict(cohorts=len(cohorts),plan_groups=sum(len(c['plans']) for c in self.cohorts.values()),scenario_rows=len(self.runs),unique_identified_executions=len({r['simulation_id'] for r in self.runs.values() if r.get('simulation_id')}),rows_without_execution_id=sum(not r.get('simulation_id') for r in self.runs.values()))
         return dict(version='1.0',counts=counts,cohorts=cohorts,warning='S25 ESTIMADO / NO VALIDADO. Probabilidades condicionadas a catálogos provisionales; no certifican riesgo de obra.')
@@ -440,6 +468,7 @@ def signature(local_output):
     files=list((ROOT/'docs/exploracion/evidencia').glob('*.csv'))+list((ROOT/'docs/exploracion/evidencia').glob('*catalogo*.json'))+list((ROOT/'docs/defensa/evidencia').glob('tabla_corridas.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.csv'))+list((ROOT/'docs/mejoras_f02').glob('*.json'))+list((ROOT/'docs/defensa/evidencia').glob('catalogo*.json'))+list(Path(local_output).glob('*/metadata.json'))
     files+=list((ROOT/'resultados/cierre_f02').glob('*.json'))
     files+=list((ROOT/'docs/hielo_f02').glob('*.json'))
+    files+=list((ROOT/'docs/malla_comun/corridas').glob('*_96x96x54_dt1200_*.json'))+list((ROOT/'docs/hielo_f02/convergencia').glob('*_96x96x54_dt1200_*.json'))
     files+=list((ROOT/'docs/cierre_f02/evidencia').glob('*.json'))+list((ROOT/'docs/cierre_f02/evidencia').glob('*.csv'))
     return tuple((str(f),f.stat().st_mtime_ns) for f in files)
 

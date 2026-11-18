@@ -25,12 +25,51 @@ def catalogo_simulaciones(folder):
             if not isinstance(m,dict):continue
             if m.get('status')!='COMPLETED' or m.get('simulation_id')!=ident or not (file.parent/'fields.bin').is_file():continue
             p=m['config'];g=m['geometry']
-            if p.get('cooling'):continue
             if not isinstance(p,dict) or not isinstance(g,dict):continue
+            if p.get('cooling'):continue
             from therma.fuentes_vigentes import comprobar_fuente
             comprobar_fuente((p.get('construction') or {}).get('curve') or {})
+            receipt_path=file.parent/'ensayo_pronostico.json'
+            receipt={}
+            if receipt_path.is_file():
+                try:
+                    candidate=json.loads(receipt_path.read_bytes())
+                    if isinstance(candidate,dict) and candidate.get('simulation_id')==ident:receipt=candidate
+                except (OSError,ValueError):
+                    pass
+            construction=p.get('construction') or {}
+            s25=m.get('s25_ifc') or {}
+            metrics=m.get('metrics') or {}
+            weather=p.get('weather') or {}
+            starts={v['start_h'] for v in construction.get('pours',[])}
+            placement=sorted({v['placement_C'] for v in construction.get('pours',[])})
+            insulation=max((b.get('R',0) for i,b in enumerate(p.get('faces',[])) if i!=4),default=0)
+            soil=(p.get('environment') or {}).get('soil') or {}
+            contact=soil.get('contact_R_m2K_W')
+            snapshot=weather.get('provenance') or {}
+            snapshot=snapshot.get('snapshot') or snapshot
+            stages=receipt.get('plan_pours') or len(starts) or None
+            title=(f'{stages} vertida'+('s' if stages!=1 else '') if stages else 'Fundación IFC')
+            if placement:title+=' · '+('/'.join(f'{v:g}' for v in placement))+' °C'
+            if receipt:
+                title+=(' · con hielo' if (receipt.get('ice_balance') or {}).get('total_t',0)>0 else ' · sin hielo')
+                title+=' · clima actualizado'
+            elif insulation>0 and isinstance(contact,(float,int)) and contact>=1:
+                title+=' · aislación y protección basal'
+            elif insulation>0:
+                title+=' · aislación exterior'
+            if p['geometry']!='foundation':title=f"Ejercicio {p['dim']}D"
             items.append(dict(simulation_id=ident,created_utc=m.get('created_utc'),geometry=p['geometry'],
-                dim=p['dim'],lengths_m=g['lengths_m'],days=p.get('days'),custom_geometry=bool(p.get('foundation_parameters'))))
+                dim=p['dim'],lengths_m=g['lengths_m'],days=p.get('days'),custom_geometry=bool(p.get('foundation_parameters')),
+                title=title,source_id=(construction.get('curve') or {}).get('column'),shape=g.get('shape_xyz'),
+                Tmax_C=metrics.get('maxField'),Delta_estimate_C=(s25.get('peak_estimate') or {}).get('DeltaT_estimate_C'),
+                S25_validation=s25.get('validation'),s25_validated=s25.get('validation')=='VALIDATED',
+                DeltaTmax_validated_C=s25.get('DeltaTmax_C'),
+                complete_sampling=s25.get('complete_sampling'),placement_C=placement,pours=stages,
+                ice_t=(receipt.get('ice_balance') or {}).get('total_t') if receipt.get('ice_balance') else (0 if receipt else None),
+                weather_start=weather.get('start_utc'),weather_retrieved=snapshot.get('retrieved_at_utc'),
+                formwork=bool(p.get('formwork')),eps_mm=receipt.get('eps_mm'),exterior_R=insulation,
+                basal_contact_R=contact))
         except (OSError,ValueError,KeyError,TypeError):continue
     return sorted(items,key=lambda r:r.get('created_utc') or '',reverse=True)
 

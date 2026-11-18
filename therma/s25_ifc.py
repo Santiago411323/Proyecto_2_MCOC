@@ -40,9 +40,9 @@ def validar_s25(p):
 
 
 class ObservadorIFC:
-    def __init__(self,config,path):
+    def __init__(self,config,path,*,geometry=None):
         self.config=config;self.path=Path(path);self.stages={};self.rows=[];self.peak=None;self.peak_snapshot=None
-        self.geometry=cargar_superficies(str(self.path),self.path.stat().st_mtime_ns,config['s25']['surface_spacing_m'])
+        self.geometry=geometry if geometry is not None else cargar_superficies(str(self.path),self.path.stat().st_mtime_ns,config['s25']['surface_spacing_m'])
 
     def __call__(self,m,p,history):
         if not m.activo.any():return

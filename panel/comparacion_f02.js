@@ -3,7 +3,6 @@
 let data=null,cohort=null,plan=null,detail=null,ticket=0,loading=false,pendingIce=false;
 const fmt=(v,d=2)=>typeof v==='number'&&Number.isFinite(v)?v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d}):'NO EVALUADO',pct=v=>v===null||v===undefined?'INDETERMINADO':fmt(v*100),yes=v=>v===null||v===undefined?'INDETERMINADO':v?'1':'0',coord=v=>Array.isArray(v)?'('+v.map(x=>fmt(x,3)).join('; ')+') m':'no disponible';
 const legacy=document.querySelector('#comparePage .plan-table-panel');legacy.hidden=true;
-$('comparePage').insertBefore($('f02Comparison'),legacy);
 const decisionReport=$('decisionDefensa');
 if(decisionReport){
   for(const span of decisionReport.querySelectorAll('[data-decision-run]')){
@@ -90,5 +89,5 @@ $('f02ExportRuns').onclick=()=>cohort&&csv('therma-escenarios.csv',['Plan','Curv
 new ResizeObserver(()=>{if(!$('comparePage').hidden){drawRisk();drawEvidence();drawScenarioPeaks();}}).observe($('f02Comparison'));
 $('f02IcePlan').onclick=()=>{$('f02Cohort').value=data.cohorts.some(c=>c.id==='hielo-eps100-42_estudiada')?'hielo-eps100-42_estudiada':data.cohorts.some(c=>c.id==='hielo-eps100-42_250')?'hielo-eps100-42_250':'hielo-eps100-42';selectCohort();changeView('plans');};
 /*__F02_SUMMARY__*/
-window.ThermaF02={refresh,openIce:()=>{pendingIce=true;if(data&&!$('f02IcePlan').hidden){pendingIce=false;$('f02IcePlan').click();}}};refresh();
+window.ThermaF02={refresh,openIce:()=>{$('f02Analysis').open=true;pendingIce=true;if(data&&!$('f02IcePlan').hidden){pendingIce=false;$('f02IcePlan').click();}}};refresh();
 })();
