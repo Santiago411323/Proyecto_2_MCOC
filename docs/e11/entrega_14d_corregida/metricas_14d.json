@@ -1,0 +1,56 @@
+{
+  "tmax_C": 57.16267224442532,
+  "tmax_h": 134.6,
+  "tmax_xyz": [
+    11,
+    11,
+    4
+  ],
+  "tmax_xyz_m": [
+    -0.375,
+    -0.375,
+    2.475
+  ],
+  "deltaTmax_C": 15.268130268789875,
+  "deltaTmax_abs_C": 15.268130268789875,
+  "deltaTmax_h": 336.0,
+  "deltaTmax_core_C": 49.83771067084805,
+  "deltaTmax_exterior_C": 34.56958040205817,
+  "deltaTmax_core_xyz": [
+    -0.375,
+    -0.375,
+    1.375
+  ],
+  "deltaTmax_exterior_xyz": [
+    7.125,
+    -0.375,
+    1.375
+  ],
+  "first_over_20_h": null,
+  "last_over_20_h": null,
+  "final_core_C": 49.83771067084805,
+  "final_exterior_C": 34.56958040205817,
+  "final_deltaT_C": 15.268130268789875,
+  "max_center_C": 56.359188691731504,
+  "max_center_h": 154.6,
+  "active_cells": 1536,
+  "volume_m3": 475.20000000000005,
+  "runtime_s": 0.2508260419999715,
+  "steps": 706,
+  "dt_s": 2160.0,
+  "energy_residual_relative": 6.638836377324967e-16,
+  "formwork": {
+    "model": "fixed_resistance",
+    "thickness_m": 0.2,
+    "conductivity_W_mK": 0.15,
+    "faces": [
+      true,
+      true,
+      true,
+      true,
+      false,
+      true
+    ],
+    "parameter_source": "E11: protección térmica didáctica para ΔT≤20 °C; e=0.20 m, k=0.15 W/(m·K), caras x±, y± y z+; no es un moldaje real."
+  }
+}

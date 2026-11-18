@@ -1,0 +1,77 @@
+{
+  "snapshot": "/Users/ivan/Documents/GitHub/Proyecto_2_MCOC/data/weather/20261112T124325279292Z_a139765f",
+  "weather_sha256": "3a6a828efa343ee586a3a8e211475decb13678c6a8227d700316f2875d1c5dab",
+  "start_with_timezone": "2026-11-12T10:00:00-03:00",
+  "duration_h": 336.0,
+  "metrics": {
+    "maxCenter": 56.359188691731504,
+    "peakTime": 556560.0,
+    "maxField": 57.16267224442532,
+    "hottest_xyz": [
+      11,
+      11,
+      4
+    ],
+    "global_peak_time_s": 484560.0,
+    "global_peak_field_exported": true,
+    "residual": 3.4332275390625e-05,
+    "energy_residual_relative": 6.638836377324967e-16,
+    "exactError": null,
+    "qmax": 0.0,
+    "dt": 2160.0,
+    "dtMax": 78701.82012847967,
+    "alpha": 9.259259259259259e-07,
+    "steps": 706,
+    "N": 1536,
+    "gridN": 3456,
+    "volume": 475.20000000000005,
+    "geometric_volume_m3": 475.20000000000005,
+    "runtime_s": 0.2508260419999715,
+    "connectivity_rebuilds": 3,
+    "final_soil_into_concrete_J": -11777553412.301666,
+    "final_air_into_concrete_J": -9425592614.206425
+  },
+  "points": {
+    "nucleo": {
+      "index_xyz": [
+        11,
+        11,
+        2
+      ],
+      "xyz_m": [
+        -0.375,
+        -0.375,
+        1.375
+      ],
+      "celda_original": 1427,
+      "final_T_C": 49.83771067084805
+    },
+    "exterior": {
+      "index_xyz": [
+        21,
+        11,
+        2
+      ],
+      "xyz_m": [
+        7.125,
+        -0.375,
+        1.375
+      ],
+      "celda_original": 1437,
+      "final_T_C": 34.56958040205817
+    }
+  },
+  "frames": 70,
+  "peak_frame": 30,
+  "final_volume_m3": 475.20000000000005,
+  "provenance_commit": "b0e72c1d9adef5e14177d9cbe95bb5fec4449071",
+  "working_tree_dirty": true,
+  "limits": [
+    "Forecast: no observaciones medidas.",
+    "Geometría IFC provisional e hidratación no calibrada.",
+    "h constante: viento archivado, sin efecto físico; sin radiación solar/onda larga.",
+    "Suelo como reservorio fijo a 8 °C; no almacenamiento de suelo.",
+    "Puntos en centros de voxel: no temperatura exacta de superficie ni S25.",
+    "Corrección ΔT≤20: protección térmica didáctica e=0.20 m, k=0.15 W/(m·K), caras x±/y±/z+; no es un moldaje real. El ΔT sigue aumentando lentamente al final del horizonte de 14 días; no extrapolar sin volver a simular."
+  ]
+}

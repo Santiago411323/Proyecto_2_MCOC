@@ -1,0 +1,42 @@
+{
+  "tmax_C": 53.59155914727458,
+  "tmax_h": 107.0,
+  "tmax_xyz": [
+    11,
+    11,
+    2
+  ],
+  "tmax_xyz_m": [
+    -0.375,
+    -0.375,
+    1.375
+  ],
+  "deltaTmax_C": 30.384099874869896,
+  "deltaTmax_abs_C": 30.384099874869896,
+  "deltaTmax_h": 262.5,
+  "deltaTmax_core_C": 47.97593593244366,
+  "deltaTmax_exterior_C": 17.591836057573765,
+  "deltaTmax_core_xyz": [
+    -0.375,
+    -0.375,
+    1.375
+  ],
+  "deltaTmax_exterior_xyz": [
+    7.125,
+    -0.375,
+    1.375
+  ],
+  "first_over_20_h": 99.75,
+  "last_over_20_h": 336.0,
+  "final_core_C": 43.9815644967847,
+  "final_exterior_C": 15.502418433804323,
+  "final_deltaT_C": 28.479146062980377,
+  "max_center_C": 52.96526737855517,
+  "max_center_h": 133.6,
+  "active_cells": 1536,
+  "volume_m3": 475.20000000000005,
+  "runtime_s": 0.25432037499922444,
+  "steps": 706,
+  "dt_s": 2160.0,
+  "energy_residual_relative": 1.0236926433115115e-15
+}

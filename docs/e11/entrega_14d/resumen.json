@@ -1,0 +1,76 @@
+{
+  "snapshot": "/Users/ivan/Documents/GitHub/Proyecto_2_MCOC/data/weather/20261112T124325279292Z_a139765f",
+  "weather_sha256": "3a6a828efa343ee586a3a8e211475decb13678c6a8227d700316f2875d1c5dab",
+  "start_with_timezone": "2026-11-12T10:00:00-03:00",
+  "duration_h": 336.0,
+  "metrics": {
+    "maxCenter": 52.96526737855517,
+    "peakTime": 480960.0,
+    "maxField": 53.59155914727458,
+    "hottest_xyz": [
+      11,
+      11,
+      2
+    ],
+    "global_peak_time_s": 385200.0,
+    "global_peak_field_exported": true,
+    "residual": 4.57763671875e-05,
+    "energy_residual_relative": 1.0236926433115115e-15,
+    "exactError": null,
+    "qmax": 0.0,
+    "dt": 2160.0,
+    "dtMax": 75817.95233700667,
+    "alpha": 9.259259259259259e-07,
+    "steps": 706,
+    "N": 1536,
+    "gridN": 3456,
+    "volume": 475.20000000000005,
+    "geometric_volume_m3": 475.20000000000005,
+    "runtime_s": 0.25432037499922444,
+    "connectivity_rebuilds": 3,
+    "final_soil_into_concrete_J": -9613922664.743483,
+    "final_air_into_concrete_J": -25334310589.14461
+  },
+  "points": {
+    "nucleo": {
+      "index_xyz": [
+        11,
+        11,
+        2
+      ],
+      "xyz_m": [
+        -0.375,
+        -0.375,
+        1.375
+      ],
+      "celda_original": 1427,
+      "final_T_C": 43.9815644967847
+    },
+    "exterior": {
+      "index_xyz": [
+        21,
+        11,
+        2
+      ],
+      "xyz_m": [
+        7.125,
+        -0.375,
+        1.375
+      ],
+      "celda_original": 1437,
+      "final_T_C": 15.502418433804323
+    }
+  },
+  "frames": 70,
+  "peak_frame": 25,
+  "final_volume_m3": 475.20000000000005,
+  "provenance_commit": "b0e72c1d9adef5e14177d9cbe95bb5fec4449071",
+  "working_tree_dirty": true,
+  "limits": [
+    "Forecast: no observaciones medidas.",
+    "Geometría IFC provisional e hidratación no calibrada.",
+    "h constante: viento archivado, sin efecto físico; sin radiación solar/onda larga.",
+    "Suelo como reservorio fijo a 8 °C; no almacenamiento de suelo.",
+    "Puntos en centros de voxel: no temperatura exacta de superficie ni S25."
+  ]
+}
