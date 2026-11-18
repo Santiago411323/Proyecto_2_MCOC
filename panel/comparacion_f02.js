@@ -4,6 +4,35 @@ let data=null,cohort=null,plan=null,detail=null,ticket=0,loading=false,pendingIc
 const fmt=(v,d=2)=>typeof v==='number'&&Number.isFinite(v)?v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d}):'NO EVALUADO',pct=v=>v===null||v===undefined?'INDETERMINADO':fmt(v*100),yes=v=>v===null||v===undefined?'INDETERMINADO':v?'1':'0',coord=v=>Array.isArray(v)?'('+v.map(x=>fmt(x,3)).join('; ')+') m':'no disponible';
 const legacy=document.querySelector('#comparePage .plan-table-panel');legacy.hidden=true;
 $('comparePage').insertBefore($('f02Comparison'),legacy);
+const decisionReport=$('decisionDefensa');
+if(decisionReport){
+  for(const span of decisionReport.querySelectorAll('[data-decision-run]')){
+    const open=E('button','Ver campo 3D','quiet');
+    open.type='button';
+    open.title=span.dataset.decisionRun;
+    open.onclick=async()=>{
+      open.disabled=true;
+      try{
+        await window.therma.openArchived(span.dataset.decisionRun);
+        window.ThermaNavigation.go('results');
+      }catch(error){open.textContent='Campo local no disponible';open.title=error.message;}
+      finally{open.disabled=false;}
+    };
+    span.replaceChildren(open);
+  }
+  const download=E('button','Guardar resumen para la defensa','secondary');
+  download.type='button';
+  download.onclick=()=>{
+    const copy=decisionReport.cloneNode(true);
+    for(const span of copy.querySelectorAll('[data-decision-run]'))span.textContent=span.dataset.decisionRun;
+    copy.querySelector('button').remove();
+    const html='<!doctype html><html lang="es"><meta charset="utf-8"><title>THERMA · Decisión F02</title><style>body{font:16px system-ui;margin:3vw}td,th,summary{padding:8px}.table-scroll{overflow:auto}</style>'+copy.outerHTML+'</html>';
+    const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+    const link=E('a');link.href=url;link.download='THERMA-decision-F02.html';link.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
+  decisionReport.append(download);
+}
 async function api(url){const r=await fetch(url,{cache:'no-store'}),v=await r.json();if(!r.ok)throw Error(v.message||'No se pudo leer la evidencia Python.');return v;}
 function table(headers,rows){const t=E('table',undefined,'plan-table'),head=E('tr');headers.forEach(h=>head.append(E('th',h)));const thead=E('thead');thead.append(head);t.append(thead);const body=E('tbody');for(const row of rows){const tr=E('tr');row.forEach(v=>{const td=E('td');typeof v==='object'&&v instanceof Node?td.append(v):td.textContent=v;tr.append(td);});body.append(tr);}t.append(body);return t;}
 function box(canvas,height=260){const w=Math.max(280,Math.round(canvas.clientWidth||600)),dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=height*dpr;canvas.style.height=height+'px';const g=canvas.getContext('2d');g.scale(dpr,dpr);g.font='11px Segoe UI';return {g,w,h:height};}

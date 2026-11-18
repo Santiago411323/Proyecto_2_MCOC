@@ -18,6 +18,27 @@ const layout=configure.querySelector('.config-layout');complete.insertBefore(lay
 for(const [key,label] of [['complete','Plan completo · hielo y aislación'],['ice','Ensayo rápido · dosis de hielo']]){const b=document.createElement('button');b.type='button';b.dataset.configMode=key;b.textContent=label;b.onclick=()=>selectMode(key);modes.append(b);}
 function selectMode(key){ice.hidden=key!=='ice';complete.hidden=key==='ice';for(const b of modes.children)b.setAttribute('aria-pressed',String(b.dataset.configMode===key));if(key==='ice')ice.open=true;window.dispatchEvent(new Event('resize'));}
 selectMode('complete');
+const meshCard=document.createElement('section');
+meshCard.className='panel';
+meshCard.innerHTML='<h3>Malla estudiada para los planes con hielo</h3><p><strong>96 × 96 × 54</strong> · 225.936 voxeles de hormigón en el IFC de referencia.</p><p>Con M4_SS, al refinar a 100 × 100 × 60, el ΔT S25 estimado cambió 0,032 °C para colocación a 8 °C y 0,049 °C a 12 °C. Ambos cambios quedaron bajo la tolerancia del estudio de 0,10 °C.</p><button class="secondary" type="button">Aplicar esta malla al plan actual</button><p class="hint" role="status"></p>';
+complete.prepend(meshCard);
+const meshButton=meshCard.querySelector('button');
+const meshStatus=meshCard.querySelector('[role=status]');
+function showPlanMesh(){
+  meshCard.hidden=$('geometry').value!=='foundation';
+  const shape=['nx','ny','nz'].map(id=>Number($(id).value));
+  const selected=shape.join(',')==='96,96,54';
+  meshButton.disabled=selected;
+  meshStatus.textContent='Malla configurada: '+shape.join(' × ')+(selected?' · Ejecuta Python para calcular el plan con esta malla.':'');
+}
+meshButton.onclick=()=>{
+  const preset=$('resolutionPreset');
+  preset.value='study96';
+  preset.dispatchEvent(new Event('change',{bubbles:true}));
+  showPlanMesh();
+};
+window.addEventListener('therma:inputs',showPlanMesh);
+showPlanMesh();
 const boundaries=$('globalR').closest('details');boundaries.querySelector('summary').textContent='3. Aislación exterior y condiciones de borde';$('formworkOptions').after(boundaries);
 const insulation=document.createElement('div');insulation.className='insulation-helper';insulation.innerHTML='<div class="eyebrow">AISLACIÓN EN LAS CARAS AL AIRE</div><h3>Del espesor a la protección térmica.</h3><p class="hint">Calcula R = espesor / conductividad y aplícala a los laterales y la parte superior. El moldaje se suma por separado; la base mantiene su contacto con el suelo.</p><div class="field-grid"><label>Espesor de aislación [mm]<input type="number" id="studioInsMm" value="100" min="0" step="1"></label><label>Conductividad [W/(m·K)]<input type="number" id="studioInsK" value="0.038" min="0.001" step="0.001"></label></div><button type="button" class="secondary" id="studioApplyIns">Aplicar aislación a las caras al aire</button><p class="hint" id="studioInsStatus" role="status">Reemplaza la R adicional de x±, y± y z+. Mantiene los otros parámetros de borde.</p>';
 boundaries.querySelector('.detail-body').prepend(insulation);

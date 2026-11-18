@@ -12,3 +12,14 @@
 #f02Comparison summary{font-size:14px}
 .f02-source-plots figure{margin:0;background:#0b1727;padding:12px;border-radius:8px}
 .f02-source-plots svg{width:100%;display:block}.f02-source-plots text{fill:#bed0dc;font:11px sans-serif}
+
+#decisionDefensa { margin-bottom: 1.2rem; padding: clamp(1rem,2vw,1.6rem); }
+#decisionDefensa h2 { margin-top: 0; }
+#decisionDefensa > p { max-width: 92ch; }
+#decisionDefensa > .table-scroll { margin: 1rem 0; }
+#decisionDefensa td, #decisionDefensa th { font-variant-numeric: tabular-nums; }
+#decisionDefensa > .table-scroll tr:nth-child(-n+2) td:first-child { font-weight: 700; }
+#decisionDefensa details { padding: .55rem 0; border-top: 1px solid #62768155; }
+#decisionDefensa summary { cursor: pointer; padding: .35rem 0; }
+#decisionDefensa details img { max-width: 1050px; border-radius: .4rem; }
+#decisionDefensa > button { margin-top: .85rem; }

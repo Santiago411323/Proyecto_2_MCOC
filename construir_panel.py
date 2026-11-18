@@ -80,6 +80,8 @@ def main():
     html = html.replace('/*__NAVSCRIPT__*/', (origen/'navegacion.js').read_text(encoding='utf-8'))
     for marker,file in [('F02UI','comparacion_f02.html'),('F02STYLE','comparacion_f02.css'),('F02SCRIPT','comparacion_f02.js')]:
         html=html.replace('/*__'+marker+'__*/',(origen/file).read_text(encoding='utf-8'))
+    decision = BASE/'docs/decision_f02/fragmento.html'
+    html = html.replace('/*__DECISION_F02__*/', decision.read_text(encoding='utf-8') if decision.exists() else '<p>La comparación final de 96 × 96 × 54 está pendiente de publicación.</p>')
     html=html.replace('/*__F02_SUMMARY__*/',(origen/'resumen_planes.js').read_text(encoding='utf-8'))
     html=html.replace('/*__F02_SOURCES__*/',graficos_fuentes(BASE/'data/hydration/source_terms.txt'))
     html = html.replace('/*__IFC_DATA__*/', json.dumps(datos_ifc(BASE/'modelo_e02.ifc'), ensure_ascii=False).replace('</', '<\\/'))

@@ -34,7 +34,7 @@ function setConfig(p){
  window.ThermaFoundationEditor?.set(p);
  if(!p||![1,2,3].includes(p.dim)||!Array.isArray(p.L)||p.L.length!==3||!Array.isArray(p.n)||p.n.length!==3||!Array.isArray(p.faces)||p.faces.length!==6)throw Error('El archivo no contiene ajustes válidos de THERMA.');
  S.frames=Number.isInteger(p.frames)&&p.frames>=20&&p.frames<=100?p.frames:65;S.dim=p.dim;['lx','ly','lz'].forEach((id,i)=>$(id).value=p.L[i]);['nx','ny','nz'].forEach((id,i)=>$(id).value=p.n[i]);
- $('geometry').value=p.geometry==='foundation'?'foundation':'block';$('foundationMesh').value=String([0,1,2].includes(p.meshIndex)?p.meshIndex:0);if(p.meshIndex===2)['voxelDx','voxelDy','voxelDz'].forEach((id,a)=>$(id).value=Number((p.L[a]/p.n[a]).toPrecision(12)));if(p.geometry==='foundation')foundationSettings();
+ $('geometry').value=p.geometry==='foundation'?'foundation':'block';$('foundationMesh').value=String([0,1,2].includes(p.meshIndex)?p.meshIndex:0);if(p.meshIndex===2)['voxelDx','voxelDy','voxelDz'].forEach((id,a)=>$(id).value=p.L[a]/p.n[a]);if(p.geometry==='foundation')foundationSettings();
  ['k','rho','cp','initial','initialType','amplitude','source','qmax','target','days','dtMode','dt','factor'].forEach(id=>{if(p[id]!==undefined)$(id).value=p[id];});$('period').value=p.period/DAY;$('calibrate').checked=!!p.calibrate;
  p.faces.forEach((b,i)=>{if(!['D','N','R'].includes(b.type))throw Error('Tipo de borde desconocido.');$('ft'+i).value=b.type;[['fb','temp'],['fq','flux'],['fh','h'],['fr','R']].forEach(([prefix,key])=>$(prefix+i).value=b[key]);});
  window.ThermaConstructionUI.set(p);window.ThermaWeatherUI.set(p);window.ThermaEnvironmentUI.set(p);window.ThermaFormworkUI.set(p);window.ThermaResolutionUI?.set(p);visibility();dirty();
@@ -43,7 +43,7 @@ function applyFaces(){for(let i=0;i<2*S.dim;i++){if($('ft'+i).disabled)continue;
 function dirty(){S.revision++;if(S.result){$('stale').hidden=false;execution('STALE','Los resultados pertenecen a la configuración de la ejecución anterior.');}visibility();window.dispatchEvent(new Event('therma:inputs'));}
 function preset(name){
  const p={dim:3,L:[3,3,.6],n:[30,30,6],k:2,rho:2400,cp:900,initial:20,initialType:'uniform',amplitude:30,source:'pulse',period:2*DAY,qmax:1905.58,calibrate:true,target:70,days:14,dtMode:'auto',dt:300,factor:.7,faces:Array.from({length:6},()=>({type:'R',temp:20,flux:0,h:10,R:0}))};
- if(name==='foundation'||name==='construction'){p.geometry='foundation';p.meshIndex=1;if(name==='construction'){p.source='none';p.calibrate=false;p.construction=window.ThermaConstructionUI.defaults();}}
+ if(name==='foundation'||name==='construction'){p.geometry='foundation';p.meshIndex=1;if(name==='construction'){p.meshIndex=2;p.L=IFC.max.map((v,a)=>v-IFC.min[a]);p.n=[96,96,54];p.frames=40;p.source='none';p.calibrate=false;p.construction=window.ThermaConstructionUI.defaults();}}
  if(name==='d20'||name==='d30')p.faces.forEach(b=>{b.type='D';b.temp=name==='d30'?30:20;});
  if(name==='adiabatic')p.faces.forEach(b=>b.type='N');
  if(name==='bar3'){p.L=[4,2,1];p.n=[32,16,8];p.faces.forEach(b=>b.type='D');}
