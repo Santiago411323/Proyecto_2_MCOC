@@ -1,6 +1,6 @@
 <section id="f02Comparison">
- /*__DECISION_F02__*/
  <div class="f02-toolbar"><label>Conjunto de resultados<select id="f02Cohort"></select></label><label>Evaluación<select id="f02RiskMode"><option value="estimated">Aproximada · S25 estimado</option><option value="formal">Formal · S25 validado requerido</option></select></label><button type="button" id="f02IcePlan" class="secondary" hidden>Planes con hielo · 8 y 12 °C</button></div>
+ <p id="f02Population" class="hint" role="status"></p>
  <nav class="f02-nav" aria-label="Vistas del conjunto"><button type="button" data-f02="plans" aria-pressed="true">Planes y cumplimiento</button><button type="button" data-f02="runs" aria-pressed="false">Corridas individuales</button><button type="button" data-f02="sources" aria-pressed="false">Fuentes de calor</button></nav>
  <section id="f02PlansView">
  <h2 id="f02DecisionTitle">Planes dentro del criterio</h2><p id="f02Conclusion" class="revision-note"></p>
@@ -29,4 +29,5 @@
  </details></section>
  <section id="f02SourcesView" hidden><h2>Las ocho curvas de hidratación</h2><p>El cálculo de riesgo del cierre F02 usa las cuatro fuentes SS. Las cuatro curvas 22A permiten estudiar la sensibilidad a otra campaña, con mayor incertidumbre en la temperatura ambiente registrada.</p><div class="f02-chart-grid f02-source-plots">/*__F02_SOURCES__*/</div><p class="hint">Fuente: data/hydration/source_terms.txt · inversión FV/Tikhonov. Cada gráfico conserva la misma escala. La hora cero corresponde al comienzo de la ventana retenida, dos horas después del inicio del registro.</p></section>
  <details class="f02-method"><summary>Procedencia y método de evaluación</summary><p id="f02Scope"></p><p id="f02RiskModeNote"></p><p id="f02Counts" role="status"></p><button id="f02Refresh" type="button" class="quiet">Actualizar catálogo</button></details>
+ <details class="f02-method"><summary>Anexo de defensa · tablas y cortes en la malla común</summary>/*__DECISION_F02__*/</details>
 </section>

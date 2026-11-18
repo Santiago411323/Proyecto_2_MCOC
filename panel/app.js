@@ -217,7 +217,7 @@ async function loadArchived(ident){
  const check=async(data,expected)=>{const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data))).map(v=>v.toString(16).padStart(2,'0')).join('');if(hash!==expected)throw Error('Campo guardado con SHA-256 incorrecto.');};
  await check(buffer,meta.fields.sha256);if(active)await check(active,meta.activation.sha256);
  const r=window.ThermaContract.adaptar(meta,buffer,active);window.therma.loadResult(r);
- execution('COMPLETED',`Plan guardado · ${ident} · ${meta.created_utc} · no recalculado.`);$('status').textContent=isExternalSchedule(r)?'Corrida de seis etapas cargada. Para modificar su cronograma, usa el ejecutor Python que generó esta corrida.':'Resultado de lote cargado. Puedes consultar cortes, sensores y S25 del mismo instante.';
+ execution('COMPLETED',`Plan guardado · ${ident} · ${meta.created_utc} · no recalculado.`);$('status').textContent=isExternalSchedule(r)?`Corrida de ${layerCount(r)} etapas cargada. Para modificar su cronograma, usa el ejecutor Python que generó esta corrida.`:'Resultado de lote cargado. Puedes consultar cortes, sensores y S25 del mismo instante.';
 }
 const archivedId=new URLSearchParams(location.search).get('result');
 if(archivedId)loadArchived(archivedId).catch(e=>error(e.message));else{execution('READY','Configura un plan y pulsa Ejecutar simulación.');$('status').textContent='Listo para calcular. No se ejecuta Python hasta que lo solicites.';}

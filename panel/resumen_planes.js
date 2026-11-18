@@ -37,19 +37,30 @@ function decision(plans) {
   if(meshRows.length)$('f02MeshTable').append(table(['Plan','Fuente','Celdas totales','Celdas activas finales','Voxel [mm]','Error de volumen IFC','Cambio Tmax [°C]','Cambio ΔT est. [°C]','S25 sin cobertura','Área aire reconstruida'],meshRows));
   const pass=plans.filter(p=>riskOf(p).compliance==='CUMPLE').sort((a,b)=>(a.D_h??Infinity)-(b.D_h??Infinity));
   const unknown=plans.filter(p=>riskOf(p).compliance==='INDETERMINADO').length;
+  const completed=plans.reduce((count,p)=>count+p.runs.filter(r=>r.status==='COMPLETED').length,0);
+  const expected=cohort.expected||[];
+  const sources=new Set(expected.map(s=>s.source_id).filter(Boolean)).size;
+  const climates=new Set(expected.map(s=>s.climate_id).filter(Boolean)).size;
+  const population=[plans.length+(plans.length===1?' plan':' planes'),
+    completed+(completed===1?' corrida disponible':' corridas disponibles'),
+    expected.length?expected.length+(expected.length===1?' escenario por plan':' escenarios por plan'):'Sin catálogo probabilístico',
+    sources? sources+(sources===1?' fuente de calor':' fuentes de calor'):'',
+    climates? climates+(climates===1?' clima':' climas'):''];
+  $('f02Population').textContent=population.filter(Boolean).join(' · ')+
+    (expected.length===1?'. Conjunto exploratorio de un solo escenario.':'.');
   const durations=pass.map(p=>p.D_h).filter(Number.isFinite);
   const fastest=Math.min(...durations);
   const ties=pass.filter(p=>p.D_h===fastest);
-  $('f02DecisionTitle').textContent=estimated()?'Planes que cumplen en la evaluación aproximada':'Planes con cumplimiento formal';
+  $('f02DecisionTitle').textContent=estimated()?'Planes dentro del criterio estimado':'Planes con cumplimiento formal';
   $('f02Conclusion').textContent=pass.length
-    ? pass.length+' de '+plans.length+' planes cumplen el criterio de riesgo conjunto del 5 % en este conjunto. '+
+    ? pass.length+' de '+plans.length+' planes quedan en o bajo el 5 % de riesgo conjunto en el conjunto seleccionado. '+
       (ties.length?(ties.length===1?'Menor duración entre ellos: ':ties.length+' planes comparten la menor duración: ')+fmt(fastest)+' h. ':'')+
       (estimated()?'S25 estimado a 25 mm del IFC.':'')
     : unknown?'Cumplimiento indeterminado. Hay '+unknown+' planes sin evidencia suficiente para decidir.':
       'Ningún plan evaluado en este conjunto cumple el criterio del 5 %.';
   const list=$('f02Shortlist');list.replaceChildren();
   if(pass.length)list.append(table(['Plan','Duración [h]','Tmax [°C]','ΔT S25 est. [°C]','Margen a 20 °C','Riesgo conjunto [%]','Corridas'],pass.map(p=>{
-    const b=E('button','Ver '+p.evaluated,'secondary');b.onclick=()=>inspectPlan(p);
+    const b=E('button','Ver '+p.evaluated+(p.evaluated===1?' corrida':' corridas'),'secondary');b.onclick=()=>inspectPlan(p);
     return [p.name,fmt(p.D_h),fmt(p.Tmax_C),fmt(p.Delta_estimate_C),Number.isFinite(p.Delta_estimate_C)?fmt(20-p.Delta_estimate_C)+' °C':'—',pct(riskOf(p).P_f),b];
   })));
   $('f02FullPlans').open=!pass.length;

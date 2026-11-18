@@ -1,0 +1,13 @@
+{
+  "provider": "Meteored",
+  "product": "forecast",
+  "locality": "Punta Arenas",
+  "site_relation": "Localidad de referencia para Faro del Sur; pronóstico de Punta Arenas.",
+  "request_url": "https://www.tiempo.com/chile/punta-arenas/por-horas",
+  "retrieved_at_utc": "2026-11-18T16:04:17.081964+00:00",
+  "hours": 72,
+  "first_valid_utc": "2026-11-18T04:00:00+00:00",
+  "last_valid_utc": "2026-11-21T03:00:00+00:00",
+  "raw_sha256": "2679060705aebf691fdd39daa133bc70362876205ed4521b1db6842d1525cafd",
+  "source_html_sha256": "dd2fa06c7354c061c4182653f19ff3c8ff82934c0d0851eadb9cbf8d917b43e2"
+}

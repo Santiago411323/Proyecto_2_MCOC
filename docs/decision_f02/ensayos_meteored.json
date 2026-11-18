@@ -1,0 +1,447 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "DeltaT_S25_estimate_C": 40.408539246006775,
+      "S25_validation": "NOT VALIDATED",
+      "Tmax_C": 51.82407757656795,
+      "additional_basal_R_m2K_W": 0,
+      "additional_wait_h": 0,
+      "control_reference": "5950c8275e6d4991826e5dda60412284",
+      "eps_mm": 0,
+      "forecast_snapshot": "data\\weather\\meteored_20261118_punta_arenas",
+      "ice_balance": null,
+      "placement_rate_m3_h": 20,
+      "placement_schedule": [
+        {
+          "end_h": 3.2805905953129217,
+          "id": 1,
+          "start_h": 0.0,
+          "volume_m3": 65.61181190625844
+        },
+        {
+          "end_h": 7.381328840796084,
+          "id": 2,
+          "start_h": 3.2805905953129217,
+          "volume_m3": 82.01476490966324
+        },
+        {
+          "end_h": 11.482067086279535,
+          "id": 3,
+          "start_h": 7.381328840796084,
+          "volume_m3": 82.01476490966901
+        },
+        {
+          "end_h": 14.762657681592774,
+          "id": 4,
+          "start_h": 11.482067086279535,
+          "volume_m3": 65.61181190626478
+        },
+        {
+          "end_h": 18.731180768685654,
+          "id": 5,
+          "start_h": 14.762657681592774,
+          "volume_m3": 79.37046174185761
+        },
+        {
+          "end_h": 21.0803757039707,
+          "id": 6,
+          "start_h": 18.731180768685654,
+          "volume_m3": 46.9838987057009
+        },
+        {
+          "end_h": 22.23833868363241,
+          "id": 7,
+          "start_h": 21.0803757039707,
+          "volume_m3": 23.159259593234196
+        },
+        {
+          "end_h": 22.943384416797507,
+          "id": 8,
+          "start_h": 22.23833868363241,
+          "volume_m3": 14.100914663301957
+        },
+        {
+          "end_h": 23.648430149770252,
+          "id": 9,
+          "start_h": 22.943384416797507,
+          "volume_m3": 14.100914659454906
+        },
+        {
+          "end_h": 24.353475882935008,
+          "id": 10,
+          "start_h": 23.648430149770252,
+          "volume_m3": 14.100914663295129
+        }
+      ],
+      "plan_pours": 10,
+      "pre_cooling": {
+        "method": "none",
+        "net_heat_removed_MJ": 0.0
+      },
+      "protection_control": "sin_protecciones",
+      "simulation_id": "638b36bbddc54341b10f3dd6de7b392b",
+      "uncooled_mix_C": 14,
+      "shape": [
+        96,
+        96,
+        54
+      ],
+      "status": "COMPLETED",
+      "complete_sampling": true,
+      "config_sha256": "7c41c52f36df78dfe09441f39dbd7ae764744e218c5b793beae68aa30550a4e0",
+      "delta_time_h": 159.0
+    },
+    {
+      "DeltaT_S25_estimate_C": 38.42664298072947,
+      "S25_validation": "NOT VALIDATED",
+      "Tmax_C": 51.82427225905218,
+      "additional_basal_R_m2K_W": 0,
+      "additional_wait_h": 0,
+      "control_reference": "5950c8275e6d4991826e5dda60412284",
+      "eps_mm": 0,
+      "forecast_snapshot": "data\\weather\\meteored_20261118_punta_arenas",
+      "ice_balance": null,
+      "placement_rate_m3_h": 20,
+      "placement_schedule": [
+        {
+          "end_h": 3.2805905953129217,
+          "id": 1,
+          "start_h": 0.0,
+          "volume_m3": 65.61181190625844
+        },
+        {
+          "end_h": 7.381328840796084,
+          "id": 2,
+          "start_h": 3.2805905953129217,
+          "volume_m3": 82.01476490966324
+        },
+        {
+          "end_h": 11.482067086279535,
+          "id": 3,
+          "start_h": 7.381328840796084,
+          "volume_m3": 82.01476490966901
+        },
+        {
+          "end_h": 14.762657681592774,
+          "id": 4,
+          "start_h": 11.482067086279535,
+          "volume_m3": 65.61181190626478
+        },
+        {
+          "end_h": 18.731180768685654,
+          "id": 5,
+          "start_h": 14.762657681592774,
+          "volume_m3": 79.37046174185761
+        },
+        {
+          "end_h": 21.0803757039707,
+          "id": 6,
+          "start_h": 18.731180768685654,
+          "volume_m3": 46.9838987057009
+        },
+        {
+          "end_h": 22.23833868363241,
+          "id": 7,
+          "start_h": 21.0803757039707,
+          "volume_m3": 23.159259593234196
+        },
+        {
+          "end_h": 22.943384416797507,
+          "id": 8,
+          "start_h": 22.23833868363241,
+          "volume_m3": 14.100914663301957
+        },
+        {
+          "end_h": 23.648430149770252,
+          "id": 9,
+          "start_h": 22.943384416797507,
+          "volume_m3": 14.100914659454906
+        },
+        {
+          "end_h": 24.353475882935008,
+          "id": 10,
+          "start_h": 23.648430149770252,
+          "volume_m3": 14.100914663295129
+        }
+      ],
+      "plan_pours": 10,
+      "pre_cooling": {
+        "method": "none",
+        "net_heat_removed_MJ": 0.0
+      },
+      "protection_control": "moldaje",
+      "simulation_id": "1dad34690457458c8024ca5f0e273618",
+      "uncooled_mix_C": 14,
+      "shape": [
+        96,
+        96,
+        54
+      ],
+      "status": "COMPLETED",
+      "complete_sampling": true,
+      "config_sha256": "ec39a8988f2d1cba1bcb7645a773628ff62629906fe4c773cc3d52abeec5b9a2",
+      "delta_time_h": 189.0
+    },
+    {
+      "DeltaT_S25_estimate_C": 26.18596952920017,
+      "S25_validation": "NOT VALIDATED",
+      "Tmax_C": 52.90115447160353,
+      "additional_basal_R_m2K_W": 0,
+      "additional_wait_h": 0,
+      "eps_mm": 100,
+      "forecast_snapshot": "data\\weather\\meteored_20261118_punta_arenas",
+      "ice_balance": null,
+      "placement_rate_m3_h": 20,
+      "placement_schedule": [
+        {
+          "end_h": 3.2805905953129217,
+          "id": 1,
+          "start_h": 0.0,
+          "volume_m3": 65.61181190625844
+        },
+        {
+          "end_h": 7.381328840796084,
+          "id": 2,
+          "start_h": 3.2805905953129217,
+          "volume_m3": 82.01476490966324
+        },
+        {
+          "end_h": 11.482067086279535,
+          "id": 3,
+          "start_h": 7.381328840796084,
+          "volume_m3": 82.01476490966901
+        },
+        {
+          "end_h": 14.762657681592774,
+          "id": 4,
+          "start_h": 11.482067086279535,
+          "volume_m3": 65.61181190626478
+        },
+        {
+          "end_h": 18.731180768685654,
+          "id": 5,
+          "start_h": 14.762657681592774,
+          "volume_m3": 79.37046174185761
+        },
+        {
+          "end_h": 21.0803757039707,
+          "id": 6,
+          "start_h": 18.731180768685654,
+          "volume_m3": 46.9838987057009
+        },
+        {
+          "end_h": 22.23833868363241,
+          "id": 7,
+          "start_h": 21.0803757039707,
+          "volume_m3": 23.159259593234196
+        },
+        {
+          "end_h": 22.943384416797507,
+          "id": 8,
+          "start_h": 22.23833868363241,
+          "volume_m3": 14.100914663301957
+        },
+        {
+          "end_h": 23.648430149770252,
+          "id": 9,
+          "start_h": 22.943384416797507,
+          "volume_m3": 14.100914659454906
+        },
+        {
+          "end_h": 24.353475882935008,
+          "id": 10,
+          "start_h": 23.648430149770252,
+          "volume_m3": 14.100914663295129
+        }
+      ],
+      "plan_pours": 10,
+      "pre_cooling": {
+        "method": "none",
+        "net_heat_removed_MJ": 0.0
+      },
+      "simulation_id": "5950c8275e6d4991826e5dda60412284",
+      "uncooled_mix_C": 14,
+      "shape": [
+        96,
+        96,
+        54
+      ],
+      "status": "COMPLETED",
+      "complete_sampling": true,
+      "config_sha256": "1e912c4531c4cd2ce03c6db1180dee0a392d3b1bbf44662ae4881dc8504d13ef",
+      "delta_time_h": 549.0
+    },
+    {
+      "DeltaT_S25_estimate_C": 26.189221486349496,
+      "S25_validation": "NOT VALIDATED",
+      "Tmax_C": 52.91307415592795,
+      "additional_basal_R_m2K_W": 0,
+      "additional_wait_h": 0,
+      "eps_mm": 100,
+      "forecast_snapshot": "data\\weather\\meteored_20261118_punta_arenas",
+      "ice_balance": null,
+      "placement_rate_m3_h": 20,
+      "placement_schedule": [
+        {
+          "end_h": 3.2805905953129217,
+          "id": 1,
+          "start_h": 0.0,
+          "volume_m3": 65.61181190625844
+        },
+        {
+          "end_h": 7.381328840796084,
+          "id": 2,
+          "start_h": 3.2805905953129217,
+          "volume_m3": 82.01476490966324
+        },
+        {
+          "end_h": 11.482067086279535,
+          "id": 3,
+          "start_h": 7.381328840796084,
+          "volume_m3": 82.01476490966901
+        },
+        {
+          "end_h": 14.762657681592774,
+          "id": 4,
+          "start_h": 11.482067086279535,
+          "volume_m3": 65.61181190626478
+        },
+        {
+          "end_h": 17.60940564184363,
+          "id": 5,
+          "start_h": 14.762657681592774,
+          "volume_m3": 56.934959205017094
+        },
+        {
+          "end_h": 20.081438242722673,
+          "id": 6,
+          "start_h": 17.60940564184363,
+          "volume_m3": 49.44065201758088
+        },
+        {
+          "end_h": 21.577581917355545,
+          "id": 7,
+          "start_h": 20.081438242722673,
+          "volume_m3": 29.92287349265742
+        },
+        {
+          "end_h": 22.23833868353251,
+          "id": 8,
+          "start_h": 21.577581917355545,
+          "volume_m3": 13.215135323539336
+        },
+        {
+          "end_h": 22.708369172180678,
+          "id": 9,
+          "start_h": 22.23833868353251,
+          "volume_m3": 9.400609772963323
+        },
+        {
+          "end_h": 23.295907283182828,
+          "id": 10,
+          "start_h": 22.708369172180678,
+          "volume_m3": 11.750762220043024
+        },
+        {
+          "end_h": 23.88344539418488,
+          "id": 11,
+          "start_h": 23.295907283182828,
+          "volume_m3": 11.750762220041006
+        },
+        {
+          "end_h": 24.35347588283298,
+          "id": 12,
+          "start_h": 23.88344539418488,
+          "volume_m3": 9.40060977296203
+        }
+      ],
+      "plan_pours": 12,
+      "pre_cooling": {
+        "method": "none",
+        "net_heat_removed_MJ": 0.0
+      },
+      "simulation_id": "1dfa0d1c493d439b88651a9815e33cec",
+      "uncooled_mix_C": 14,
+      "shape": [
+        96,
+        96,
+        54
+      ],
+      "status": "COMPLETED",
+      "complete_sampling": true,
+      "config_sha256": "443c642ff904e800e43d2c513b4e542a3d598b68f759c2020277dcbeea1155d1",
+      "delta_time_h": 549.0
+    },
+    {
+      "DeltaT_S25_estimate_C": 22.02036733350546,
+      "S25_validation": "NOT VALIDATED",
+      "Tmax_C": 46.734381508577705,
+      "additional_basal_R_m2K_W": 0,
+      "additional_wait_h": 0,
+      "eps_mm": 100,
+      "forecast_snapshot": "data\\weather\\meteored_20261118_punta_arenas",
+      "ice_balance": null,
+      "placement_rate_m3_h": 20,
+      "placement_schedule": [
+        {
+          "end_h": 24.353475882892088,
+          "id": 1,
+          "start_h": 0,
+          "volume_m3": 487.06951765784174
+        }
+      ],
+      "plan_pours": 1,
+      "pre_cooling": {
+        "method": "nitrogen",
+        "net_heat_removed_MJ": 7402.33056367437
+      },
+      "simulation_id": "78f89b0fd7aa498db53c4a2600b801a6",
+      "uncooled_mix_C": 14,
+      "shape": [
+        96,
+        96,
+        54
+      ],
+      "status": "COMPLETED",
+      "complete_sampling": true,
+      "config_sha256": "9693a1acfc224d6126215d2566f8bd7f14aeba3bc05295eda3effee72d559d7c",
+      "delta_time_h": 578.6666666666666
+    },
+    {
+      "DeltaT_S25_estimate_C": 17.676952595896516,
+      "S25_validation": "NOT VALIDATED",
+      "Tmax_C": 46.94014124872103,
+      "additional_basal_R_m2K_W": 1.0,
+      "additional_wait_h": 0,
+      "eps_mm": 100,
+      "forecast_snapshot": "data\\weather\\meteored_20261118_punta_arenas",
+      "ice_balance": null,
+      "placement_rate_m3_h": 20,
+      "placement_schedule": [
+        {
+          "end_h": 24.353475882892088,
+          "id": 1,
+          "start_h": 0,
+          "volume_m3": 487.06951765784174
+        }
+      ],
+      "plan_pours": 1,
+      "pre_cooling": {
+        "method": "nitrogen",
+        "net_heat_removed_MJ": 7402.33056367437
+      },
+      "simulation_id": "fb6215d3ad7d4a5fb6377f46304cfdd7",
+      "uncooled_mix_C": 14,
+      "shape": [
+        96,
+        96,
+        54
+      ],
+      "status": "COMPLETED",
+      "complete_sampling": true,
+      "config_sha256": "d022f2997bad24b94c3bdab01e2cdae839cffd98a8d9669557c0d6108d3c8512",
+      "delta_time_h": 794.6666666666666
+    }
+  ]
+}

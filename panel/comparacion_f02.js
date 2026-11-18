@@ -40,7 +40,35 @@ function line(ctx,values,color,name,legend){const {g,X,Y}=ctx;g.save();g.beginPa
 function message(ctx,text){ctx.g.fillStyle='#d7bc8e';ctx.g.font='12px Segoe UI';ctx.g.fillText(text,ctx.L+10,ctx.T+42);}
 function download(name,content,mime){const url=URL.createObjectURL(new Blob([content],{type:mime})),a=E('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function csv(name,headers,rows){const escape=v=>'"'+String(v??'').replaceAll('"','""')+'"';download(name,'\ufeff'+[headers,...rows].map(r=>r.map(escape).join(',')).join('\r\n'),'text/csv;charset=utf-8');}
-async function refresh(){if(loading)return;loading=true;$('f02Counts').textContent='Leyendo catálogos y métricas reales; no se ejecuta el solver.';try{data=await api('/api/comparison-f02');$('f02IcePlan').hidden=!data.cohorts.some(c=>c.id==='hielo-eps100-42');const prev=$('f02Cohort').value;$('f02Cohort').replaceChildren();const groups={};for(const c of data.cohorts){const label=c.historical?'Históricos / exploratorios':c.id.startsWith('local')?'Corridas propias':c.id.startsWith('malla')||c.id.startsWith('clima')?'Sensibilidades espaciales, temporales y climáticas':'Estudios recientes · inicio 19 noviembre';if(!groups[label]){groups[label]=E('optgroup');groups[label].label=label;$('f02Cohort').append(groups[label]);}const o=E('option',c.title);o.value=c.id;groups[label].append(o);}const defaultSet=data.cohorts.find(c=>c.id.startsWith('cierre-'))||data.cohorts.find(c=>c.title.includes('exploracion_constructiva'));$('f02Cohort').value=data.cohorts.some(c=>c.id===prev)?prev:defaultSet?.id||data.cohorts[0]?.id;$('f02Counts').textContent=`${data.counts.cohorts} conjuntos · ${data.counts.plan_groups} variantes de plan/conjunto · ${data.counts.scenario_rows} filas de escenarios, incluidas vistas parciales. No se suman como probabilidades entre conjuntos.`;selectCohort();}catch(e){$('f02Counts').textContent=e.message+' Inicia el servidor actualizado.';}finally{loading=false;if(pendingIce&&!$('f02IcePlan').hidden){pendingIce=false;$('f02IcePlan').click();}}}
+async function refresh(){
+ if(loading)return;
+ loading=true;
+ $('f02Counts').textContent='Leyendo catálogos y métricas guardadas.';
+ try{
+  data=await api('/api/comparison-f02');
+  const common=data.cohorts.filter(c=>c.id.startsWith('malla-comun-'));
+  $('f02IcePlan').hidden=!common.length&&!data.cohorts.some(c=>c.id==='hielo-eps100-42');
+  const select=$('f02Cohort'),prev=select.value,groups=new Map();
+  select.replaceChildren();
+  for(const c of [...common,...data.cohorts.filter(c=>!common.includes(c))]){
+   const label=common.includes(c)?'F02 · malla común':c.historical?'Históricos / exploratorios':c.id.startsWith('local')?'Corridas propias':c.id.startsWith('malla')||c.id.startsWith('clima')?'Estudios de sensibilidad':'Otros conjuntos de planes';
+   if(!groups.has(label)){
+    const group=E('optgroup');group.label=label;select.append(group);groups.set(label,group);
+   }
+   const option=E('option',c.title);
+   option.value=c.id;
+   groups.get(label).append(option);
+  }
+  const defaultSet=common[0]||data.cohorts.find(c=>c.id.startsWith('cierre-'));
+  select.value=data.cohorts.some(c=>c.id===prev)?prev:defaultSet?.id||data.cohorts[0]?.id;
+  $('f02Counts').textContent=`Archivo completo: ${data.counts.cohorts} conjuntos y ${data.counts.scenario_rows} registros de escenarios, incluidas vistas parciales.`;
+  selectCohort();
+ }catch(e){$('f02Population').textContent=e.message+' Inicia el servidor actualizado.';}
+ finally{
+  loading=false;
+  if(pendingIce&&!$('f02IcePlan').hidden){pendingIce=false;$('f02IcePlan').click();}
+ }
+}
 function estimated(){return $('f02RiskMode').value==='estimated';}
 function riskOf(p){return estimated()?(p.estimated_risk||{P_T:null,P_Delta:null,P_f:null,compliance:'INDETERMINADO'}):p.risk;}
 function approximatePlan(v){
@@ -87,7 +115,29 @@ $('f02Reproduce').onclick=()=>{if(!detail?.config)return;const c=structuredClone
 $('f02ExportPlans').onclick=()=>cohort&&csv('therma-tabla-planes.csv',['Plan','D [h]','Tmax [°C]','Delta S25 aproximado [°C]','Comparación aproximada 70/20 °C','P_T [%]',estimated()?'P_Δ aprox. [%]':'P_Δ formal [%]',estimated()?'P_f aprox. [%]':'P_f formal [%]',estimated()?'Bajo 5 % aproximado':'¿Cumple? formal','Conjunto','Alcance'],cohort.plans.map(p=>[p.name,p.D_h,p.Tmax_C,p.Delta_estimate_C,approximatePlan(p),pct(riskOf(p).P_T),pct(riskOf(p).P_Delta),pct(riskOf(p).P_f),riskOf(p).compliance,cohort.title,cohort.scope]));
 $('f02ExportRuns').onclick=()=>cohort&&csv('therma-escenarios.csv',['Plan','Curva','Clima','Peso w','M_T [°C]','M_Δ estimado [°C]','I_T',estimated()?'I_Δ aprox.':'I_Δ formal',estimated()?'I_F aprox.':'I_F formal','Estado','Malla','Horizonte [d]','Versión','ID'],cohort.plans.flatMap(p=>p.runs.map(r=>[p.name,r.source_id,r.climate_id,r.weight,r.Tmax_C,r.Delta_estimate_C,yes(r.I_T),yes(estimated()?r.I_Delta_estimated:r.I_Delta),yes(estimated()?r.I_F_estimated:r.I_F),r.status,r.shape?.join('×'),r.days,r.engine,r.simulation_id])));
 new ResizeObserver(()=>{if(!$('comparePage').hidden){drawRisk();drawEvidence();drawScenarioPeaks();}}).observe($('f02Comparison'));
-$('f02IcePlan').onclick=()=>{$('f02Cohort').value=data.cohorts.some(c=>c.id==='hielo-eps100-42_estudiada')?'hielo-eps100-42_estudiada':data.cohorts.some(c=>c.id==='hielo-eps100-42_250')?'hielo-eps100-42_250':'hielo-eps100-42';selectCohort();changeView('plans');};
+$('f02IcePlan').onclick=()=>{
+ const available=data.cohorts;
+ const target=available.find(c=>c.id.startsWith('malla-comun-'))||
+  available.find(c=>c.id==='hielo-eps100-42_estudiada')||available.find(c=>c.id==='hielo-eps100-42');
+ if(!target)return;
+ $('f02Cohort').value=target.id;selectCohort();changeView('plans');
+};
 /*__F02_SUMMARY__*/
-window.ThermaF02={refresh,openIce:()=>{$('f02Analysis').open=true;pendingIce=true;if(data&&!$('f02IcePlan').hidden){pendingIce=false;$('f02IcePlan').click();}}};refresh();
+async function openRun(cohortId,planId,uid){
+ window.ThermaNavigation.go('compare');
+ $('f02Analysis').open=true;
+ changeView('runs');
+ const drawer=$('f02RunDrawer');
+ drawer.open=true;
+ drawer.scrollIntoView({block:'start'});
+ if(!data?.cohorts.some(c=>c.id===cohortId))await refresh();
+ if(!data?.cohorts.some(c=>c.id===cohortId)){
+  $('f02EvidenceStatus').textContent='Este estudio todavía no se ha cargado. Usa Actualizar catálogo y vuelve a abrir la fila.';
+  return;
+ }
+ $('f02Cohort').value=cohortId;
+ selectCohort();
+ choose(planId,uid);
+}
+window.ThermaF02={refresh,openRun,openIce:()=>{$('f02Analysis').open=true;pendingIce=true;if(data&&!$('f02IcePlan').hidden){pendingIce=false;$('f02IcePlan').click();}}};refresh();
 })();

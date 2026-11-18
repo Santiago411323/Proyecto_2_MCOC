@@ -1,4 +1,4 @@
-"""Subdivide el IFC base en seis etapas mediante tres cortes horizontales."""
+"""Subdivide el IFC base en etapas horizontales conservando su envolvente."""
 import json
 from pathlib import Path
 
@@ -45,19 +45,28 @@ def split_triangles(triangles, level):
     return sections
 
 
-def write_ifc(path):
+def write_ifc(path, parts_per_solid, spacing_z, origin_z):
     base = ROOT / 'modelo_e02.ifc'
     model = ifcopenshell.open(str(ROOT / 'modelo_inicial.ifc'))
     body = next(c for c in model.by_type('IfcGeometricRepresentationSubContext')
                 if c.ContextIdentifier == 'Body' and c.ContextType == 'Model')
     storey = model.by_type('IfcBuildingStorey')[0]
-    for solid in sorted(cargar_geometria(base), key=lambda s: s['VertidaID']):
+    ident = 0
+    for solid, parts in zip(sorted(cargar_geometria(base), key=lambda s: s['VertidaID']), parts_per_solid, strict=True):
         triangles = solid['triangulos']
-        level = (triangles[:, :, 2].min() + triangles[:, :, 2].max()) / 2
-        if np.any(np.isclose(triangles[:, :, 2], level, rtol=0, atol=1e-8)):
-            raise ValueError('El plano de corte atraviesa vértices existentes.')
-        for part, section in enumerate(split_triangles(triangles, level), 1):
-            ident = 2 * (solid['VertidaID'] - 1) + part
+        z = triangles[:, :, 2]
+        levels = np.linspace(z.min(), z.max(), parts + 1)[1:-1]
+        cuts = np.round((levels - origin_z)/spacing_z) * spacing_z + origin_z
+        sections = []
+        for level in cuts:
+            if np.any(np.isclose(triangles[:, :, 2], level, rtol=0, atol=1e-8)):
+                raise ValueError('El plano de corte atraviesa vértices existentes.')
+            low, high = split_triangles(triangles, level)
+            sections.append(low)
+            triangles = np.asarray(high)
+        sections.append(triangles)
+        for section in sections:
+            ident += 1
             footing = ifcopenshell.api.run('root.create_entity', model, ifc_class='IfcFooting',
                                            name=f'Vertida_{ident:02}')
             footing.Description = f'Subdivisión geométrica del elemento IFC {solid["guid"]}'
@@ -74,19 +83,22 @@ def write_ifc(path):
     completar(model).write(str(path))
 
 
-def ejecutar_seis(config, ident, folder, reference, wait_h, rate, progress):
+def ejecutar_subdividido(config, ident, folder, reference, wait_h, rate, progress, count):
     if not np.isfinite(wait_h) or wait_h < 0:
         raise ValueError('La espera entre etapas debe ser finita y no negativa.')
     p = validar(config)
-    path = folder / 'seis_vertidas.ifc'
-    write_ifc(path)
+    parts = {6:(2,2,2),10:(4,3,3),12:(4,4,4)}[count]
+    path = folder / f'vertidas_{count}.ifc'
+    write_ifc(path, parts, p['L'][2]/p['n'][2], p['origin'][2])
     geometry = datos_ifc(path, formas=[p['n']])
     old = np.asarray(p['mask'])
     new = np.asarray(geometry['mallas'][0]['ids'])
-    if not np.array_equal(old, (new+1)//2):
+    parents = np.repeat(np.arange(1,4), parts)
+    if not np.array_equal(old, np.r_[0,parents][new]):
         raise ValueError('El IFC derivado modifica la ocupación de la geometría de referencia.')
-    if len(geometry['capas']) != 6:
-        raise ValueError('Se esperaban seis etapas en el IFC derivado.')
+    if len(geometry['capas']) != count or not np.array_equal(np.unique(new[new>0]), np.arange(1,count+1)):
+        raise ValueError('La geometría no contiene todas las etapas de colocación.')
+    print(f'{count} vertidas: ocupación de la malla verificada.', flush=True)
     p['mask'] = new.tolist()
     schedule = []
     start = 0.
@@ -99,7 +111,7 @@ def ejecutar_seis(config, ident, folder, reference, wait_h, rate, progress):
     validar_construccion(p)
     # Los planos intermedios agregan caras al IFC. Conservar la separación
     # de muestreo del caso de una vertida dentro de este ejecutor local.
-    surfaces = SuperficiesIFC(cargar_geometria(path), p['s25']['surface_spacing_m'], max_points=60000)
+    surfaces = SuperficiesIFC(cargar_geometria(path), p['s25']['surface_spacing_m'], max_points=160000)
     inspector = ObservadorIFC(p, path, geometry=surfaces)
     meta = ejecutar_construccion(p, ident, folder, geometry, progress, inspector)
     meta['provenance']['ifc'] = dict(archivo=path.name, sha256=geometry['sha256'], geometry=geometry)

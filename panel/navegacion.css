@@ -36,3 +36,23 @@ body.organized{--page-width:1440px;background:#0a1220;color:#e1ebf6}
 .organized.presentation .run-library{display:none}
 #resultsPage:not(.has-loaded-run)>:is(.run-summary,#resultViewerSlot,#runDashboard,#s25Results,#sensorDrawer,#resultTechnical,#legacyPlots),
 #resultsPage:not(.has-loaded-run):not(.working-on-run)>#simulationDesk{display:none}
+.run-study-path{margin:0 0 16px;padding:12px 14px;background:#142832;border:1px solid #29434c;border-radius:8px}
+.run-study-path summary{font-weight:650;cursor:pointer}
+.run-study-path p{font-size:13px;line-height:1.55;color:#b6cbd5;margin:10px 0 0}
+.run-study-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:12px}
+.run-study-steps button{text-align:left;white-space:normal}
+.run-study-steps button[aria-pressed=true]{border-color:#79dcca;background:#1c443e}
+.run-study-steps small{display:block;margin-top:4px;color:#b3ccd5}
+.defense-intro{color:#bed4df;margin:0 0 14px}
+.defense-section{padding:clamp(14px,2.25vw,26px);margin:0 0 18px}
+.defense-section h2{margin:0 0 10px;font-size:clamp(20px,2.4vw,28px)}
+.defense-section h3{margin:24px 0 8px}
+.defense-section p{color:#bdcedd;font-size:13px;line-height:1.6;max-width:92ch}
+.defense-schedule{min-width:575px;display:grid;gap:9px;padding:7px 0}
+.defense-schedule-row{display:grid;grid-template-columns:145px 1fr 72px;gap:14px;align-items:center;color:#d3e1ed;font-size:12px}
+.defense-ticks,.defense-track{position:relative;height:22px}
+.defense-ticks span{position:absolute;transform:translateX(-50%);color:#aec5d6}
+.defense-track{border:1px solid #35475b;border-radius:5px;background:#0d1a28;overflow:hidden}
+.defense-pour{box-sizing:border-box;position:absolute;top:0;height:100%;border-right:1px solid #10292a;background:#52baa6}
+.defense-pour:nth-child(even){background:#318d81}
+.defense-risk{width:100%;height:auto;max-width:900px;display:block}

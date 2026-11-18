@@ -5,3 +5,4 @@ instaladores/
 resultados/
 *.ifc.bak
 *.blend1
+/data/weather/meteored_*/pronostico.html

@@ -15,16 +15,36 @@
 <section id="resultsPage" class="workflow-page" hidden>
  <div class="page-heading"><div><p class="eyebrow">03 / EXPLORAR EL CAMPO CALCULADO</p><h1>Simulaciones y resultados</h1><p>Recorre el tiempo, abre un corte y consulta las temperaturas del mismo instante.</p></div><button id="presentationToggle" type="button" class="secondary" aria-pressed="false">Vista de presentación</button></div>
  <section id="simulationLibrary" class="panel run-library">
-  <div class="run-library-heading"><div><h2>Todas las simulaciones</h2><p>Busca una corrida y abre su resultado.</p></div><button type="button" class="secondary" data-go="compare">Ver las que quedan bajo los límites →</button></div>
+  <div class="run-library-heading"><div><h2>Todas las simulaciones</h2><p>Cada fila es una corrida de un plan con una fuente de calor y un clima.</p></div><div class="simulation-actions"><button id="findNitrogenRuns" type="button" class="secondary">Ver ensayos con nitrógeno</button><button type="button" class="secondary" data-go="compare">Comparar planes F02 →</button></div></div>
+  <details id="iceStudyPath" class="workflow-details run-study-path">
+   <summary>Cómo llegamos al plan con hielo · 96 × 96 × 54</summary>
+   <p>En las referencias se comparó la secuencia de colocación. Después se evaluaron dos temperaturas de colocación con moldaje, EPS de 100 mm y protección basal adicional de 1,0 m²·K/W. Las pruebas posteriores muestran qué pasó al cambiar las protecciones o el cronograma.</p>
+   <div class="run-study-steps" role="group" aria-label="Ruta de simulaciones">
+    <button type="button" class="secondary" data-study-step="reference" aria-pressed="false"><strong>Referencias de construcción</strong><small>Una vertida, propuesto, rápido y lento</small></button>
+    <button type="button" class="secondary" data-study-step="ice" aria-pressed="false"><strong>Candidatos con hielo</strong><small>8 °C y 12 °C con las tres protecciones</small></button>
+    <button type="button" class="secondary" data-study-step="followup" aria-pressed="false"><strong>Pruebas posteriores</strong><small>Comparaciones con hielo y cambios de cronograma</small></button>
+   </div>
+   <p id="studyEvidence" class="hint" role="status"></p>
+  </details>
   <div class="run-library-filters">
    <label>Buscar<input id="simulationSearch" type="search" placeholder="Ej. seis vertidas, hielo, M4_SS"></label>
    <label>Origen<select id="simulationCollection"><option value="all">Todas</option><option value="local">Guardadas en este equipo</option><option value="common">F02 · malla común</option><option value="published">Otros estudios publicados</option></select></label>
+   <label>Malla <select id="simulationMesh"><option value="all">Todas las mallas</option><option value="96x96x54" selected>96 × 96 × 54 · referencia</option></select></label>
+   <button id="resetStudyPath" type="button" class="quiet" hidden>Salir de la ruta</button>
    <button id="refreshSimulations" type="button" class="quiet">Actualizar</button>
   </div>
   <p id="simulationCatalogNote" class="hint" role="status">Cargando simulaciones…</p>
   <div id="simulationLibraryTable" class="table-scroll"></div>
   <div id="simulationLibraryPages" class="run-library-pages"></div>
  </section>
+ <details class="panel workflow-details run-library" id="simulationPass">
+  <summary>Corridas individuales bajo los límites térmicos</summary>
+  <p class="hint">Tmax ≤ 70 °C y ΔT S25 ≤ 20 °C en cada corrida. La evaluación del riesgo por plan está en <button type="button" class="quiet" data-go="compare">04 Comparar planes</button>.</p>
+  <div class="run-library-filters"><label>Malla <select id="simulationPassMesh"><option value="all">Todas las mallas</option><option value="96x96x54" selected>96 × 96 × 54 · referencia</option></select></label></div>
+  <p id="simulationPassNote" class="hint" role="status">Cargando resultados…</p>
+  <div id="simulationPassTable" class="table-scroll"></div>
+  <div id="simulationPassPages" class="run-library-pages"></div>
+ </details>
  <section id="iceResults" class="panel simulation-desk" hidden>
   <div class="panel-head"><h3>Una vertida · efecto del hielo</h3><a id="iceDownload" download="comparacion_hielo.json">Descargar datos</a></div>
   <label>Comparación guardada<select id="iceArchive"></select></label>
@@ -53,14 +73,9 @@
  <details id="resultTechnical" class="panel workflow-details"><summary>Datos técnicos, energía y exportaciones</summary><div id="resultTechnicalSlot" class="drawer-content"></div></details>
 </section>
 <section id="comparePage" class="workflow-page" hidden>
- <div class="page-heading"><div><p class="eyebrow">04 / COMPARAR DECISIONES</p><h1>Comparar planes</h1><p>Resultados calculados por Python. Abre un plan para investigar su campo 3D.</p></div></div>
- <section class="panel run-library" id="simulationPass">
-  <div class="run-library-heading"><div><h2>Corridas bajo ambos límites</h2><p>Tmax ≤ 70 °C y ΔT S25 ≤ 20 °C durante el periodo simulado.</p></div><button type="button" class="secondary" data-go="results">Ver todas las simulaciones →</button></div>
-  <p id="simulationPassNote" class="hint" role="status">Cargando resultados…</p>
-  <div id="simulationPassTable" class="table-scroll"></div>
-  <div id="simulationPassPages" class="run-library-pages"></div>
- </section>
- <details class="panel workflow-details" id="f02Analysis"><summary>Análisis F02 · planes, probabilidades y evidencia</summary>
+ <div class="page-heading"><div><p class="eyebrow">04 / COMPARAR DECISIONES</p><h1>Comparar planes · defensa F02</h1><p>Recorre las pruebas térmicas y compara la duración y el riesgo de los planes.</p></div><button type="button" class="secondary" data-go="results">Ir a corridas individuales →</button></div>
+ /*__DEFENSE_PRESENTATION__*/
+ <details class="panel workflow-details" id="f02Analysis"><summary>Análisis detallado · corridas, probabilidades y evidencia</summary>
  /*__F02UI__*/
  </details>
  <button type="button" id="iceCompareLink" class="secondary" hidden>Ver comparación con y sin hielo →</button>

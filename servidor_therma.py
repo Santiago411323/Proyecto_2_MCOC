@@ -52,8 +52,11 @@ def catalogo_simulaciones(folder):
             title=(f'{stages} vertida'+('s' if stages!=1 else '') if stages else 'Fundación IFC')
             if placement:title+=' · '+('/'.join(f'{v:g}' for v in placement))+' °C'
             if receipt:
-                title+=(' · con hielo' if (receipt.get('ice_balance') or {}).get('total_t',0)>0 else ' · sin hielo')
-                title+=' · clima actualizado'
+                if (receipt.get('pre_cooling') or {}).get('method')=='nitrogen':
+                    title+=' · nitrógeno líquido'
+                else:
+                    title+=(' · con hielo' if (receipt.get('ice_balance') or {}).get('total_t',0)>0 else ' · sin hielo')
+                title+=' · '+(snapshot.get('provider') or 'clima actualizado')
             elif insulation>0 and isinstance(contact,(float,int)) and contact>=1:
                 title+=' · aislación y protección basal'
             elif insulation>0:

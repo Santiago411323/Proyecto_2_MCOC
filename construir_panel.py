@@ -49,6 +49,8 @@ def main():
     html = html.replace('/*__SIMULATIONS__*/', (origen/'simulaciones.js').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVSTYLE__*/', (origen/'navegacion.css').read_text(encoding='utf-8'))
     html = html.replace('/*__NAVUI__*/', (origen/'navegacion.html').read_text(encoding='utf-8'))
+    from presentacion_f02 import render as render_defense
+    html = html.replace('/*__DEFENSE_PRESENTATION__*/', render_defense())
     dashboard=(origen/'panel_corrida.html').read_text(encoding='utf-8')
     html=html.replace('/*__RUN_DASH__*/',dashboard)
     weather={}

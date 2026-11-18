@@ -348,9 +348,10 @@ class Evidence:
 
     def public(self):
         clean=lambda r:{k:v for k,v in r.items() if not k.startswith('_')}
+        registry=read(ROOT/'resultados/planes_publicados.json',{}) or {}
         def public_run(run):
-            folder=run.get('_folder')
-            can_open=bool(run.get('simulation_id') and folder
+            folder=self.result_folder(run,registry)
+            can_open=bool(not run.get('partial_horizon') and folder
                           and all((folder/name).is_file() for name in ('metadata.json','fields.bin')))
             return dict(clean(run), can_open=can_open)
         cohorts=[]
@@ -383,16 +384,29 @@ class Evidence:
         if uid not in self.runs:raise ValueError('Corrida no encontrada en el catálogo.')
         return self.runs[uid]
 
+    def result_folder(self,run,registry):
+        ident=run.get('simulation_id')
+        if not isinstance(ident,str) or len(ident)!=32 or any(c not in '0123456789abcdef' for c in ident):
+            return None
+        record=registry.get(ident) or {}
+        registered=safe_folder(ROOT/record['folder']) if record.get('folder') else None
+        candidates=[self.local_output/ident,registered,run.get('_folder')]
+        return next((f for f in candidates if f and (f/'metadata.json').is_file()
+                     and (f/'fields.bin').is_file()),run.get('_folder'))
+
     def artifact(self,ident,name):
         if name not in ('metadata.json','config.json','fields.bin','active.bin','campos.npz','s25_ifc_history.csv'):return None
+        registry=read(ROOT/'resultados/planes_publicados.json',{}) or {}
         for r in self.runs.values():
             if r.get('simulation_id')!=ident:continue
-            folder=r.get('_folder')
+            folder=self.result_folder(r,registry)
             if folder and (folder/name).is_file():return folder/name
         return None
 
     def detail(self,uid):
-        r=self.get(uid);folder=r.get('_folder');m=read(folder/'metadata.json',{}) if folder else {}
+        r=self.get(uid)
+        folder=self.result_folder(r,read(ROOT/'resultados/planes_publicados.json',{}) or {})
+        m=read(folder/'metadata.json',{}) if folder else {}
         config=m.get('config') or r.get('_config');s=m.get('s25_ifc',{});h=m.get('history',[]);history=[]
         if s.get('history'):
             history=[dict(time_s=v['time_s'],Tmax_C=v['Tmax_C'],Tmin_S25_C=v.get('Tmin_S25_estimate_C'),Delta_C=v.get('DeltaT_estimate_C')) for v in s['history']]
