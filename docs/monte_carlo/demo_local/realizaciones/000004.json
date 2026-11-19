@@ -1,0 +1,37 @@
+{
+  "climate": "Meteored18",
+  "source": "M2_22A",
+  "Tmax_C": 41.3134172312883,
+  "Delta_C": 16.653643005435615,
+  "T14_C": 41.3134172312883,
+  "D14_C": 16.653643005435615,
+  "exceeds_T": false,
+  "exceeds_delta": false,
+  "horizon_captured": true,
+  "T_time_h": 91.0,
+  "T_hot_xyz_m": [
+    -4.21875,
+    -1.03125,
+    1.4361111111111113
+  ],
+  "D_time_h": 31.333333333333332,
+  "D_hot_xyz_m": [
+    -8.53125,
+    -3.28125,
+    0.39722222222222225
+  ],
+  "D_S25_xyz_m": [
+    -0.0754856736979555,
+    3.472515462424795,
+    2.9333333333333336
+  ],
+  "id": 4,
+  "spawn_key": [
+    4
+  ],
+  "manifest": "a24d057e570232d51522bdc38199431e7cd58b3fff2816ddccb326af3ed79867",
+  "job": null,
+  "task": null,
+  "host": "DESKTOP-FJK62NI",
+  "numba": "0.68.1"
+}

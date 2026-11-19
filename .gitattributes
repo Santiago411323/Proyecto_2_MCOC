@@ -23,3 +23,6 @@ docs/e13/** -text whitespace=cr-at-eol
 docs/cierre_f02/evidencia/** -text whitespace=cr-at-eol
 docs/comparacion_f02/** -text whitespace=cr-at-eol
 docs/hielo_f02/refinamiento_xyz/** -text whitespace=cr-at-eol
+hpc/*.sh text eol=lf
+hpc/*.sbatch text eol=lf
+docs/monte_carlo/demo_local/**/*.json text eol=lf

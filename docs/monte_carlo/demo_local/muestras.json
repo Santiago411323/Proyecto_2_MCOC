@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "seed": 20261119,
+  "rng": "PCG64/SeedSequence",
+  "model": "T8_96x96x54_42d",
+  "physics_id": "ea48372e1a0b9266b53170749e9c7d76cddcb9db9330b77c4a18e3b149499a2c",
+  "numpy": "2.5.4",
+  "sources": [
+    "M1_SS",
+    "M2_SS",
+    "M3_SS",
+    "M4_SS",
+    "M1_22A",
+    "M2_22A",
+    "M3_22A",
+    "M4_22A"
+  ],
+  "climates": [
+    "OM16",
+    "OM18",
+    "Meteored18"
+  ],
+  "distribution": "iid_uniform_product_with_replacement",
+  "samples": [
+    {
+      "id": 0,
+      "spawn_key": [
+        0
+      ],
+      "source": "M2_22A",
+      "climate": "OM18"
+    },
+    {
+      "id": 1,
+      "spawn_key": [
+        1
+      ],
+      "source": "M4_22A",
+      "climate": "OM16"
+    },
+    {
+      "id": 2,
+      "spawn_key": [
+        2
+      ],
+      "source": "M4_SS",
+      "climate": "OM16"
+    },
+    {
+      "id": 3,
+      "spawn_key": [
+        3
+      ],
+      "source": "M1_22A",
+      "climate": "OM16"
+    },
+    {
+      "id": 4,
+      "spawn_key": [
+        4
+      ],
+      "source": "M2_22A",
+      "climate": "Meteored18"
+    },
+    {
+      "id": 5,
+      "spawn_key": [
+        5
+      ],
+      "source": "M3_SS",
+      "climate": "OM16"
+    },
+    {
+      "id": 6,
+      "spawn_key": [
+        6
+      ],
+      "source": "M1_SS",
+      "climate": "OM16"
+    },
+    {
+      "id": 7,
+      "spawn_key": [
+        7
+      ],
+      "source": "M3_22A",
+      "climate": "OM18"
+    }
+  ]
+}

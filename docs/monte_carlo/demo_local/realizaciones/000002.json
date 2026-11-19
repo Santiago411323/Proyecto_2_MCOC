@@ -1,0 +1,38 @@
+{
+  "climate": "OM16",
+  "source": "M4_SS",
+  "Tmax_C": 47.179789048775966,
+  "Delta_C": 17.970664758917778,
+  "T14_C": 47.179789048775966,
+  "D14_C": 15.669736838194725,
+  "exceeds_T": false,
+  "exceeds_delta": false,
+  "horizon_captured": true,
+  "T_time_h": 209.66666666666666,
+  "T_hot_xyz_m": [
+    -0.09375,
+    -0.09375,
+    1.9861111111111112
+  ],
+  "D_time_h": 789.0,
+  "D_hot_xyz_m": [
+    -0.09375,
+    -0.09375,
+    1.9250000000000003
+  ],
+  "D_S25_xyz_m": [
+    8.823751298272507,
+    -3.8688933626681643,
+    0.3666666666666667
+  ],
+  "reference_max_error_C": 7.105427357601002e-15,
+  "id": 2,
+  "spawn_key": [
+    2
+  ],
+  "manifest": "a24d057e570232d51522bdc38199431e7cd58b3fff2816ddccb326af3ed79867",
+  "job": null,
+  "task": null,
+  "host": "DESKTOP-FJK62NI",
+  "numba": "0.68.1"
+}
